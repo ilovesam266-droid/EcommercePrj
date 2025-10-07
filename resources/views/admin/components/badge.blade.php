@@ -1,4 +1,6 @@
-<!-- Badge component -->
+@extends('layouts.page-layout')
+@section('title', 'Dashboard')
+@section('content')<!-- Badge component -->
 <div class="tab-content rounded-bottom">
     <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1000">
         <h1>Example heading<span class="badge bg-secondary">New</span></h1>
@@ -36,3 +38,4 @@
         <span class="badge me-1 rounded-pill bg-dark">Dark</span>
     </div>
 </div>
+@endsection
