@@ -40,6 +40,11 @@ return new class extends Migration
             $table->timestamp('done_at')->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+
+            $table->index('owner_id');
+            $table->index('status');
+            $table->index('payment_status');
+            $table->index('created_at');
         });
     }
 

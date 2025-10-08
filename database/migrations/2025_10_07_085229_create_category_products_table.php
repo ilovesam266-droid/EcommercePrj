@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('category_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->integer('category_id');
+            $table->integer('product_id');
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+            $table->unique(['category_id', 'product_id']);
+            $table->index(['category_id', 'product_id']);
         });
     }
 

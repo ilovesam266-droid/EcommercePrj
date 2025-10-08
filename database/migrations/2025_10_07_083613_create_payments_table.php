@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders')->onDelete('restrict');//restrict deletion if any order is using this payment
-            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');//restrict deletion if any user is using this payment
+            $table->integer('order_id');
+            $table->integer('user_id');
             $table->unsignedBigInteger('amount');
             $table->tinyInteger('payment_method')->comment("0: cash on delivery, 1: credit card, 2: e-wallet")->default(0);
-            $table->string('transaction_code', 100)->nullable();
+            $table->string('transaction_code', 100)->nullable()->unique();
             $table->tinyInteger('status')->comment("0: pending, 1: completed, 2: failed")->default(0);
             $table->json('metadata')->nullable();
             $table->timestamps();
+
+            $table->index('order_id');
+            $table->index('user_id');
+            $table->index('payment_method');
+            $table->index('status');
         });
     }
 

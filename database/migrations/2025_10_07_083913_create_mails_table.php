@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('mails', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('created_by')->constrained('users')->onDelete('set null')->nullable();
+            $table->integer('created_by');
             $table->string('title', 255);
             $table->text('body', 1000)->nullable();
             $table->json('variables')->nullable();
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
+            $table->timestamp('deleted_at')->nullable();
+            $table->index('created_by');
         });
     }
 

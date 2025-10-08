@@ -13,14 +13,20 @@ return new class extends Migration
     {
         Schema::create('product_variant_sizes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');//if product is deleted, all its variants are deleted
-            $table->foreignId('variant_size_id')->constrained('variant_sizes')->onDelete('restrict');//restrict deletion if any product is using this size
+            $table->integer('product_id');
+            $table->integer('variant_size_id');
             $table->string('sku', 100);
             $table->unsignedBigInt('price');
             $table->integer('total_sold')->default(0);
             $table->integer('stock')->default(0);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+            $table->unique(['product_id', 'variant_size_id']);
+            $table->index('product_id');
+            $table->index('variant_size_id');
+            $table->index('sku');
+            $table->index('price');
+            $table->index('stock');
         });
     }
 

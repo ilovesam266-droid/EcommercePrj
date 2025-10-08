@@ -18,6 +18,10 @@ return new class extends Migration
             $table->text('content');
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+
+            $table->index('blog_id');
+            $table->index('user_id');
+            $table->index('created_at');
         });
     }
 

@@ -19,6 +19,11 @@ return new class extends Migration
             $table->text('body')->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+
+            $table->unique(['product_id', 'user_id']);
+            $table->index('product_id');
+            $table->index('user_id');
+            $table->index('rating');
         });
     }
 

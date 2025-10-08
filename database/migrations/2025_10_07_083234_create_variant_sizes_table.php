@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('variant_sizes', function (Blueprint $table) {
             $table->id();
-            $table->integer('size');
+            $table->string('size', 15)->unique();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
         });

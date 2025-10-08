@@ -20,6 +20,11 @@ return new class extends Migration
             $table->string('error_message', 255)->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+
+            $table->unique(['user_id', 'mail_id']);
+            $table->index('user_id');
+            $table->index('mail_id');
+            $table->index('status');
         });
     }
 
