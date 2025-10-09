@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Order extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    public $fillable=[
+        'owner_by',
+        'total_amount',
+        'recipient_name',
+        'recipient_phone',
+        'province',
+        'district',
+        'ward',
+        'detailed_address',
+        'payment_method',
+        'status',
+    ];
+
+    public $casts=[
+        'total_amount'=>'integer',
+    ];
+
+    public function owner() : BelongsTo
+    {
+        return $this->belongsTo(User::class,'owner_by');
+    }
+    public function orderItems() : HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+    public function payment() : HasOne
+    {
+        return $this->hasOne(Payment::class);
+    }
+}

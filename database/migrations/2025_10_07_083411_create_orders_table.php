@@ -29,17 +29,17 @@ return new class extends Migration
             $table->tinyInteger('payment_status')->comment("0: pending, 1: paid, 2: failed")->default(0);
             $table->string('payment_transaction_code', 100)->nullable();
 
-            $table->text('customer_note', 500)->nullable();
-            $table->text('admin_note', 500)->nullable();
-            $table->text('cancellation_reason', 500)->nullable();
-            $table->text('failure_reason', 500)->nullable();
+            $table->text('customer_note')->nullable();
+            $table->text('admin_note')->nullable();
+            $table->text('cancellation_reason')->nullable();
+            $table->text('failure_reason')->nullable();
             $table->timestamp('confirmed_at')->nullable();
             $table->timestamp('shipping_at')->nullable();
             $table->timestamp('canceled_at')->nullable();
             $table->timestamp('failed_at')->nullable();
             $table->timestamp('done_at')->nullable();
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
 
             $table->index('owner_id');
             $table->index('status');

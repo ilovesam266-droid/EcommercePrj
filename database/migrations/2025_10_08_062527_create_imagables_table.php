@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        Schema::create('imagables', function (Blueprint $table) {
             $table->id();
-            $table->integer('created_by');
-            $table->string('title', 255);
-            $table->text('content', 1000);
+            $table->foreignId('image_id')->constrained('images')->onDelete('restrict');
+            $table->morphs('imageable');
             $table->timestamps();
             $table->softDeletes();
-            $table->index('created_by');
-            $table->index('created_at');
         });
     }
 
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('imagables');
     }
 };

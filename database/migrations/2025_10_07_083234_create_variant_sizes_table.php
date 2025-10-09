@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('variant_sizes', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 50)->unique();
             $table->string('size', 15)->unique();
+            $table->foreignId('created_by')->constrained('users')->onDelete('set null')->nullable();
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
         });
     }
 

@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_variant_size_id');
-            $table->integer('cart_id');
+            $table->unsignedBigInteger('product_variant_size_id')->index();
+            $table->unsignedBigInteger('cart_id')->index();
             $table->integer('quantity')->default(1);
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
-            
+            $table->softDeletes();
+
             $table->unique(['product_variant_size_id', 'cart_id']);
-            $table->index('cart_id');
-            $table->index('product_variant_size_id');
         });
     }
 

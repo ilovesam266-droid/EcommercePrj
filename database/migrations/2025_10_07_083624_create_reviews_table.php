@@ -18,7 +18,7 @@ return new class extends Migration
             $table->tinyInteger('rating')->comment("1: terrible, 2: bad, 3: average, 4: good, 5: excellent")->default(5);
             $table->text('body')->nullable();
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
 
             $table->unique(['product_id', 'user_id']);
             $table->index('product_id');

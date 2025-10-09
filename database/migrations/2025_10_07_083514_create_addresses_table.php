@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('province', 100);
             $table->string('district', 100);
             $table->string('ward', 100);
-            $table->string('specific_address', 255);
+            $table->string('detailed_address', 255);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

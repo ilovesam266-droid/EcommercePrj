@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('total_sold')->default(0);
             $table->integer('stock')->default(0);
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
             $table->unique(['product_id', 'variant_size_id']);
             $table->index('product_id');
             $table->index('variant_size_id');

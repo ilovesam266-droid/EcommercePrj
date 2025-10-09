@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');//if user is deleted, all its address_user records are deleted
             $table->boolean('is_default')->default(false);
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
 
             $table->unique(['address_id', 'user_id']);
             $table->index('user_id');

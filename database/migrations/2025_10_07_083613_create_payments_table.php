@@ -21,6 +21,7 @@ return new class extends Migration
             $table->tinyInteger('status')->comment("0: pending, 1: completed, 2: failed")->default(0);
             $table->json('metadata')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index('order_id');
             $table->index('user_id');

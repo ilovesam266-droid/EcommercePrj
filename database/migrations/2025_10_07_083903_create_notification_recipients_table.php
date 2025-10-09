@@ -19,6 +19,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(0)->comment('0: unread, 1: read');
             $table->string('error_message', 255)->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['user_id', 'notification_id']);
             $table->index('user_id');

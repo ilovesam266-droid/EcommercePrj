@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('category_id');
             $table->integer('product_id');
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
             $table->unique(['category_id', 'product_id']);
             $table->index(['category_id', 'product_id']);
         });

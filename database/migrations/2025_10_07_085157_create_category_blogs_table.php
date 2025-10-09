@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('category_id');
             $table->integer('blog_id');
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
 
             $table->unique(['category_id', 'blog_id']);
             $table->index(['category_id', 'blog_id']);

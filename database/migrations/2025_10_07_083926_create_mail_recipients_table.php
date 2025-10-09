@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('email', 100)->nullable();
             $table->tinyInteger('status')->default(0)->comment('0: unread, 1: read');
             $table->string('error_message', 255)->nullable();
+            $table->timestamp('sent_at')->nullable();
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
 
             $table->unique(['user_id', 'mail_id']);
             $table->index('user_id');

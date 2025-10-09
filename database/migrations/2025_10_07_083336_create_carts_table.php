@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('session_token',255)->nullable()->unique();//for guest users
             $table->enum('status',['active', 'expired'])->default('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

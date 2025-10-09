@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('body', 1000);
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
             $table->index('created_by');
             $table->index('scheduled_at');
         });

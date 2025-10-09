@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInt('unit_price');
             $table->integer('quantity')->default(1);
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
             $table->index('order_id');
             $table->index('product_variant_size_id');
         });
