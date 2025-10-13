@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\MailRecipientStatus;
 
 class MailRecipient extends Model
 {
@@ -16,7 +20,7 @@ class MailRecipient extends Model
         'error_message',
     ];
     protected $casts=[
-        'status'=>'integer',
+        'status'=> MailRecipientStatus::class,
         'sent_at'=>'datetime',
     ];
     public function mail() : BelongsTo

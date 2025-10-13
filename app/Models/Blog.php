@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Blog extends Model
 {
@@ -24,8 +25,8 @@ class Blog extends Model
     {
         return $this->hasMany(Comment::class,'blog_id');
     }
-    public function categories() : BelongsToMany
+    public function categories() : MorphToMany
     {
-        return $this->belongsToMany(Category::class,'blog_category','blog_id','category_id');
+        return $this->morphToMany(Categoryable::class,'categoryable');
     }
 }

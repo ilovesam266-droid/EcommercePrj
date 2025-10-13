@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\NotificationRecipientStatus;
 
 class NotificationRecipient extends Model
 {
@@ -18,7 +22,7 @@ class NotificationRecipient extends Model
         'sent_at',
     ];
     protected $casts=[
-        'status'=>'integer',
+        'status'=> NotificationRecipientStatus::class,
         'sent_at'=>'datetime',
     ];
     public function notification() : BelongsTo

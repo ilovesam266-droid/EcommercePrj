@@ -13,20 +13,17 @@ return new class extends Migration
     {
         Schema::create('product_variant_sizes', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id');
-            $table->integer('variant_size_id');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('variant_size_id')->constrained('variant_sizes')->onDelete('restrict');
             $table->string('sku', 100);
-            $table->unsignedBigInt('price');
+            $table->unsignedBigInteger('price');
             $table->integer('total_sold')->default(0);
             $table->integer('stock')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
             $table->unique(['product_id', 'variant_size_id']);
-            $table->index('product_id');
-            $table->index('variant_size_id');
-            $table->index('sku');
-            $table->index('price');
-            $table->index('stock');
+            $table->index('sku'); // Nếu tìm kiếm theo SKU
         });
     }
 

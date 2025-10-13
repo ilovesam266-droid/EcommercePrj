@@ -12,16 +12,16 @@
       </div>
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
         <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('admin.dashboard')?'active':''}}" href="{{ route('admin.dashboard') }}">
+          <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.dashboard') }}">
             <svg class="nav-icon">
               <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
             </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
         <li class="nav-title">Theme</li>
-        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.alert')?'active':''}}" href="{{ route('admin.alert') }}">
+        <li class="nav-item">
+          <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.user') }}">
             <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
-            </svg> Alerts</a>
-        </li>
+              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+            </svg> User</a></li>
       </ul>
       <div class="sidebar-footer border-top d-none d-md-flex">
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>

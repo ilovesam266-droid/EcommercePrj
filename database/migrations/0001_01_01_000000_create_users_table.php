@@ -1,8 +1,11 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
 
 return new class extends Migration
 {
@@ -21,7 +24,13 @@ return new class extends Migration
             $table->string('password', 100);
             $table->rememberToken();
             $table->date('birthday')->nullable();
-            $table->tinyInteger('role')->default(0)->comment('0=user, 1=admin');
+            $table->string('avatar')->nullable();
+            $table->enum('role', array_column(UserRole::cases(), 'value'))
+                ->default(UserRole::ADMIN->value)
+                ->comment('User roles: user, admin');
+            $table->enum('status', array_column(UserStatus::cases(), 'value'))
+                ->default(UserStatus::ACTIVE->value)
+                ->comment('Statuses: active, inactive');
             $table->timestamps();
         });
 

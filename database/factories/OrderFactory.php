@@ -21,7 +21,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         $name = fake()->unique()->word(3, true);
-        $phone = '0' . fake()->numberBetween(100000000, 999999999);
+        $phone = fake()->numerify('0#########');
         $province = fake()->state();
         $district = fake()->city();
         $ward = fake()->citySuffix();

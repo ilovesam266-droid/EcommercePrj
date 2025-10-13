@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('size', 15)->unique();
-            $table->foreignId('created_by')->constrained('users')->onDelete('set null')->nullable();
+            $table->foreignId('created_by')->constrained('users')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

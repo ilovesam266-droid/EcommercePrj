@@ -6,7 +6,6 @@
             </svg>
           </button>
           <ul class="header-nav d-none d-lg-flex">
-            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
           </ul>
@@ -96,8 +95,9 @@
                 <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
                   <svg class="icon me-2">
                     <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
-                  </svg> Lock Account</a><a class="dropdown-item" href="#">
-                  <svg class="icon me-2">
+                  </svg> Lock Account</a>
+                  <a class="dropdown-item" href="{{ route('admin.logout') }}">
+                  <svg class="icon me-2" >
                     <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-account-logout') }}"></use>
                   </svg> Logout</a>
               </div>

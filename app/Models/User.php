@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -26,7 +29,9 @@ class User extends Authenticatable
         'email',
         'password',
         'birthday',
+        'avatar',
         'role',
+        'status',
     ];
 
     /**
@@ -47,11 +52,17 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'role' => UserRole::class,
+            'status' => UserStatus::class,
+            'birthday' => 'datetime',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
+    public function scopePublished(){
+        $this->where('created_at', '<=', Carbon::now());
+    }
     public function products() : HasMany
     {
         return $this->hasMany(Product::class,'created_by');
@@ -66,22 +77,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class,'owner_id');
     }
+
     public function addressUsers() : HasMany
     {
         return $this->hasMany(AddressUser::class,'user_id');
     }
-    public function categories() : HasMany
+
+    public function categories() : MorphToMany
     {
-        return $this->hasMany(Category::class,'created_by');
+        return $this->morphToMany(Categoryable::class,'categoryable');
     }
+
     public function payments() : HasMany
     {
         return $this->hasMany(Payment::class,'owner_id');
     }
+
     public function comments() : HasMany
     {
         return $this->hasMany(Comment::class,'user_id');
     }
+
     public function mails() : HasMany
     {
         return $this->hasMany(Mail::class,'user_id');
@@ -90,14 +106,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(MailRecipient::class,'user_id');
     }
+
     public function notifications() : HasMany
     {
         return $this->hasMany(Notification::class,'user_id');
     }
+
     public function notificationrecipients() : HasMany
     {
         return $this->hasMany(NotificationRecipient::class,'user_id');
     }
+
     public function reviews() : HasMany
     {
         return $this->hasMany(Review::class,'user_id');

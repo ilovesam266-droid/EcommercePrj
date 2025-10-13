@@ -14,7 +14,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>@yield('title', 'ecommercePrj')</title>
+    <title>{{ $title??'Page Title'}}</title>
     <!-- Icons-->
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/favicon/android-icon-192x192.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/favicon/favicon-32x32.png') }}">
@@ -27,13 +27,14 @@
     <!-- Vendors styles-->
     <link rel="stylesheet" href="{{ asset('vendors/simplebar/css/simplebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/vendors/simplebar.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/coreui.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('assets/css/coreui.min.css') }}"> --}}
     <!-- Main styles for this application-->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <!-- We use those styles to show code examples, you should remove them in your application.-->
     <link href="{{ asset('css/examples.css') }}" rel="stylesheet">
     <script src="{{ asset('js/config.js') }}"></script>
     <script src="{{ asset('js/color-modes.js') }}"></script>
+    @livewireStyles()
   </head>
   <body>
     @include('admin.partials.sidebar')
@@ -41,12 +42,14 @@
         @include('admin.partials.header')
       <div class="body flex-grow-1">
         <div class="container-lg px-4">
-            @yield('content')
+            {{ $slot }}
 
         </div>
       </div>
     @include('admin.partials.footer')
     </div>
+    @livewire('component.alert')
+    @livewireScripts()
     <!-- CoreUI and necessary plugins-->
     <script src="{{ asset('vendors/@coreui/coreui/js/coreui.bundle.min.js') }}"></script>
     <script src="{{ asset('vendors/simplebar/js/simplebar.min.js') }}"></script>

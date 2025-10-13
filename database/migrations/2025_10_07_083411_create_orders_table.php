@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\OrderStatus;
 
 return new class extends Migration
 {
@@ -13,8 +14,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->constrained('users')->onDelete('restrict');//if user is deleted, all his orders are deleted
-            $table->integer('status')->comment("0: pending, 1: confirmed, 2: shipping, 3: buyer cancel, 4: admin cancel, 5: failed, 6: done")->default(0);
+            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
+            $table->enum('status', array_column(OrderStatus::cases(), 'value'))
+            ->default(OrderStatus::PENDING->value)
+            ->comment('statuses: pending, confirmed, shipping, canceled, failed, done');
             $table->unsignedBigInteger('total_amount')->default(0);
             $table->unsignedBigInteger('shipping_fee')->default(0);
             $table->string('recipient_name', 100);
@@ -23,7 +26,6 @@ return new class extends Migration
             $table->string('district', 100);
             $table->string('ward', 100);
             $table->string('detailed_address', 255);
-            $table->unsignedBigInteger('shipping_fee')->default(0);
 
             $table->tinyInteger('payment_method')->comment("0: cash on delivery, 1: credit card, 2: e-wallet")->default(0);
             $table->tinyInteger('payment_status')->comment("0: pending, 1: paid, 2: failed")->default(0);
@@ -41,10 +43,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index('owner_id');
-            $table->index('status');
-            $table->index('payment_status');
-            $table->index('created_at');
+            $table->index(['owner_id', 'status', 'created_at']);
         });
     }
 

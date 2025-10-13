@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\OrderStatus;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
@@ -23,6 +26,8 @@ class Order extends Model
 
     public $casts=[
         'total_amount'=>'integer',
+        'status'=>OrderStatus::class,
+        'owner_by'=>'integer',
     ];
 
     public function owner() : BelongsTo

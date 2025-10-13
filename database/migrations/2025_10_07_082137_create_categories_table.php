@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('slug', 100);
-            $table->foreignId('created_by')->constrained('users')->onDelete('set null');//set null if user who created this category is deleted
+            $table->foreignId('created_by')->constrained('users')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

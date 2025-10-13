@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
-            $table->integer('created_by');
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->string('title', 255);
             $table->text('content', 1000);
             $table->timestamps();
             $table->softDeletes();
-            $table->index('created_by');
-            $table->index('created_at');
         });
     }
 

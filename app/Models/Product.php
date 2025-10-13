@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Enums\ProductStatus;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Product extends Model
 {
@@ -24,7 +27,7 @@ class Product extends Model
 
     protected $casts = [
         'created_by' => 'integer',
-        'status' => 'string',
+        'status' => ProductStatus::class,
     ];
 
     public function creator(): BelongsTo
@@ -32,11 +35,16 @@ class Product extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function categories() : BelongsToMany
+    public function categories() : MorphToMany
     {
-        return $this->belongsToMany(Category::class, 'category_products', 'product_id', 'category_id');
+        return $this->morphToMany(Categoryable::class, 'categoryable');
     }
-    
+
+    public function images() : MorphToMany
+    {
+        return $this->morphToMany(Imageable::class, 'imageable');
+    }
+
     protected static function booted()
     {
         static::creating(function ($product) {

@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->integer('created_by');
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->string('title', 255);
             $table->text('body', 1000);
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->index('created_by');
-            $table->index('scheduled_at');
         });
     }
 

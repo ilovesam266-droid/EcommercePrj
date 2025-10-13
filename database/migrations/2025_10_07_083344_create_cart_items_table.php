@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_variant_size_id')->index();
+            $table->foreignId('product_variant_size_id')->constrained('product_variant_sizes')->onDelete('restrict');
             $table->unsignedBigInteger('cart_id')->index();
             $table->integer('quantity')->default(1);
             $table->timestamps();

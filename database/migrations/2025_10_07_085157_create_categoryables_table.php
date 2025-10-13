@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('category_products', function (Blueprint $table) {
+        Schema::create('categoryables', function (Blueprint $table) {
             $table->id();
-            $table->integer('category_id');
-            $table->integer('product_id');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
+            $table->morphs('categoryable');
             $table->timestamps();
             $table->softDeletes();
-            $table->unique(['category_id', 'product_id']);
-            $table->index(['category_id', 'product_id']);
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('category_products');
+        Schema::dropIfExists('category_blogs');
     }
 };

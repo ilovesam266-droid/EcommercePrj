@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->integer('product_variant_size_id');
-            $table->unsignedBigInt('unit_price');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('product_variant_size_id')->constrained('product_variant_sizes')->onDelete('restrict');
+            $table->unsignedBigInteger('unit_price');
             $table->integer('quantity')->default(1);
             $table->timestamps();
             $table->softDeletes();
-            $table->index('order_id');
-            $table->index('product_variant_size_id');
         });
     }
 

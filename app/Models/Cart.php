@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\CartStatus;
 
 class Cart extends Model
 {
@@ -18,7 +19,7 @@ class Cart extends Model
     ];
     protected $casts=[
         'owner_id'=>'integer',
-        'status'=>'string',
+        'status'=>CartStatus::class,
     ];
     public function owner() : BelongsTo
     {

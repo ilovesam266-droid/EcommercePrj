@@ -11,12 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('imagables', function (Blueprint $table) {
+        Schema::create('imageables', function (Blueprint $table) {
             $table->id();
             $table->foreignId('image_id')->constrained('images')->onDelete('restrict');
+            $table->boolean('is_primary')->default(false);// 0: not primary, 1: primary
+            $table->integer('order_of_images')->nullable();
             $table->morphs('imageable');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['imageable_type', 'imageable_id', 'is_primary']);
+            $table->index(['imageable_type', 'imageable_id', 'order_of_images']);
         });
     }
 
