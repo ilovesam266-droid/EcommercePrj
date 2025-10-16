@@ -1,5 +1,9 @@
 <div class="p-4 bg-white rounded shadow">
-
+    @if (session()->has('message'))
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
     <div class="filter-card p-4">
             <div class="row g-3">
                 <div class="col-md-4">
@@ -60,7 +64,7 @@
     <div class="table-responsive">
         <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-secondary">User List</h5>
-                <button class="btn btn-secondary">
+                <button class="btn btn-secondary" wire:click="openCreateModal">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -124,9 +128,9 @@
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Create</a>
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item text-danger" href="#">Delete</a></div>
+                                    <a class="dropdown-item" wire:click="openEditModal({{ $user->id }})">Edit</a>
+                                    <a class="dropdown-item text-danger" wire:click="deleteUser({{ $user->id }})"
+                                        wire:confirm="Are you sure you want to delete this user">Delete</a></div>
                             </div>
                         </td>
                     </tr>
@@ -137,7 +141,40 @@
                 @endforelse
             </tbody>
         </table>
+        @if ($showCreateModal)
+        <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tạo Người dùng mới</h5>
+                        <button type="button" class="btn-close" wire:click="hideCreateModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <livewire:Admin.User.create-user />
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @if ($showEditModal && $editingUserId)
+        <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chỉnh sửa Người dùng</h5>
+                        <button type="button" class="btn-close" wire:click="closeEditModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{-- Nhúng component EditUser và truyền ID người dùng --}}
+                        <livewire:Admin.User.edit-user :user-id="$editingUserId" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
+
 
     <div class="mt-4">
         {{ $this->users->onEachSide(1)->links() }}

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Livewire\Dashboard;
 use App\Livewire\Admin\Users;
+use App\Livewire\Admin\User\CreateUser;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,4 +29,5 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/user', Users::class)->name('user');
+    Route::post('/user/create', CreateUser::class)->name('create_user');
 });

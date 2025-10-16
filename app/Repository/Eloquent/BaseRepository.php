@@ -63,7 +63,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         $query = $this->query($relations, $withTrashed);
         //if input is id <integer>
         if (is_int($criteria)){
-            return $query->find($criteria)->first();
+            return $query->find($criteria);
         }
 
         $this->buildCriteria($query, $criteria);
@@ -84,9 +84,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
             return null;
         }
 
-        $model->update($data);
-
-        return $model;
+        return $model->update($data);
     }
 
     public function delete(int $id, bool $forceDelete = false)
