@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
 
 class User extends Authenticatable
@@ -60,9 +61,34 @@ class User extends Authenticatable
         ];
     }
 
+    protected function fullname() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $Attribute) => ucfirst($Attribute['first_name'].' '.$Attribute['last_name'])
+        );
+    }
+
+    protected function first_name() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => ucfirst($value),
+            set: fn($value) => strtolower($value),
+        );
+    }
+    protected function last_name() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => ucfirst($value),
+            set: fn($value) => strtolower($value),
+        );
+    }
     public function scopePublished(){
         $this->where('created_at', '<=', Carbon::now());
     }
+    public function scopeSearch(){
+        $this->where('username');
+    }
+
     public function products() : HasMany
     {
         return $this->hasMany(Product::class,'created_by');

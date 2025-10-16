@@ -17,17 +17,17 @@ class UserSeeder extends Seeder
 
     public function run(): void
     {
-        User::create([
-        'first_name' => 'Huy',
-        'last_name' => 'Mai',
-        'username' => 'huy',
-        'email' => 'admin@email.com',
-        'password' => Hash::make('12345'),
-        'birthday' => fake()->date('Y-m-d','-20 years'),
-        'avatar'     => "https://i.pravatar.cc/150?u={huy}",
-        'role' => UserRole::ADMIN,
-        'status' => UserStatus::ACTIVE,
-    ]);
-        // User::factory()->count(10)->create();
+    //     User::create([
+    //     'first_name' => 'Huy',
+    //     'last_name' => 'Mai',
+    //     'username' => 'huy',
+    //     'email' => 'admin@email.com',
+    //     'password' => Hash::make('12345'),
+    //     'birthday' => fake()->date('Y-m-d','-20 years'),
+    //     'avatar'     => "https://i.pravatar.cc/150?u={huy}",
+    //     'role' => UserRole::ADMIN,
+    //     'status' => UserStatus::ACTIVE,
+    // ]);
+        User::factory()->count(10)->create();
     }
 }

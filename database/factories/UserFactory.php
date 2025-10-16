@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'last_name' => $last_name,
             'username' => $username,
             'birthday' => fake()->optional()->date('Y-m-d', '-20 years'),
-            'avatar' => fake()->image('storage/app/public/img/avatars', 150, 150, null, false),
+            'avatar' => "https://i.pravatar.cc/150?u={$username}",
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
