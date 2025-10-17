@@ -28,15 +28,15 @@
 
                     <div class="mt-2">
                         @if ($avatar)
-                            <p>Xem trước Avatar mới:</p>
+                            <p>Preview new avatar:</p>
                             <img src="{{ $avatar->temporaryUrl() }}" class="img-thumbnail"
                                 style="max-width: 150px; max-height: 150px;">
                         @elseif ($currentAvatar)
-                            <p>Avatar hiện tại:</p>
-                            <img src="{{ Storage::url($currentAvatar) }}" class="img-thumbnail"
+                            <p>Current Avatar:</p>
+                            <img src="{{ asset('storage/'.$currentAvatar) }}" class="img-thumbnail"
                                 style="max-width: 150px; max-height: 150px;">
                         @else
-                            <p>Không có Avatar.</p>
+                            <p>Not Exist Avatar.</p>
                             <img src="https://via.placeholder.com/150" class="img-thumbnail"
                                 style="max-width: 150px; max-height: 150px;">
                         @endif

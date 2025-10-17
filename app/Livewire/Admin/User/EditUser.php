@@ -4,7 +4,6 @@ namespace App\Livewire\Admin\User;
 
 use App\Repository\Constracts\UserRepositoryInterface;
 use Livewire\Component;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
 use App\Http\Requests\UserRequest;
@@ -33,18 +32,14 @@ class EditUser extends Component
         $this->userRepository = $repository;
     }
 
+    //custom rule for EditUser
     public function rules()
     {
-        $baseRules = (new UserRequest())->rules();
-        $updateRules = [
-            'username' => ['required', 'string', 'max:125', Rule::unique('users', 'username')->ignore($this->userId)],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->userId)],
-        ];
-        return Arr::except(array_merge($baseRules, $updateRules), ['password']);
+        return (new UserRequest()->rules('edit', $this->userId));
     }
     public function messages()
     {
-        return Arr::except((new UserRequest())->messages(), ['password']);
+        return (new UserRequest()->messages());
     }
 
 
@@ -66,7 +61,8 @@ class EditUser extends Component
             $this->birthday = $user->birthday;
             $this->role = $user->role->value;
             $this->status = $user->status->value;
-        } else {
+        }
+        else {
             session()->flash('error', 'Không tìm thấy người dùng để chỉnh sửa.');
             $this->dispatch('userUpdated'); // Close modal if user not exists
         }
@@ -87,9 +83,9 @@ class EditUser extends Component
         ];
 
         if ($this->avatar) {
-            if ($this->currentAvatar && Storage::disk('public')->exists($this->currentAvatar)) {
-                Storage::disk('public')->delete($this->currentAvatar);
-            }
+                if ($this->currentAvatar && Storage::disk('public')->exists($this->currentAvatar)) {
+                    Storage::disk('public')->delete($this->currentAvatar);
+                }
             $avatar = $this->avatar->store('avatars', 'public');
             $userData['avatar'] = $avatar;
         }

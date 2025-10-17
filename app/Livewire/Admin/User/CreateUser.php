@@ -24,12 +24,8 @@ class CreateUser extends Component
     public $birthday;
     public $avatar;
     public $role = 'user';
-    public $status = 'inactive';
+    public $status = 'active';
 
-
-    public function mount(){
-
-    }
 
     public function boot(UserRepositoryInterface $repository){
         $this->userRepository = $repository;

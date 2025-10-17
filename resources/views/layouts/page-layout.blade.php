@@ -48,7 +48,6 @@
       </div>
     @include('admin.partials.footer')
     </div>
-    @livewire('component.alert')
     @livewireScripts()
     <!-- CoreUI and necessary plugins-->
     <script src="{{ asset('vendors/@coreui/coreui/js/coreui.bundle.min.js') }}"></script>

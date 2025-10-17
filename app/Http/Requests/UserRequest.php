@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -20,19 +21,27 @@ class UserRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(string $type = 'create', $id = null): array
     {
-        return [
+        $rules = [
             'first_name' => ['required', 'string', 'max:125'],
             'last_name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:125', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:5', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'avatar' => ['nullable', 'image', 'max:1024'],
-            'birthday' => ['nullable', 'date'],
-            'status' => ['required', 'string', Rule::in(['active', 'inactive'])],
-            'role' => ['required', 'string', Rule::in(['admin', 'user'])],
+            'birthday' => ['nullable', 'date', 'before:today'],
+            'status' => ['required', 'string', 'in:active,inactive'],
+            'role' => ['required', 'string', Rule::in(UserRole::cases())],
         ];
+
+        if($type !== 'create' && $id){
+            $rules['username'] = ['required', 'string', 'max:125', 'unique:users,username,'.$id];
+            $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$id];
+            unset($rules['password']);
+        }
+
+        return $rules;
     }
 
     public function messages()

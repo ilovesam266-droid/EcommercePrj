@@ -98,6 +98,7 @@
                         </td>
                         <td class="text-center">
                             <div class="avatar avatar-md"><img class="avatar-img" src="{{ $user->avatar }}"
+                                {{-- src="{{ asset('storage/'.$user->avatar) }}" --}}
                                     alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                         </td>
                         <td>
