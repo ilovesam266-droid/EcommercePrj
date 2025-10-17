@@ -5,7 +5,7 @@
         </div>
     @endif
     <div class="filter-card p-4">
-            <div class="row g-3">
+            {{-- <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label fw-semibold text-secondary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
@@ -56,8 +56,9 @@
                         Search
                     </button>
                 </div>
-            </div>
-        </div>
+            </div> --}}
+            <livewire:admin.components.search-filter :filterConfigs="$userFiltersConfig" placeholderSearch="Search by name" />
+    </div>
 
 
     <!-- User table -->
