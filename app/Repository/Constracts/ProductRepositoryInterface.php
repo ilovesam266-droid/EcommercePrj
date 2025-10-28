@@ -2,7 +2,7 @@
 
 namespace App\Repository\Constracts;
 
-interface ProductRepositoryInterface
+interface ProductRepositoryInterface extends BaseRepositoryInterface
 {
     //
 }

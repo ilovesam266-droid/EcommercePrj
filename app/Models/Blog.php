@@ -27,6 +27,12 @@ class Blog extends Model
     }
     public function categories() : MorphToMany
     {
-        return $this->morphToMany(Categoryable::class,'categoryable');
+        return $this->morphToMany(Category::class,'categoryable');
+    }
+    public function images() : MorphToMany
+    {
+        return $this->morphToMany(Image::class, 'imageable')
+                    ->withPivot('is_primary', 'order_of_images')
+                    ->withTimestamps();
     }
 }

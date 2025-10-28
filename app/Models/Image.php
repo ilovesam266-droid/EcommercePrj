@@ -10,11 +10,30 @@ class Image extends Model
 {
     use HasFactory, softDeletes;
     protected $fillable = [
+        'created_by',
         'url',
+        'image_name',
+    ];
+    protected $casts = [
+        'created_by' => 'integer',
     ];
 
-    public function images()
+    public function products()
     {
-        return $this->morphedToMany(Imageable::class, 'imageable');
+        return $this->morphedByMany(Product::class, 'imageable')
+                    ->withPivot('is_primary', 'order_of_images')
+                    ->withTimestamps();
+    }
+
+    public function blogs()
+    {
+        return $this->morphedByMany(Blog::class, 'imageable')
+                    ->withPivot('is_primary', 'order_of_images')
+                    ->withTimestamps();
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

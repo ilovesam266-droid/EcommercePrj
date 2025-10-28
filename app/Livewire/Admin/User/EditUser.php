@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\User;
 
+use App\Helpers\ImageUpload;
 use App\Repository\Constracts\UserRepositoryInterface;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -32,7 +33,6 @@ class EditUser extends Component
         $this->userRepository = $repository;
     }
 
-    //custom rule for EditUser
     public function rules()
     {
         return (new UserRequest()->rules('edit', $this->userId));
@@ -41,7 +41,6 @@ class EditUser extends Component
     {
         return (new UserRequest()->messages());
     }
-
 
     public function mount($userId)
     {
@@ -53,14 +52,16 @@ class EditUser extends Component
     {
         $user = $this->userRepository->find($this->userId);
         if ($user) {
-            $this->first_name = $user->first_name;
-            $this->last_name = $user->last_name;
-            $this->username = $user->username;
-            $this->email = $user->email;
-            $this->currentAvatar = $user->avatar;
-            $this->birthday = $user->birthday;
-            $this->role = $user->role->value;
-            $this->status = $user->status->value;
+            $this->fill($user->only([
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'birthday',
+        ]));
+        $this->currentAvatar = $user->avatar;
+        $this->role = $user->role->value;
+        $this->status = $user->status->value;
         }
         else {
             session()->flash('error', 'Không tìm thấy người dùng để chỉnh sửa.');
@@ -71,7 +72,6 @@ class EditUser extends Component
     public function updateUser()
     {
         $this->validate();
-
         $userData = [
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -83,10 +83,8 @@ class EditUser extends Component
         ];
 
         if ($this->avatar) {
-                if ($this->currentAvatar && Storage::disk('public')->exists($this->currentAvatar)) {
-                    Storage::disk('public')->delete($this->currentAvatar);
-                }
-            $avatar = $this->avatar->store('avatars', 'public');
+            ImageUpload::delete($this->currentAvatar);
+            $avatar = ImageUpload::upload($this->avatar, 'avatars', 'public');
             $userData['avatar'] = $avatar;
         }
 

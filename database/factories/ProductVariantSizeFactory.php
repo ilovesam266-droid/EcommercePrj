@@ -20,13 +20,13 @@ class ProductVariantSizeFactory extends Factory
     public function definition(): array
     {
         $product = Product::inRandomOrder()->first();
-        $variant = VariantSize::inRandomOrder()->first();
+        $variant = fake()->randomLetter();
 
-        $sku = strtoupper(Str::slug($product?->name ?? 'product')) . '-' . ($variant?->size ?? 0);
+        $sku = strtoupper(Str::slug($product?->name ?? 'product')) . '-' . ($variant);
 
         return [
             'product_id' => $product?->id ?? 1,
-            'variant_size_id' => $variant?->id ?? 1,
+            'variant_size' => $variant,
             'sku' => $sku,
             'price' => $this->faker->numberBetween(100000, 1000000),
             'total_sold' => $this->faker->numberBetween(0, 500),

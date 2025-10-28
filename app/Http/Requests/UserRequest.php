@@ -29,7 +29,7 @@ class UserRequest extends FormRequest
             'username' => ['required', 'string', 'max:125', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'avatar' => ['nullable', 'image', 'max:1024'],
+            'avatar' => ['nullable', 'image', 'max:2560'],
             'birthday' => ['nullable', 'date', 'before:today'],
             'status' => ['required', 'string', 'in:active,inactive'],
             'role' => ['required', 'string', Rule::in(UserRole::cases())],
@@ -72,7 +72,7 @@ class UserRequest extends FormRequest
             'password.confirmed' => 'Password confirmation does not match.',
 
             'avatar.image' => 'Please upload a valid image file (jpg, png, jpeg, etc).',
-            'avatar.max' => 'Your avatar must be smaller than 1MB.',
+            'avatar.max' => 'Your avatar must be smaller than 2MB.',
 
             'birthday.date' => 'Birthday must be a valid date.',
 

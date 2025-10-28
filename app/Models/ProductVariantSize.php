@@ -6,14 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class ProductVariantSize extends Model
 {
     use HasFactory, SoftDeletes;
 
-   protected $fillable = [
+    protected $fillable = [
         'product_id',
-        'variant_size_id',
+        'variant_size',
         'sku',
         'price',
         'total_sold',
@@ -26,11 +27,6 @@ class ProductVariantSize extends Model
         'stock' => 'integer',
     ];
 
-    public function variantSize() : BelongsTo
-    {
-        return $this->belongsTo(VariantSize::class, 'variant_size_id');
-    }
-
     public function product() : BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
@@ -42,9 +38,9 @@ class ProductVariantSize extends Model
 
         static::creating(function ($productVariantSize) {
             $product = $productVariantSize->product;
-            $variantSize = $productVariantSize->variantSize;
+            $variantSize = $productVariantSize->variant_size;
             if ($product && $variantSize && empty($productVariantSize->sku)) {
-                $productVariantSize->sku = $product->slug . '-' . strtoupper($variantSize->name);
+                $productVariantSize->sku = $product->slug . '-' . strtoupper($variantSize);
             }
         });
 

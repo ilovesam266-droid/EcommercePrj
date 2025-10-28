@@ -34,15 +34,21 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    public function variant_sizes()
+    {
+        return $this->hasMany(ProductVariantSize::class, 'product_id');
+    }
 
     public function categories() : MorphToMany
     {
-        return $this->morphToMany(Categoryable::class, 'categoryable');
+        return $this->morphToMany(Category::class, 'categoryable');
     }
 
     public function images() : MorphToMany
     {
-        return $this->morphToMany(Imageable::class, 'imageable');
+        return $this->morphToMany(Image::class, 'imageable')
+                    ->withPivot('is_primary', 'order_of_images')
+                    ->withTimestamps();
     }
 
     protected static function booted()

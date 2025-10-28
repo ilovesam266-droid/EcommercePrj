@@ -17,7 +17,8 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
     abstract public function getModel();
 
-    public function setModel(){
+    public function setModel()
+    {
         $this->model = app()->make($this->getModel());
     }
 
@@ -25,8 +26,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $query = $this->model->newQuery()->with($relations);
 
-        if($withTrashed && in_array(SoftDeletes::class, class_uses($this->model)))
-        {
+        if ($withTrashed && in_array(SoftDeletes::class, class_uses($this->model))) {
             $query->withTrashed();
         }
 
@@ -52,7 +52,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
      */
     protected function applySort(Builder $query, array $sort)
     {
-        foreach ($sort as $field => $direction){
+        foreach ($sort as $field => $direction) {
             $query->orderBy($field, strtolower($direction) === 'desc' ? 'desc' : 'asc');
         }
         return $query;
@@ -62,8 +62,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $query = $this->query($relations, $withTrashed);
         //if input is id <integer>
-        if (is_int($criteria)){
+        if (is_int($criteria)) {
             return $query->find($criteria);
+        }
+
+        if (is_array($criteria) && array_is_list($criteria)) {
+            return $query->whereIn('id', $criteria)->get();
         }
 
         $this->buildCriteria($query, $criteria);
@@ -80,22 +84,23 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $model = $this->find($criteria);
 
-        if(!$model){
+        if (!$model) {
             return null;
         }
 
-        return $model->update($data);
+        $model->update($data);
+        return $model;
     }
 
     public function delete(int $id, bool $forceDelete = false)
     {
         $model = $this->find($id, [], true);
 
-        if (!$model){
+        if (!$model) {
             return false;
         }
 
-        if ($forceDelete && in_array(SoftDeletes::class, class_uses($this->model))){
+        if ($forceDelete && in_array(SoftDeletes::class, class_uses($this->model))) {
             return $model->forceDelete();
         }
 
@@ -109,7 +114,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
         $this->buildCriteria($query, $criteria);
 
-        if ($forceDelete && in_array(SoftDeletes::class, class_uses($this->model))){
+        if ($forceDelete && in_array(SoftDeletes::class, class_uses($this->model))) {
             return $query->withTrashed()->forceDelete();
         }
 
@@ -117,9 +122,10 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $query->delete();
     }
 
-    public function restoreSoft(int|array|callable $criteria){
-        $model = $this->find($criteria,[],true);
-        if (!$model){
+    public function restoreSoft(int|array|callable $criteria)
+    {
+        $model = $this->find($criteria, [], true);
+        if (!$model) {
             return false;
         }
         if (in_array(SoftDeletes::class, class_uses($model)) && $model->trashed()) {
@@ -130,19 +136,20 @@ abstract class BaseRepository implements BaseRepositoryInterface
     //xử lý filter: buildCriteria để xử lý callback thành query, xử lý handleCriteria là xử lý giá trị truyền vào cho từng object, xử lý exists
     public function buildCriteria(Builder $query, mixed $criteria)
     {
-        if (is_callable($criteria)){
+        if (is_callable($criteria)) {
             $criteria($query);
             return $query;
         }
-        if (is_array($criteria)){
-            foreach ($criteria as $field => $value){
+        if (is_array($criteria)) {
+            foreach ($criteria as $field => $value) {
                 if ($value === '') continue;
                 $this->handleCriteria($query, $field, $value);
             }
         }
         return $query;
     }
-    public function handleCriteria(Builder $query, $field, $value){
+    public function handleCriteria(Builder $query, $field, $value)
+    {
         if (is_callable($value)) {
             $query->where(fn($q) => $value($q));
             return;

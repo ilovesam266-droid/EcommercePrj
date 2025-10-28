@@ -61,90 +61,97 @@ class User extends Authenticatable
         ];
     }
 
-    protected function fullname() : Attribute
+    protected function fullname(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $Attribute) => ucfirst($Attribute['first_name'].' '.$Attribute['last_name'])
+            get: fn($value, $Attribute) => ucfirst($Attribute['first_name'] . ' ' . $Attribute['last_name'])
         );
     }
 
-    protected function first_name() : Attribute
+    protected function first_name(): Attribute
     {
         return Attribute::make(
             get: fn($value) => ucfirst($value),
             set: fn($value) => strtolower($value),
         );
     }
-    protected function last_name() : Attribute
+    protected function last_name(): Attribute
     {
         return Attribute::make(
             get: fn($value) => ucfirst($value),
             set: fn($value) => strtolower($value),
         );
     }
-    public function scopePublished(){
+    public function scopePublished()
+    {
         $this->where('created_at', '<=', Carbon::now());
     }
-    public function scopeSearch(){
+    public function scopeSearch()
+    {
         $this->where('username');
     }
 
-    public function products() : HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(Product::class,'created_by');
+        return $this->hasMany(Product::class, 'created_by');
     }
 
-    public function carts() : HasMany
+    public function carts(): HasMany
     {
-        return $this->hasMany(Cart::class,'owner_id');
+        return $this->hasMany(Cart::class, 'owner_id');
     }
 
-    public function orders() : HasMany
+    public function orders(): HasMany
     {
-        return $this->hasMany(Order::class,'owner_id');
+        return $this->hasMany(Order::class, 'owner_id');
     }
 
-    public function addressUsers() : HasMany
+    public function addressUsers(): HasMany
     {
-        return $this->hasMany(AddressUser::class,'user_id');
+        return $this->hasMany(AddressUser::class, 'user_id');
     }
 
-    public function categories() : MorphToMany
+    public function categories(): MorphToMany
     {
-        return $this->morphToMany(Categoryable::class,'categoryable');
+        return $this->morphToMany(Categoryable::class, 'categoryable');
     }
 
-    public function payments() : HasMany
+    public function payments(): HasMany
     {
-        return $this->hasMany(Payment::class,'owner_id');
+        return $this->hasMany(Payment::class, 'owner_id');
     }
 
-    public function comments() : HasMany
+    public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class,'user_id');
+        return $this->hasMany(Comment::class, 'user_id');
     }
 
-    public function mails() : HasMany
+    public function mails(): HasMany
     {
-        return $this->hasMany(Mail::class,'user_id');
+        return $this->hasMany(Mail::class, 'user_id');
     }
-    public function mailrecipients() : HasMany
+    public function mailrecipients(): HasMany
     {
-        return $this->hasMany(MailRecipient::class,'user_id');
-    }
-
-    public function notifications() : HasMany
-    {
-        return $this->hasMany(Notification::class,'user_id');
+        return $this->hasMany(MailRecipient::class, 'user_id');
     }
 
-    public function notificationrecipients() : HasMany
+    public function notifications(): HasMany
     {
-        return $this->hasMany(NotificationRecipient::class,'user_id');
+        return $this->hasMany(Notification::class, 'user_id');
     }
 
-    public function reviews() : HasMany
+    public function notificationrecipients(): HasMany
     {
-        return $this->hasMany(Review::class,'user_id');
+        return $this->hasMany(NotificationRecipient::class, 'user_id');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
+    public function createdImages()
+    {
+        return $this->hasMany(Image::class, 'created_by');
     }
 }

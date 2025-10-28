@@ -34,7 +34,6 @@
     <link href="{{ asset('css/examples.css') }}" rel="stylesheet">
     <script src="{{ asset('js/config.js') }}"></script>
     <script src="{{ asset('js/color-modes.js') }}"></script>
-    @livewireStyles()
   </head>
   <body>
     @include('admin.partials.sidebar')
@@ -48,7 +47,7 @@
       </div>
     @include('admin.partials.footer')
     </div>
-    @livewireScripts()
+    @vite('resources/js/app.js')
     <!-- CoreUI and necessary plugins-->
     <script src="{{ asset('vendors/@coreui/coreui/js/coreui.bundle.min.js') }}"></script>
     <script src="{{ asset('vendors/simplebar/js/simplebar.min.js') }}"></script>

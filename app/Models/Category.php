@@ -31,12 +31,12 @@ class Category extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'category_products', 'category_id', 'product_id');
+        return $this->morphedByMany(Product::class, 'categoryable');
     }
 
     public function blogs()
     {
-        return $this->belongsToMany(Blog::class, 'blog_category', 'category_id', 'blog_id');
+        return $this->morphedByMany(Blog::class, 'categoryable');
     }
 
     public static function boot()

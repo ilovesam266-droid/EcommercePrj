@@ -5,7 +5,6 @@ namespace App\Livewire\Admin;
 use App\Repository\Constracts\UserRepositoryInterface;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
-use App\Models\User;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -17,24 +16,19 @@ class Users extends Component
 
     protected UserRepositoryInterface $userRepository;
 
+    public string $search = '';
     public array $filter = [
         'status' => '',
         'role' => '',
     ];
-
-    public string $search = '';
-
     public array $sort = ['created_at' => 'asc'];
-
     public int $perPage = 5;
 
     public bool $showCreateModal = false;
-
-    public $editingUserId = null;
-
     public bool $showEditModal = false;
 
-    public string $newStatus, $newRole;
+    // public string $newStatus, $newRole;
+    public $editingUserId = null;
 
     protected $listener = [
         'userCreated' => '$refresh',
@@ -48,23 +42,6 @@ class Users extends Component
     }
 
     //search & filter feature
-    // protected function buildUser()
-    // {
-    //     return function ($query) {
-    //         if (isset($this->filter) && $this->filter['status'] != '' || $this->filter['role'] != '') {
-    //             $this->userRepository->buildCriteria($query, $this->filter);
-    //         }
-
-    //         if (!empty($this->search)) {
-    //             $query->where(function ($q) {
-    //                 $q->where('first_name', 'like', '%' . $this->search . '%') // Use first_name
-    //                     ->orWhere('last_name', 'like', '%' . $this->search . '%')  // Use last_name
-    //                     ->orWhere('username', 'like', '%' . $this->search . '%') // Use username
-    //                     ->orWhere('email', 'like', '%' . $this->search . '%');
-    //             });
-    //         };
-    //     };
-    // }
     //fix to component search & filter
     #[On('searchPerformed')]
     public function updatedSearchTemp($searchTemp){

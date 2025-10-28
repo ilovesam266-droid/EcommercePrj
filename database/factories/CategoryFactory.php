@@ -19,13 +19,21 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->word(2, true);
+        $name = $this->faker->unique()->words(2, true);
+
         return [
-            'name'=> $name,
-            'slug'=> \Str::slug($name),
-            'created_by' => User::inRandomOrder()->first()?->id ?? 1,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'name' => ucfirst($name),
+            'slug' => Str::slug($name),
+            'created_by' => User::factory(),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterMaking(function (Category $category) {
+            if (empty($category->slug)) {
+                $category->slug = Str::slug($category->name);
+            }
+        });
     }
 }

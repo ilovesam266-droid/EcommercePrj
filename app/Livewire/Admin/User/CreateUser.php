@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\User;
 
+use App\Helpers\ImageUpload;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -14,6 +15,10 @@ class CreateUser extends Component
     use WithFileUploads;
 
     protected UserRepositoryInterface $userRepository;
+    public function boot(UserRepositoryInterface $repository)
+    {
+        $this->userRepository = $repository;
+    }
 
     public $first_name;
     public $last_name;
@@ -26,34 +31,32 @@ class CreateUser extends Component
     public $role = 'user';
     public $status = 'active';
 
-
-    public function boot(UserRepositoryInterface $repository){
-        $this->userRepository = $repository;
-    }
-
-    public function rules(){
+    public function rules()
+    {
         return (new UserRequest()->rules());
     }
-    public function messages(){
+    public function messages()
+    {
         return (new UserRequest()->messages());
     }
 
-    public function createUser(){
+    public function createUser()
+    {
         $this->validate();
 
-        $userData = [
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'username' => $this->username,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'birthday' => $this->birthday,
-            'role' => $this->role,
-            'status' => $this->status,
-        ];
+        $userData = $this->only([
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'birthday',
+            'role',
+            'status'
+        ]);
+        $userData['password'] = Hash::make($this->password);
 
-        if ($this->avatar){
-            $avatarPath = $this->avatar->store('avatars', 'public');
+        if ($this->avatar) {
+            $avatarPath = ImageUpload::upload($this->avatar, 'avatars', 'public');
             $userData['avatar'] = $avatarPath;
         }
 

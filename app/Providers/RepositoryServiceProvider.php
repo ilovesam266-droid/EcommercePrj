@@ -2,7 +2,15 @@
 
 namespace App\Providers;
 
+use App\Repository\Constracts\CategoryRepositoryInterface;
+use App\Repository\Constracts\ImageRepositoryInterface;
+use App\Repository\Constracts\ProductRepositoryInterface;
+use App\Repository\Constracts\ProductVariantSizeRepositoryInterface;
 use App\Repository\Constracts\UserRepositoryInterface;
+use App\Repository\Eloquent\CategoryRepository;
+use App\Repository\Eloquent\ImageRepository;
+use App\Repository\Eloquent\ProductRepository;
+use App\Repository\Eloquent\ProductVariantSizeRepository;
 use App\Repository\Eloquent\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -10,6 +18,10 @@ class RepositoryServiceProvider extends ServiceProvider
 {
     public $bindings = [
         UserRepositoryInterface::class => UserRepository::class,
+        ImageRepositoryInterface::class => ImageRepository::class,
+        ProductRepositoryInterface::class => ProductRepository::class,
+        CategoryRepositoryInterface::class => CategoryRepository::class,
+        ProductVariantSizeRepositoryInterface::class => ProductVariantSizeRepository::class,
     ];
 
     /**
