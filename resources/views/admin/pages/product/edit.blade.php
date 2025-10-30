@@ -126,10 +126,8 @@
                     </div>
                 </div>
             </div>
-
             <!-- Bảng Biến Thể -->
             <livewire:admin.product-variants :product_id="$productId" />
-
         </div>
     </div>
     @if ($openImageModal)

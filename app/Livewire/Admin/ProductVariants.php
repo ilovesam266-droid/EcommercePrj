@@ -16,20 +16,18 @@ class ProductVariants extends Component
 
     protected ProductVariantSizeRepositoryInterface $productVariantRepository;
     protected ProductRepositoryInterface $productRepository;
+    public int $perPage = 5;
+    public array $sort = ['created_at' => 'asc'];
+    public $productId = null;
+    public $productVariantId = null;
+    public bool $openCreateVariantModal = false;
+    public bool $openEditVariantModal = false;
+
     public function boot(ProductVariantSizeRepositoryInterface $product_variant_size_repository, ProductRepositoryInterface $product_repository)
     {
         $this->productRepository = $product_repository;
         $this->productVariantRepository = $product_variant_size_repository;
     }
-
-    public int $perPage = 5;
-    public array $sort = ['created_at' => 'asc'];
-
-    public $productId = null;
-    public $productVariantId = null;
-
-    public bool $openCreateVariantModal = false;
-    public bool $openEditVariantModal = false;
 
     public function mount($productId)
     {

@@ -6,6 +6,9 @@ use App\Livewire\Dashboard;
 use App\Livewire\Admin\Users;
 use App\Livewire\Admin\User\CreateUser;
 use App\Livewire\Admin\Images;
+use App\Livewire\Admin\Order\EditOrder;
+use App\Livewire\Admin\Order\CreateOrder;
+use App\Livewire\Admin\Orders;
 use App\Livewire\Admin\Product\CreateProduct;
 use App\Livewire\Admin\Products;
 use App\Livewire\Admin\Product\EditProduct;
@@ -38,4 +41,6 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/products', Products::class)->name('products');
     Route::get('/products/create', CreateProduct::class)->name('create_product');
     Route::get('/products/{editingProductId}/edit', EditProduct::class)->name('edit_product');
+    Route::get('/orders', Orders::class)->name('orders');
+    Route::get('/orders/create', CreateOrder::class)->name('create_order');
 });

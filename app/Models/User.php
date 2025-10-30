@@ -111,9 +111,9 @@ class User extends Authenticatable
         return $this->hasMany(AddressUser::class, 'user_id');
     }
 
-    public function categories(): MorphToMany
+    public function categories()
     {
-        return $this->morphToMany(Categoryable::class, 'categoryable');
+        return $this->morphMany(Category::class, 'categoryable');
     }
 
     public function payments(): HasMany

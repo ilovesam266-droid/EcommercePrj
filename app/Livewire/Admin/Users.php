@@ -15,7 +15,6 @@ class Users extends Component
     use WithPagination;
 
     protected UserRepositoryInterface $userRepository;
-
     public string $search = '';
     public array $filter = [
         'status' => '',
@@ -23,11 +22,8 @@ class Users extends Component
     ];
     public array $sort = ['created_at' => 'asc'];
     public int $perPage = 5;
-
     public bool $showCreateModal = false;
     public bool $showEditModal = false;
-
-    // public string $newStatus, $newRole;
     public $editingUserId = null;
 
     protected $listener = [
@@ -44,30 +40,20 @@ class Users extends Component
     //search & filter feature
     //fix to component search & filter
     #[On('searchPerformed')]
-    public function updatedSearchTemp($searchTemp){
+    public function updatedSearchTemp($searchTemp)
+    {
         $this->search = $searchTemp;
     }
 
     #[On('filterPerformed')]
-    public function updatedSelectedFilter($selectedFilter){
+    public function updatedSelectedFilter($selectedFilter)
+    {
         $this->filter = array_merge($this->filter, $selectedFilter);
     }
 
-    public function getFilteredUsers(){
-        return function ($query) {
-            if (isset($this->filter) && $this->filter['status'] != '' || $this->filter['role'] != '') {
-                $this->userRepository->buildCriteria($query, $this->filter);
-            }
-
-            if (!empty($this->search)) {
-                $query->where(function ($q) {
-                    $q->where('first_name', 'like', '%' . $this->search . '%') // Use first_name
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%')  // Use last_name
-                        ->orWhere('username', 'like', '%' . $this->search . '%') // Use username
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
-                });
-            };
-        };
+    public function getFilteredUsers()
+    {
+        return $this->userRepository->getFilteredUsers($this->filter, $this->search);
     }
 
     //after search
@@ -99,7 +85,8 @@ class Users extends Component
         $this->reset(['editingUserId']); // Xóa ID người dùng đang chỉnh sửa
     }
 
-    public function deleteUser($userId){
+    public function deleteUser($userId)
+    {
         return $this->userRepository->delete($userId);
     }
 
@@ -123,11 +110,13 @@ class Users extends Component
         $userFiltersConfig = [
             ['key' => 'role', 'placeholder' => 'Filter by Role', 'options' => [
                 ['label' => 'Admin', 'value' => 'admin'],
-                ['label' => 'User', 'value' => 'user']]],
+                ['label' => 'User', 'value' => 'user']
+            ]],
             ['key' => 'status', 'placeholder' => 'Filter by Status', 'options' => [
                 ['label' => 'Active', 'value' => 'active'],
                 ['label' => 'Inactive', 'value' => 'inactive'],
-            ]],];
+            ]],
+        ];
         return view('admin.pages.user', compact('userFiltersConfig'));
     }
 }

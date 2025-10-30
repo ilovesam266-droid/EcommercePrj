@@ -9,5 +9,4 @@ enum PaymentMethod : string
     case CREDITCARD = 'credit card';
     case PAYPAL = 'paypal';
     case BANKTRANSFER = 'bank transfer';
-
 }

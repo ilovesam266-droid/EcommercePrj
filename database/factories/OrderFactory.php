@@ -38,7 +38,7 @@ class OrderFactory extends Factory
             'payment_method' => $this->faker->randomElement([0, 1, 2]),
             'payment_status' => $this->faker->randomElement([0, 1]),
             'payment_transaction_code' => $this->faker->uuid(),
-             'status' => $this->faker->randomElement(OrderStatus::cases() ?? ['pending', 'confirmed', 'shipped', 'delivered']),
+            'status' => $this->faker->randomElement(OrderStatus::cases() ?? ['pending', 'confirmed', 'shipped', 'delivered']),
             'customer_note' => $this->faker->optional()->sentence(),
             'admin_note' => $this->faker->optional()->sentence(),
             'created_at' => now(),

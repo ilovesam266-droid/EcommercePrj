@@ -27,9 +27,21 @@ class ProductVariantSize extends Model
         'stock' => 'integer',
     ];
 
+    public function getFullNameAttribute()
+    {
+        $productName = $this->product->name ?? '';
+        $variantSize = $this->variant_size ?? '';
+
+        return trim("{$productName} - {$variantSize}");
+    }
+
     public function product() : BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function orderItems(){
+        return $this->hasMany(OrderItem::class, 'product_variant_size_id');
     }
 
     public static function boot()

@@ -5,7 +5,7 @@
         <div class="header-section">
         </div>
         <div class='card shadow-sm rounded'>
-            <div class="table-responsive">
+            <div class="table-responsive text-center align-middle">
                 <div class="p-4 pb-3 d-flex justify-content-between align-items-center">
                     <h4 class="mb-0 text-secondary">
                         <i class="bi bi-box-seam"></i> Product Management

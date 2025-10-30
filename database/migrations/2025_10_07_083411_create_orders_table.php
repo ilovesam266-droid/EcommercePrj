@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('ward', 100);
             $table->string('detailed_address', 255);
 
-            $table->tinyInteger('payment_method')->comment("0: cash on delivery, 1: credit card, 2: e-wallet")->default(0);
+            $table->tinyInteger('payment_method')->comment("0:cash on delivery, 1:credit card, 2:e-wallet")->default(0);
             $table->tinyInteger('payment_status')->comment("0: pending, 1: paid, 2: failed")->default(0);
             $table->string('payment_transaction_code', 100)->nullable();
 

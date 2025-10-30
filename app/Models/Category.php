@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
 
 class Category extends Model
@@ -24,9 +25,9 @@ class Category extends Model
         'created_by' => 'integer',
     ];
 
-    public function creator(): BelongsTo
+    public function categoryable(): MorphTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->morphTo(User::class, 'created_by');
     }
 
     public function products()

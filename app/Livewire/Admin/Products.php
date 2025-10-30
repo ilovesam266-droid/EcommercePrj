@@ -16,6 +16,10 @@ class Products extends Component
 
     protected ProductRepositoryInterface $productRepository;
     public $editingProductId = null;
+    // public string $search = '';
+    // public array $filter = [
+    //     'status' => '',
+    // ];
     public int $perPage = 5;
     public array $sort = ['created_at' => 'asc'];
 

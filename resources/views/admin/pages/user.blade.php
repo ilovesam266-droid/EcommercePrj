@@ -11,7 +11,7 @@
 
     <!-- User table -->
     <div class='card shadow-sm rounded'>
-        <div class="table-responsive">
+        <div class="table-responsive text-center align-middle">
             <div class="p-4 pb-3 d-flex justify-content-between align-items-center">
                 <h4 class="mb-0 text-secondary">User List</h4>
                 <button class="btn btn-secondary" wire:click="openCreateModal">
@@ -71,29 +71,30 @@
                                         <div class="text-nowrap">{{ $user->status }}</div>
                                     </td>
                                     <td>
-                                        <div class="text-nowrap">{{ $user->created_at }}</div>
+                                        <div>{{ $user->created_at->format('d/m/Y') }}</div>
+                                        <small style="color: #718096;">{{ $user->created_at->format('H:i:s') }}</small>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                        <button class="btn btn-sm btn-warning btn-action"
-                                            wire:click="openEditModal({{ $user->id }})">
-                                            <i class="bi bi-pencil">
-                                                <svg class="nav-icon" style="width: 20px;height: 20px;">
-                                                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-pencil">
-                                                    </use>
-                                                </svg>
-                                            </i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger btn-action"
-                                            wire:click="deleteUser({{ $user->id }})"
-                                            wire:confirm="Are you sure you want to delete this user">
-                                            <i class="bi bi-pencil">
-                                                <svg class="nav-icon" style="width: 20px;height: 20px;">
-                                                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-trash">
-                                                    </use>
-                                                </svg>
-                                            </i>
-                                        </button>
+                                            <button class="btn btn-sm btn-warning btn-action"
+                                                wire:click="openEditModal({{ $user->id }})">
+                                                <i class="bi bi-pencil">
+                                                    <svg class="nav-icon" style="width: 20px;height: 20px;">
+                                                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-pencil">
+                                                        </use>
+                                                    </svg>
+                                                </i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action"
+                                                wire:click="deleteUser({{ $user->id }})"
+                                                wire:confirm="Are you sure you want to delete this user">
+                                                <i class="bi bi-pencil">
+                                                    <svg class="nav-icon" style="width: 20px;height: 20px;">
+                                                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-trash">
+                                                        </use>
+                                                    </svg>
+                                                </i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -142,8 +143,7 @@
             @endif
         </div>
     </div>
-
-
+    <!-- Pagination -->
     <div class="mt-4">
         {{ $this->users->onEachSide(1)->links() }}
     </div>

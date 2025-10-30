@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,12 +19,13 @@ class Payment extends Model
         'amount',
         'method',
         'transaction_code',
-        'status', 
+        'status',
         'meta_data',
     ];
     protected $casts = [
         'amount' => 'integer',
         'status' => PaymentStatus::class,
+        'method' => PaymentMethod::class,
         'meta_data' => 'object',
     ];
 
@@ -37,16 +39,16 @@ class Payment extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function getStatusTextAttribute()
-    {
-        return match ($this->status) {
-            1 => 'Pending',
-            2 => 'Processing',
-            3 => 'Paid',
-            4 => 'Failed',
-            5 => 'Refunded',
-            6 => 'Cancelled',
-            default => 'Unknown',
-        };
-    }
+    // public function getStatusTextAttribute()
+    // {
+    //     return match ($this->status) {
+    //         1 => 'Pending',
+    //         2 => 'Processing',
+    //         3 => 'Paid',
+    //         4 => 'Failed',
+    //         5 => 'Refunded',
+    //         6 => 'Cancelled',
+    //         default => 'Unknown',
+    //     };
+    // }
 }

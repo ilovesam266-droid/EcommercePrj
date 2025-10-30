@@ -72,7 +72,7 @@ class CreateProduct extends Component
         }
         $this->productId = $product->id;
 
-        session()->flash('message', 'User is created successfully!');
+        session()->flash('message', 'Product is created successfully!');
         return redirect(route('admin.products'));
     }
 
