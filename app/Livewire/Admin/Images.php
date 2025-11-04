@@ -17,12 +17,6 @@ class Images extends Component
     use WithFileUploads, WithPagination;
 
     protected ImageRepositoryInterface $imageRepository;
-    public function boot(ImageRepositoryInterface $repository)
-    {
-        $this->imageRepository = $repository;
-        $this->userId = Auth::id();
-    }
-
     public int $perPage = 5;
     public array $sort = ['created_at' => 'asc'];
     public string $currentTab = 'all_images';
@@ -33,6 +27,12 @@ class Images extends Component
 
     public bool $showedImage = false;
     public $selectedImage = null;
+
+    public function boot(ImageRepositoryInterface $repository)
+    {
+        $this->imageRepository = $repository;
+        $this->userId = Auth::id();
+    }
 
     protected $listeners = [
         'imageUploaded' => '$refresh',
@@ -79,6 +79,8 @@ class Images extends Component
     public function uploadImage($selectedImageId){
         $this->dispatch('imagesSelected', $selectedImageId);
     }
+
+
 
     #[Computed]
     public function images()

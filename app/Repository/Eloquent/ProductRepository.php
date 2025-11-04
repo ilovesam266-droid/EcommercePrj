@@ -11,4 +11,19 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         return Product::class;
     }
+
+    public function getFilteredProduct(array $filter = [], ?string $search = null){
+        return function ($query) use ($filter, $search){
+            if (!empty($filter['status'])) {
+                $this->buildCriteria($query, $filter);
+            }
+
+            if (!empty($search)){
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
+                });
+            }
+        };
+    }
 }

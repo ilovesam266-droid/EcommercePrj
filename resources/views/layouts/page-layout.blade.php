@@ -34,6 +34,7 @@
     <link href="{{ asset('css/examples.css') }}" rel="stylesheet">
     <script src="{{ asset('js/config.js') }}"></script>
     <script src="{{ asset('js/color-modes.js') }}"></script>
+    {{-- <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script> --}}
   </head>
   <body>
     @include('admin.partials.sidebar')
@@ -47,7 +48,7 @@
       </div>
     @include('admin.partials.footer')
     </div>
-    @vite('resources/js/app.js')
+    @vite(['resources/js/app.js'/* , 'resources/js/ckeditor.js' */])
     <!-- CoreUI and necessary plugins-->
     <script src="{{ asset('vendors/@coreui/coreui/js/coreui.bundle.min.js') }}"></script>
     <script src="{{ asset('vendors/simplebar/js/simplebar.min.js') }}"></script>

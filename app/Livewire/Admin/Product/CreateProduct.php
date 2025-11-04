@@ -55,6 +55,7 @@ class CreateProduct extends Component
             'status',
         ]);
         $productData['created_by'] = Auth::id();
+        dd($productData);
         $product = $this->productRepository->create($productData);
 
         if (!empty($this->selectedCategories)) {
@@ -83,6 +84,7 @@ class CreateProduct extends Component
             array_merge($this->image_ids, $images),
             SORT_NUMERIC
         );
+        $this->openImageModal = false;
     }
 
     #[Computed()]

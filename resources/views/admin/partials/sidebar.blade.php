@@ -20,23 +20,28 @@
         <li class="nav-item">
           <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.user') }}">
             <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-user"></use>
             </svg> User</a></li>
             <li class="nav-item">
           <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.images') }}">
             <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-image"></use>
             </svg> Image</a></li>
             <li class="nav-item">
           <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.products') }}">
             <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-3d"></use>
             </svg> Product</a></li>
             <li class="nav-item">
           <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.orders') }}">
             <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-notes"></use>
             </svg> Order</a></li>
+            <li class="nav-item">
+            <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.mails') }}">
+            <svg class="nav-icon">
+              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-envelope-closed"></use>
+            </svg> Mail</a></li>
       </ul>
     <div class="sidebar-footer border-top d-none d-md-flex">
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>

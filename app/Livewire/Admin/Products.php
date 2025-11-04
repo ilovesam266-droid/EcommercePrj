@@ -16,10 +16,10 @@ class Products extends Component
 
     protected ProductRepositoryInterface $productRepository;
     public $editingProductId = null;
-    // public string $search = '';
-    // public array $filter = [
-    //     'status' => '',
-    // ];
+    public string $search = '';
+    public array $filter = [
+        'status' => '',
+    ];
     public int $perPage = 5;
     public array $sort = ['created_at' => 'asc'];
 
@@ -33,16 +33,30 @@ class Products extends Component
         return $this->productRepository->delete($productId);
     }
 
-    public function getProduct()
+    #[On('searchPerformed')]
+    public function updatedSearchTemp($searchTemp)
     {
-        return [];
+        $this->search = $searchTemp;
+    }
+
+    #[On('filterPerformed')]
+    public function updatedSelectedFilter($selectedFilter)
+    {
+        $this->filter = array_merge($this->filter, $selectedFilter);
+    }
+
+    //after search
+    #[On('resetPage')]
+    public function Search()
+    {
+        $this->resetPage();
     }
 
     #[Computed]
     public function products()
     {
         return $this->productRepository->all(
-            $this->getProduct(),
+            $this->productRepository->getFilteredProduct($this->filter, $this->search),
             $this->sort,
             $this->perPage,
             ['*'],
@@ -57,6 +71,12 @@ class Products extends Component
     #[Title('Products')]
     public function render()
     {
-        return view('admin.pages.products');
+        $productFiltersConfig = [
+            ['key' => 'status', 'placeholder' => 'Filter by Status', 'options' => [
+                ['label' => 'Active', 'value' => 'active'],
+                ['label' => 'In Active', 'value' => 'inactive'],
+            ]],
+        ];
+        return view('admin.pages.products', compact('productFiltersConfig'));
     }
 }

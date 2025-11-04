@@ -128,7 +128,7 @@ class User extends Authenticatable
 
     public function mails(): HasMany
     {
-        return $this->hasMany(Mail::class, 'user_id');
+        return $this->hasMany(Mail::class, 'created_by');
     }
     public function mailrecipients(): HasMany
     {

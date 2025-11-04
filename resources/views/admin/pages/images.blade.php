@@ -40,7 +40,7 @@
                                 aria-controls="all-photos"
                                 aria-selected="{{ $currentTab === 'all_photos' ? 'true' : 'false' }}"
                                 wire:click="selectTab('all_images')">
-                                Tất cả ảnh
+                                All images
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -49,7 +49,7 @@
                                 aria-controls="my-photos"
                                 aria-selected="{{ $currentTab === 'my_photos' ? 'true' : 'false' }}"
                                 wire:click="selectTab('my_images')">
-                                Ảnh của tôi
+                                My images
                             </button>
                         </li>
                     </ul>
@@ -70,7 +70,6 @@
                     <div id="my-images" class="tab-content active">
                         <div class="image-grid" id="grid-all">
                             <!-- Image Card 1 -->
-
                             @forelse ($this->images as $image)
                                 <div wire:key="modal-library-image-{{ $image->id }}"
                                     wire:click="toggleSelection({{ $image->id }})"

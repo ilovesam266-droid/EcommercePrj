@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repository\Constracts\CategoryRepositoryInterface;
 use App\Repository\Constracts\ImageRepositoryInterface;
+use App\Repository\Constracts\MailRepositoryInterface;
 use App\Repository\Constracts\OrderItemRepositoryInterface;
 use App\Repository\Constracts\OrderRepositoryInterface;
 use App\Repository\Constracts\ProductRepositoryInterface;
@@ -11,6 +12,7 @@ use App\Repository\Constracts\ProductVariantSizeRepositoryInterface;
 use App\Repository\Constracts\UserRepositoryInterface;
 use App\Repository\Eloquent\CategoryRepository;
 use App\Repository\Eloquent\ImageRepository;
+use App\Repository\Eloquent\MailRepository;
 use App\Repository\Eloquent\OrderItemRepository;
 use App\Repository\Eloquent\OrderRepository;
 use App\Repository\Eloquent\ProductRepository;
@@ -28,6 +30,7 @@ class RepositoryServiceProvider extends ServiceProvider
         ProductVariantSizeRepositoryInterface::class => ProductVariantSizeRepository::class,
         OrderRepositoryInterface::class => OrderRepository::class,
         OrderItemRepositoryInterface::class => OrderItemRepository::class,
+        MailRepositoryInterface::class => MailRepository::class,
     ];
 
     /**

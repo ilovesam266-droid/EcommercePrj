@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MailType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,21 +13,26 @@ class Mail extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable=[
+    protected $fillable = [
         'created_by',
         'title',
         'body',
+        'type',
         'variables',
+        'scheduled_at',
     ];
-    protected $casts=[
-        'variables'=>'object',
+    protected $casts = [
+        'type' => MailType::class,
+        'variables' => 'array',
+        'scheduled_at' => 'datetime',
     ];
-    public function user() : BelongsTo
+
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
-    public function recipients() : HasMany
+    public function recipients(): HasMany
     {
-        return $this->hasMany(NotificationRecipient::class,'notification_id');
+        return $this->hasMany(MailRecipient::class, 'mail_id');
     }
 }

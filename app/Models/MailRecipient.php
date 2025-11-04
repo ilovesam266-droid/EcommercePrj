@@ -16,12 +16,14 @@ class MailRecipient extends Model
         'mail_id',
         'email',
         'status',
+        'scheduled_at',
         'sent_at',
         'error_message',
     ];
     protected $casts=[
         'status'=> MailRecipientStatus::class,
         'sent_at'=>'datetime',
+        'scheduled_at' => 'datetime',
     ];
     public function mail() : BelongsTo
     {

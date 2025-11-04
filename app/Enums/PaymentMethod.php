@@ -9,4 +9,14 @@ enum PaymentMethod : string
     case CREDITCARD = 'credit card';
     case PAYPAL = 'paypal';
     case BANKTRANSFER = 'bank transfer';
+
+    public function colorClass(): string
+    {
+        return match ($this) {
+            self::CASH => 'bg-success text-white',
+            self::CREDITCARD => 'bg-primary text-white',
+            self::PAYPAL => 'bg-info text-white',
+            self::BANKTRANSFER => 'bg-warning text-white',
+        };
+    }
 }

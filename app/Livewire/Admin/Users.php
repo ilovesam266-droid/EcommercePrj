@@ -51,11 +51,6 @@ class Users extends Component
         $this->filter = array_merge($this->filter, $selectedFilter);
     }
 
-    public function getFilteredUsers()
-    {
-        return $this->userRepository->getFilteredUsers($this->filter, $this->search);
-    }
-
     //after search
     #[On('resetPage')]
     public function Search()
@@ -94,7 +89,7 @@ class Users extends Component
     public function users()
     {
         return $this->userRepository->all(
-            $this->getFilteredUsers(),
+            $this->userRepository->getFilteredUsers($this->filter, $this->search),
             $this->sort,
             $this->perPage,
             ['*'],

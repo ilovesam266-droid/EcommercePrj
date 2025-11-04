@@ -1,7 +1,8 @@
 <div>
     <!-- Order Status Timeline -->
     <div class="mb-4 pb-4 border-bottom">
-        <h6 class="text-muted mb-3" style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase;">Trạng Thái Đơn Hàng</h6>
+        <h6 class="text-muted mb-3" style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase;">Trạng Thái
+            Đơn Hàng</h6>
         <div class="d-flex justify-content-between align-items-center">
             @php
                 // Xác định trạng thái của từng bước dựa trên status
@@ -169,11 +170,11 @@
             <div class="row mb-3">
                 <div class="col-6">
                     <p class="text-muted mb-1" style="font-size: 0.875rem;">Phương Thức</p>
-                    <p class="mb-0" style="font-weight: 500;">{{ $payment_method_label }}</p>
+                    <p class="mb-0" style="font-weight: 500;">{{ $payment_method }}</p>
                 </div>
                 <div class="col-6">
                     <p class="text-muted mb-1" style="font-size: 0.875rem;">Trạng Thái</p>
-                    <p class="mb-0"><span class="payment-badge payment-completed">{{ $payment_status_label }}</span>
+                    <p class="mb-0"><span class="payment-badge payment-completed">{{ $payment_status }}</span>
                     </p>
                 </div>
             </div>
@@ -191,64 +192,107 @@
         <h6 class="text-muted mb-3" style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase;">Chi
             Tiết
             Thanh Toán</h6>
-    <livewire:admin.order-items :order_id="$orderId">
+        <livewire:admin.order-items :order_id="$orderId">
 
-        <div style="background-color: #f9fafb; padding: 1rem; border-radius: 0.5rem;">
-            <div class="row mb-2">
-                <div class="col-6">
-                    <p class="text-muted mb-0" style="font-size: 0.875rem;">Tổng Tiền Hàng</p>
-                </div>
-                <div class="col-6 text-end">
-                    <p class="mb-0" style="font-weight: 500;">{{ $formatted_price }}</p>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-6">
-                    <p class="text-muted mb-0" style="font-size: 0.875rem;">Phí Vận Chuyển</p>
-                </div>
-                <div class="col-6 text-end">
-                    @if ($formatted_shipping_fee)
-                        <p class="mb-0" style="font-weight: 500;">{{ $formatted_shipping_fee }}</p>
-                    @else
-                        <p class="mb-0" style="font-weight: 500;">0 ₫</p>
-                    @endif
-                </div>
-            </div>
-            <div style="border-top: 2px solid #e5e7eb; padding-top: 1rem;">
-                <div class="row">
+            <div style="background-color: #f9fafb; padding: 1rem; border-radius: 0.5rem;">
+                <div class="row mb-2">
                     <div class="col-6">
-                        <p class="mb-0" style="font-weight: 600; font-size: 1rem;">Tổng Cộng</p>
+                        <p class="text-muted mb-0" style="font-size: 0.875rem;">Tổng Tiền Hàng</p>
                     </div>
                     <div class="col-6 text-end">
-                        <p class="mb-0" style="font-weight: 700; font-size: 1.125rem; color: #2563eb;">
-                            {{ $formatted_total }}
-                        </p>
+                        <p class="mb-0" style="font-weight: 500;">{{ $formatted_price }}</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <p class="text-muted mb-0" style="font-size: 0.875rem;">Phí Vận Chuyển</p>
+                    </div>
+                    <div class="col-6 text-end">
+                        @if ($formatted_shipping_fee)
+                            <p class="mb-0" style="font-weight: 500;">{{ $formatted_shipping_fee }}</p>
+                        @else
+                            <p class="mb-0" style="font-weight: 500;">0 ₫</p>
+                        @endif
+                    </div>
+                </div>
+                <div style="border-top: 2px solid #e5e7eb; padding-top: 1rem;">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="mb-0" style="font-weight: 600; font-size: 1rem;">Tổng Cộng</p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p class="mb-0" style="font-weight: 700; font-size: 1.125rem; color: #2563eb;">
+                                {{ $formatted_total }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- Notes Section -->
     <div>
-        <h6 class="text-muted mb-3" style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase;">Ghi Chú
+        <h6 class="text-muted mb-3" style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase;">
+            Ghi chú
         </h6>
-        <div style="background-color: #fef3c7; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
-            <p class="mb-0" style="font-size: 0.875rem;">
-                <i class="bi bi-info-circle" style="color: #92400e; margin-right: 0.5rem;"></i>
-                <span style="color: #92400e;">Giao hàng vào buổi sáng, liên hệ trước khi giao.</span>
+
+        {{-- Ghi chú của khách hàng --}}
+        <div class="mb-3"
+            style="background-color: #fef3c7; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
+            <p class="mb-1" style="font-size: 0.875rem; color: #92400e;">
+                <i class="bi bi-info-circle" style="margin-right: 0.5rem;"></i>
+                <strong>Ghi chú khách hàng:</strong>
             </p>
+            <p class="mb-0" style="font-size: 0.875rem; color: #92400e;">
+                {{ $customer_note ?? 'Không có ghi chú từ khách hàng.' }}
+            </p>
+        </div>
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+        {{-- Ghi chú của admin (chỉnh sửa được) --}}
+        <div style="background-color: #e0f2fe; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #0284c7;">
+            <p class="mb-2" style="font-size: 0.875rem; color: #075985;">
+                <i class="bi bi-pencil-square" style="margin-right: 0.5rem;"></i>
+                <strong>Ghi chú quản trị:</strong>
+            </p>
+
+            @if ($isEditingAdminNote)
+                <div class="mb-2">
+                    <textarea wire:model.defer="admin_note" rows="3" class="form-control form-control-sm"
+                        placeholder="Nhập ghi chú nội bộ..."></textarea>
+                </div>
+                <div class="d-flex gap-2">
+                    <button wire:click="saveAdminNote" class="btn btn-sm btn-primary">
+                        <i class="bi bi-save"></i> Lưu
+                    </button>
+                    <button wire:click="$set('isEditingAdminNote', false)" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Hủy
+                    </button>
+                </div>
+            @else
+                <p class="mb-2" style="font-size: 0.875rem; color: #075985;">
+                    {{ $admin_note ?: 'Chưa có ghi chú.' }}
+                </p>
+                <button wire:click="$set('isEditingAdminNote', true)" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Chỉnh sửa
+                </button>
+            @endif
         </div>
     </div>
 
 
-    <div class="modal-footer border-top">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary">
-            <i class="bi bi-pencil"></i> Chỉnh Sửa
-        </button>
-        <button type="button" class="btn btn-outline-danger">
-            <i class="bi bi-printer"></i> In Đơn
-        </button>
-    </div>
+    @if ($status->value === 'pending')
+        <div class="modal-footer border-top">
+            <button wire:click="confirmOrder" class="btn btn-success btn-sm">
+                <i class="bi bi-check-circle"></i> Xác nhận đơn
+            </button>
+
+            <button wire:click="cancelOrder" class="btn btn-danger btn-sm">
+                <i class="bi bi-x-circle"></i> Hủy đơn
+            </button>
+        </div>
+    @endif
 </div>

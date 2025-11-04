@@ -6,11 +6,14 @@ use App\Livewire\Dashboard;
 use App\Livewire\Admin\Users;
 use App\Livewire\Admin\User\CreateUser;
 use App\Livewire\Admin\Images;
+use App\Livewire\Admin\Mail\EditMail;
 use App\Livewire\Admin\Order\EditOrder;
 use App\Livewire\Admin\Order\CreateOrder;
 use App\Livewire\Admin\Orders;
 use App\Livewire\Admin\Product\CreateProduct;
 use App\Livewire\Admin\Products;
+use App\Livewire\Admin\Mails;
+use App\Livewire\Admin\Mail\CreateMail;
 use App\Livewire\Admin\Product\EditProduct;
 
 Route::get('/', function () {
@@ -43,4 +46,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/products/{editingProductId}/edit', EditProduct::class)->name('edit_product');
     Route::get('/orders', Orders::class)->name('orders');
     Route::get('/orders/create', CreateOrder::class)->name('create_order');
+    Route::get('/mails', Mails::class)->name('mails');
+    Route::get('/mails/create', CreateMail::class)->name('create_mail');
+    Route::get('/mails/{editingMailId}/edit', EditMail::class)->name('edit_mail');
 });

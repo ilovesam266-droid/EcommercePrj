@@ -7,6 +7,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 
 class Orders extends Component
@@ -14,6 +15,11 @@ class Orders extends Component
     use WithPagination;
 
     protected OrderRepositoryInterface $orderRepository;
+    public string $search = '';
+    public array $filter = [
+        'status' => '',
+        'payment_method' => '',
+    ];
     public $sort = ['created_at' => 'asc'];
     public $perPage = 5;
     public $detailsOrderId = null;
@@ -35,14 +41,37 @@ class Orders extends Component
         $this->reset(['detailsOrderId']);
     }
 
+    public function deleteOrder($orderId){
+        return $this->orderRepository->delete($orderId);
+    }
+
+    #[On('searchPerformed')]
+    public function updatedSearchTemp($searchTemp)
+    {
+        $this->search = $searchTemp;
+    }
+
+    #[On('filterPerformed')]
+    public function updatedSelectedFilter($selectedFilter)
+    {
+        $this->filter = array_merge($this->filter, $selectedFilter);
+    }
+
+    //after search
+    #[On('resetPage')]
+    public function Search()
+    {
+        $this->resetPage();
+    }
+
     #[Computed()]
     public function orders(){
         return $this->orderRepository->all(
-            [],
+            $this->orderRepository->getFilteredOrder($this->filter, $this->search),
             $this->sort,
             $this->perPage,
             ['*'],
-            ['owner'],
+            ['owner', 'payment'],
             false
         );
     }
@@ -51,6 +80,22 @@ class Orders extends Component
     #[Title('Orders')]
     public function render()
     {
-        return view('admin.pages.orders');
+        $orderFiltersConfig = [
+            ['key' => 'status', 'placeholder' => 'Filter by Status', 'options' => [
+                ['label' => 'Pending', 'value' => 'pending'],
+                ['label' => 'Confirmed', 'value' => 'confirmed'],
+                ['label' => 'Cancelled', 'value' => 'canceled'],
+                ['label' => 'Shipping', 'value' => 'shipping'],
+                ['label' => 'Failed', 'value' => 'failed'],
+                ['label' => 'Done', 'value' => 'done'],
+            ]],
+            ['key' => 'payment_method', 'placeholder' => 'Filter by Payment Method', 'options' => [
+                ['label' => 'Cash on delivery', 'value' => 'cash on delivery'],
+                ['label' => 'Credit Card', 'value' => 'credit card'],
+                ['label' => 'Paypal', 'value' => 'paypal'],
+                ['label' => 'Bank Transfer', 'value' => 'bank transfer'],
+            ]],
+        ];
+        return view('admin.pages.orders', compact('orderFiltersConfig'));
     }
 }

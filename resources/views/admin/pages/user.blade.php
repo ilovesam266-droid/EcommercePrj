@@ -11,10 +11,10 @@
 
     <!-- User table -->
     <div class='card shadow-sm rounded'>
-        <div class="table-responsive text-center align-middle">
+        <div class="table-responsive">
             <div class="p-4 pb-3 d-flex justify-content-between align-items-center">
-                <h4 class="mb-0 text-secondary">User List</h4>
-                <button class="btn btn-secondary" wire:click="openCreateModal">
+                <h3 class="mb-0">User List</h3>
+                <button class="btn btn-primary" wire:click="openCreateModal">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -26,16 +26,14 @@
             <div class="p-4">
                 <div class="rounded-3 overflow-hidden border">
                     <table class="table table-hover border mb-0">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-dark">
                             <tr>
-                                <th class="bg-body-secondary">#</th>
                                 <th class="bg-body-secondary text-center">
                                     <svg class="icon">
                                         <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-people"></use>
                                     </svg>
                                 </th>
-                                <th class="bg-body-secondary">Name</th>
-                                <th class="bg-body-secondary">Username</th>
+                                <th class="bg-body-secondary">User</th>
                                 <th class="bg-body-secondary">Email</th>
                                 <th class="bg-body-secondary">Role</th>
                                 <th class="bg-body-secondary">Status</th>
@@ -46,29 +44,30 @@
                         <tbody>
 
                             @forelse($this->users as $user)
-                                <tr class="align-middle">
+                                <tr>
                                     <td>
-                                        <div class="text-nowrap">{{ $user->id }}</div>
-                                    </td>
-                                    <td class="text-center">
                                         <div class="avatar avatar-md"><img class="avatar-img" src="{{ $user->avatar }}"
                                                 {{-- src="{{ asset('storage/'.$user->avatar) }}" --}} alt="user@email.com"><span
                                                 class="avatar-status bg-success"></span></div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">{{ $user->full_name }}</div>
-                                    </td>
-                                    <td>
-                                        <div class="text-nowrap">{{ $user->username }}</div>
+                                        <div class="small text-body-secondary text-nowrap">
+                                            <span>{{ $user->username }}</span> |
+                                            Birthday:
+                                            {{ optional($user->birthday)->format('d/m/Y') ?? 'Not updated yet' }}
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">{{ $user->email }}</div>
                                     </td>
                                     <td>
-                                        <div class="text-nowrap">{{ $user->role }}</div>
+                                        <span
+                                            class="status-badge {{ $user->role->colorClass() }}">{{ $user->role }}</span>
                                     </td>
                                     <td>
-                                        <div class="text-nowrap">{{ $user->status }}</div>
+                                        <span
+                                            class="status-badge {{ $user->status->colorClass() }}">{{ $user->status }}</span>
                                     </td>
                                     <td>
                                         <div>{{ $user->created_at->format('d/m/Y') }}</div>
@@ -78,22 +77,18 @@
                                         <div class="d-flex gap-2">
                                             <button class="btn btn-sm btn-warning btn-action"
                                                 wire:click="openEditModal({{ $user->id }})">
-                                                <i class="bi bi-pencil">
-                                                    <svg class="nav-icon" style="width: 20px;height: 20px;">
-                                                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-pencil">
-                                                        </use>
-                                                    </svg>
-                                                </i>
+                                                <svg class="nav-icon" style="width: 20px;height: 20px;">
+                                                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-pencil">
+                                                    </use>
+                                                </svg>
                                             </button>
                                             <button class="btn btn-sm btn-danger btn-action"
                                                 wire:click="deleteUser({{ $user->id }})"
                                                 wire:confirm="Are you sure you want to delete this user">
-                                                <i class="bi bi-pencil">
-                                                    <svg class="nav-icon" style="width: 20px;height: 20px;">
-                                                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-trash">
-                                                        </use>
-                                                    </svg>
-                                                </i>
+                                                <svg class="nav-icon" style="width: 20px;height: 20px;">
+                                                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-trash">
+                                                    </use>
+                                                </svg>
                                             </button>
                                         </div>
                                     </td>
@@ -113,8 +108,19 @@
                     style="background-color: rgba(0,0,0,0.5);">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Tạo Người dùng mới</h5>
+                            <div class="modal-header card-header">
+                                <div class="">
+                                    <h3>
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="8" r="4" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" />
+                                            <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                        </svg>
+                                        Add new user
+                                    </h3>
+                                </div>
                                 <button type="button" class="btn-close" wire:click="hideCreateModal"></button>
                             </div>
                             <div class="modal-body">

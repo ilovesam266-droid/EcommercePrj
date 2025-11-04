@@ -1,6 +1,6 @@
 <div class="container-main">
     <!-- Header -->
-    <div class="header">
+    <div class="header mb-3">
         <h1>Create New Order</h1>
         <p>Enter Details to Create New Order</p>
     </div>

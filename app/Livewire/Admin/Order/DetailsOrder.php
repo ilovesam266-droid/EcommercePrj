@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Order;
 
+use App\Enums\OrderStatus;
 use App\Repository\Constracts\OrderRepositoryInterface;
 use App\Repository\Constracts\UserRepositoryInterface;
 use Livewire\Component;
@@ -19,8 +20,8 @@ class DetailsOrder extends Component
     public $recipient_name;
     public $recipient_phone;
     public $full_address;
-    public $payment_method_label;
-    public $payment_status_label;
+    public $payment_method;
+    public $payment_status;
     public $payment_transaction_code;
     public $customer_note;
     public $admin_note;
@@ -33,6 +34,7 @@ class DetailsOrder extends Component
     public $canceled_at;
     public $failed_at;
     public $done_at;
+    public bool $isEditingAdminNote;
 
 
     public function boot(OrderRepositoryInterface $order_repository, UserRepositoryInterface $user_repository)
@@ -49,7 +51,7 @@ class DetailsOrder extends Component
 
     public function loadOrder()
     {
-        $order = $this->orderRepository->find($this->orderId);
+        $order = $this->orderRepository->find($this->orderId, ['payment']);
         if ($order) {
             $this->fill($order->only([
                 'owner_id',
@@ -60,8 +62,6 @@ class DetailsOrder extends Component
                 'recipient_name',
                 'recipient_phone',
                 'full_address',
-                'payment_method_label',
-                'payment_status_label',
                 'payment_transaction_code',
                 'customer_note',
                 'admin_note',
@@ -75,6 +75,35 @@ class DetailsOrder extends Component
                 'failed_at',
                 'done_at',
             ]));
+        }
+        $this->payment_method = $order->payment->payment_method;
+        $this->payment_status = $order->payment->status;
+        $this->payment_transaction_code = $order->payment->transaction_code;
+    }
+
+
+    public function cancelOrder()
+    {
+        $this->status = OrderStatus::CANCELED;
+        $orderStatus['status'] = $this->status;
+        $this->orderRepository->update($this->orderId, $orderStatus);
+    }
+
+    public function confirmOrder()
+    {
+        $this->status = OrderStatus::CONFIRMED;
+        $orderStatus['status'] = $this->status;
+        $this->orderRepository->update($this->orderId, $orderStatus);
+    }
+
+    public function saveAdminNote()
+    {
+        $adminNote['admin_note'] = $this->admin_note;
+        $order = $this->orderRepository->update($this->orderId, $adminNote);
+
+        if ($order) {
+            session()->flash('message', 'Update admin note successfully!!!');
+            $this->isEditingAdminNote = false;
         }
     }
 

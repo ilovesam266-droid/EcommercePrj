@@ -6,17 +6,7 @@
     @endif
 <form wire:submit.prevent="createUser">
     <div class="card">
-        <div class="card-header">
-            <h3>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" />
-                    <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" />
-                </svg>
-                Add new user
-            </h3>
-        </div>
+
         <div class="card-body">
             <div class="mb-3">
                 <label for="avatar" class="form-label">Avatar</label>

@@ -17,7 +17,7 @@ class Payment extends Model
         'order_id',
         'user_id',
         'amount',
-        'method',
+        'payment_method',
         'transaction_code',
         'status',
         'meta_data',
@@ -25,7 +25,7 @@ class Payment extends Model
     protected $casts = [
         'amount' => 'integer',
         'status' => PaymentStatus::class,
-        'method' => PaymentMethod::class,
+        'payment_method' => PaymentMethod::class,
         'meta_data' => 'object',
     ];
 
