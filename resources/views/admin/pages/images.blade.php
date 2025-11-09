@@ -29,7 +29,7 @@
                 <div class="container-main">
                     <!-- Header -->
                     <div class="header-section">
-                        <h1><i class="bi bi-images"></i> Manage Image</h1>
+                        <h2><i class=""></i> Manage Image</h2>
                     </div>
 
                     <!-- Tab Buttons -->
@@ -53,7 +53,7 @@
                             </button>
                         </li>
                     </ul>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="selected-count" id="selectedCount">
                             <strong id="countText">0 ảnh được chọn</strong>
                         </div>
@@ -65,7 +65,7 @@
                                 <i class="bi bi-square"></i> Bỏ Chọn Tất Cả
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- Tab 2: My Images -->
                     <div id="my-images" class="tab-content active">
                         <div class="image-grid" id="grid-all">
@@ -90,8 +90,7 @@
                                                 <i class="bi bi-eye"></i> Xem
                                             </button>
                                             <button class="action-btn delete"
-                                                wire:click="deleteImage({{ $image->id }})"
-                                                wire:confirm="Are you sure you want to delete this image"
+                                                wire:click="confirmDelete({{ $image->id }})"
                                                 title="Xóa">
                                                 <i class="bi bi-trash"></i> Xóa
                                             </button>
@@ -102,6 +101,10 @@
                                 <p>Chưa có ảnh nào được tải lên.</p>
                             @endforelse
                         </div>
+                        @if ($currentPage)
+                            <button wire:click='uploadImage(@json($selectedImageId))'
+                                class="btn btn-primary-custom">Select</button>
+                        @endif
                     </div>
                 </div>
                 @if ($showedImage)
@@ -115,17 +118,14 @@
                                 <div class="modal-body">
                                     <div class="image-wrapper">
                                         <i class="image-placeholder bi bi-image"></i>
-                                        <img src="{{ asset('storage/' . $selectedImage) }}"
-                                            class="w-100 object-cover">
+                                        <img src="{{ asset('storage/' . $selectedImage) }}" class="w-100 object-cover">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endif
-                @if($currentPage)
-                    <button wire:click='uploadImage(@json($selectedImageId))' class="btn btn-primary">Select</button>
-                @endif
+
             </div>
             <div class="mt-4">
                 {{ $this->images->onEachSide(1)->links() }}

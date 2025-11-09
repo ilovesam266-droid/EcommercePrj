@@ -4,9 +4,7 @@
             {{ session('message') }}
         </div>
     @endif
-<form wire:submit.prevent="createUser">
-    <div class="card">
-
+    <form wire:submit.prevent="createUser">
         <div class="card-body">
             <div class="mb-3">
                 <label for="avatar" class="form-label">Avatar</label>
@@ -29,16 +27,21 @@
                     <label for="firstName" class="form-label">
                         First Name <span class="required">*</span>
                     </label>
-                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="firstName" wire:model="first_name"
-                        placeholder="First Name">
-                    @error('first_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="firstName"
+                        wire:model="first_name" placeholder="First Name">
+                    @error('first_name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="lastName" class="form-label">
                         Last Name <span class="required">*</span>
                     </label>
-                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="lastName" wire:model="last_name" placeholder="Last Name">
-                    @error('last_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="lastName"
+                        wire:model="last_name" placeholder="Last Name">
+                    @error('last_name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -57,8 +60,11 @@
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </span>
-                    <input type="text" class="form-control @error('username') is-invalid @enderror" id="userName" wire:model="username" placeholder="username">
-                    @error('username') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input type="text" class="form-control @error('username') is-invalid @enderror" id="userName"
+                        wire:model="username" placeholder="username">
+                    @error('username')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -75,9 +81,11 @@
                             <path d="M3 7L12 13L21 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
                     </span>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" wire:model="email"
-                        placeholder="example@email.com">
-                        @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                        wire:model="email" placeholder="example@email.com">
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="form-text">Email must be unique</div>
             </div>
@@ -97,8 +105,11 @@
                             <circle cx="12" cy="16" r="1" fill="currentColor" />
                         </svg>
                     </span>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" wire:model="password"  placeholder="••••••••">
-                    @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input type="password" class="form-control @error('password') is-invalid @enderror"
+                        id="password" wire:model="password" placeholder="••••••••">
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -117,7 +128,8 @@
                             <circle cx="12" cy="16" r="1" fill="currentColor" />
                         </svg>
                     </span>
-                    <input type="password" class="form-control" id="password_confirmation" wire:model="password_confirmation"  placeholder="••••••••">
+                    <input type="password" class="form-control" id="password_confirmation"
+                        wire:model="password_confirmation" placeholder="••••••••">
                 </div>
             </div>
 
@@ -136,8 +148,11 @@
                             <path d="M16 3V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
                     </span>
-                    <input type="date" class="form-control @error('birthday') is-invalid @enderror" id="birthday" wire:model="birthday">
-                    @error('birthday') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input type="date" class="form-control @error('birthday') is-invalid @enderror" id="birthday"
+                        wire:model="birthday">
+                    @error('birthday')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -146,20 +161,26 @@
                     <label for="status" class="form-label">
                         Status <span class="required">*</span>
                     </label>
-                    <select class="form-select @error('status') is-invalid @enderror" id="status" wire:model="status" required>
+                    <select class="form-select @error('status') is-invalid @enderror" id="status"
+                        wire:model="status" required>
                         <option value="active">Active</option>
                         <option value="inactive" selected>Inactive</option>
                     </select>
-                    @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="role" class="form-label">
                         Role <span class="required">*</span>
                     </label>
-                    <select class="form-select @error('role') is-invalid @enderror" id="role" wire:model="role" required>
+                    <select class="form-select @error('role') is-invalid @enderror" id="role" wire:model="role"
+                        required>
                         <option value="user" selected>User</option>
                         <option value="admin">Admin</option>
-                        @error('role') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        @error('role')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </select>
                 </div>
             </div>
@@ -179,7 +200,6 @@
             </div>
 
         </div>
-    </div>
 
-</form>
+    </form>
 </div>

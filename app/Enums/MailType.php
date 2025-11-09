@@ -2,42 +2,45 @@
 
 namespace App\Enums;
 
-enum MailType :string
+enum MailType: string
 {
-    case Transactional = 'transactional'; // Email giao dịch (xác nhận đơn hàng, reset mật khẩu...)
-    case Marketing = 'marketing';         // Email quảng cáo, khuyến mãi
-    case Newsletter = 'newsletter';       // Bản tin định kỳ
-    case Onboarding = 'onboarding';       // Hướng dẫn người dùng mới
-    case Retention = 'retention';         // Giữ chân người dùng
-    case Feedback = 'feedback';           // Khảo sát, đánh giá
-    case Notification = 'notification';   // Thông báo hệ thống
-    case Event = 'event';                 // Mời tham gia hoặc nhắc sự kiện
+    case OrderConfirmed = 'order_confirmed';
+    case OrderCanceled = 'order_canceled';
+    case OrderShipping = 'order_shipping';
+    case OrderFailed = 'order_failed';
+    case OrderDone = 'order_done';
+    case PersonalOffer = 'personal_offer';
+    case Newsletter = 'newsletter';
+    case UserRegistered = 'user_registered';
+    case EmailVerification = 'email_verification';
 
     public function label(): string
     {
         return match($this) {
-            self::Transactional => 'Transactional',
-            self::Marketing => 'Marketing',
-            self::Newsletter => 'Newsletter',
-            self::Onboarding => 'Onboarding',
-            self::Retention => 'Retention',
-            self::Feedback => 'Feedback',
-            self::Notification => 'Notification',
-            self::Event => 'Event',
+            self::OrderConfirmed => 'order_confirmed',
+            self::OrderCanceled => 'order_canceled',
+            self::OrderShipping => 'order_shipping',
+            self::OrderFailed => 'order_failed',
+            self::OrderDone => 'order_done',
+            self::PersonalOffer => 'personal_offer',
+            self::Newsletter => 'newsletter',
+            self::UserRegistered => 'user_registered',
+            self::EmailVerification => 'email_verification',
         };
     }
 
     public function colorClass(): string
     {
         return match ($this) {
-            self::Transactional => 'bg-warning text-white',
-            self::Marketing => 'bg-info text-white',
-            self::Newsletter => 'bg-primary text-white',
-            self::Onboarding => 'bg-secondary text-white',
-            self::Retention => 'bg-danger text-white',
-            self::Feedback => 'bg-success text-white',
-            self::Notification => 'bg-black text-white',
-            self::Event => 'bg-greendark text-white',
+            self::OrderConfirmed => 'bg-warning text-white',
+            self::OrderCanceled => 'bg-secondary text-white',
+            self::OrderShipping => 'bg-info text-white',
+            self::OrderFailed => 'bg-dark text-white',
+            self::OrderDone => 'bg-primary text-white',
+            self::PersonalOffer => 'bg-danger text-white',
+            self::Newsletter => 'bg-success text-white',
+            self::UserRegistered => 'bg-success text-white',
+            self::EmailVerification => 'bg-success text-white',
         };
     }
 }

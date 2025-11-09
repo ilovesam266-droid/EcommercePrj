@@ -11,4 +11,9 @@ class MailRepository extends BaseRepository implements MailRepositoryInterface
     {
         return Mail::class;
     }
+
+    public function findByType(string $type): ?Mail
+    {
+        return $this->model->where('type', $type)->first();
+    }
 }

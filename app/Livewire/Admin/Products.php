@@ -28,9 +28,23 @@ class Products extends Component
         $this->productRepository = $repository;
     }
 
-    public function deleteProduct($productId)
+    public function confirmDelete($productId)
     {
-        return $this->productRepository->delete($productId);
+        $this->dispatch(
+            'showConfirm',
+            'Confirm product deletion',
+            'Are you sure you want to delete this product #PRODUCT-<<'.$productId.'>>?',
+            'delete-product',
+            ['product_id' => $productId],
+        );
+    }
+
+    #[On('delete-product')]
+    public function deleteProduct($data)
+    {
+        $productId = $data['product_id'];
+        $this->productRepository->delete($productId);
+        $this->dispatch('showToast', 'success', 'Success', 'Product Deleted');
     }
 
     #[On('searchPerformed')]

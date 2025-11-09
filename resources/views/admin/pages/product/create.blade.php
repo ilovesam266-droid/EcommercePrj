@@ -24,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary" wire:click="showCategoryModal">
+                <button class="btn btn-primary-custom" wire:click="showCategoryModal">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" wire:click="showImageModal">
+                <button type="button" class="btn btn-primary-custom" wire:click="showImageModal">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -117,7 +117,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <button type="submit" class="btn btn-primary"
+                                <button type="submit" class="btn btn-primary-custom"
                                     style="margin-left: 10px; margin-bottom: 10px;" id="saveBtn">
                                     💾 Save
                                 </button>
@@ -137,7 +137,7 @@
             <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Image</h5>
+                        <h5 class="modal-title  text-white">Add Image to product</h5>
                         <button type="button" class="btn-close" wire:click="hideImageModal"></button>
                     </div>
                     <div class="modal-body">
@@ -150,20 +150,16 @@
 
     {{-- Modal Chọn categories --}}
     @if ($openCategoryModal)
-        <div class="modal fade show d-block" tabindex="-1" role="dialog"
-            style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal fade show d-block card" tabindex="-1" role="dialog"
+            style="background-color: rgba(0,0,0,0.5);" wire:click.self="hideCategoryModal">
             <div class="modal-dialog modal-dialog-centered modal" role="document">
                 <div class="modal-content">
-                    <div class="modal-header card-header bg-light">
-                        <div class="card-header">
-                            <h5 class="mb-0">Chọn Lựa Chọn</h5>
-                        </div>
+                    <div class="modal-header card-header">
+                            <h5 class="mb-0 text-white">Select Categories</h5>
                         <button type="button" class="btn-close" wire:click="hideCategoryModal"></button>
 
                     </div>
                     <div class="modal-body">
-                        <div class="card shadow-sm" style="max-width: 400px; margin: 0 auto;">
-                            <div class="card-body">
                                 <div class="checkbox-container">
                                     {{-- @dd($this->categories) --}}
                                     @forelse ($this->categories as $category)
@@ -178,7 +174,7 @@
                                             </div>
                                         </div>
                                     @empty
-                                        <p>Chưa có category nào được tải lên.</p>
+                                        <p>Have not any category be used</p>
                                     @endforelse
                                 </div>
                                 {{-- <button class="btn btn-primary btn-get-values w-100" wire:click="getSelectedValues">
@@ -186,13 +182,10 @@
                                 </button> --}}
 
                                 <div class="result-text" id="resultText"></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-</div>
-@endif
+    </div>
+    @endif
 </div>

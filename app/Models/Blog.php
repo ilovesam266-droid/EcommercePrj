@@ -14,7 +14,7 @@ class Blog extends Model
     use HasFactory, SoftDeletes;
     protected $fillable=[
         'title',
-        'body',
+        'content',
         'created_by',
     ];
     public function user() : BelongsTo

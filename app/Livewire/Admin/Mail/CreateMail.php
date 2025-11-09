@@ -13,14 +13,11 @@ use App\Repository\Constracts\MailRepositoryInterface;
 class CreateMail extends Component
 {
     protected MailRepositoryInterface $mailRepository;
-    public $name = '';
     public $title = '';
     public $body = '';
     public $variables = [];
     public $type = 'notification';
     public $scheduled_at;
-    public $newVariableKey;
-    public $newVariableValue;
 
     public function boot(MailRepositoryInterface $mail_repository)
     {
@@ -35,15 +32,6 @@ class CreateMail extends Component
     public function messages()
     {
         return (new MailRequest()->messages());
-    }
-
-    public function addVariable()
-    {
-        if ($this->newVariableKey) {
-            $this->variables[$this->newVariableKey] = $this->newVariableValue;
-            $this->newVariableKey = '';
-            $this->newVariableValue = '';
-        }
     }
 
     #[On('save-mail')]
@@ -70,12 +58,6 @@ class CreateMail extends Component
             session()->flash('message', 'Mail is created successfully!');
         }
     }
-
-    public function removeVariable($key)
-    {
-        unset($this->variables[$key]);
-    }
-
 
     #[Layout('layouts.page-layout')]
     #[Title('Create Mail')]

@@ -14,13 +14,12 @@ class EditMail extends Component
 {
     protected MailRepositoryInterface $mailRepository;
     public $editingMailId = null;
+    public $name = '';
     public $title = '';
     public $body = '';
     public $variables = [];
     public $type = 'notification';
     public $scheduled_at;
-    public $newVariableKey;
-    public $newVariableValue;
 
     public function rules()
     {
@@ -56,20 +55,6 @@ class EditMail extends Component
             ]));
             $this->scheduled_at = optional($mail->scheduled_at)->format('Y-m-d\TH:i');
         }
-    }
-
-    public function addVariable()
-    {
-        if ($this->newVariableKey) {
-            $this->variables[$this->newVariableKey] = $this->newVariableValue;
-            $this->newVariableKey = '';
-            $this->newVariableValue = '';
-        }
-    }
-
-    public function removeVariable($key)
-    {
-        unset($this->variables[$key]);
     }
 
     #[On('updateMail')]

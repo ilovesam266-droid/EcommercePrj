@@ -287,11 +287,27 @@
     @if ($status->value === 'pending')
         <div class="modal-footer border-top">
             <button wire:click="confirmOrder" class="btn btn-success btn-sm">
-                <i class="bi bi-check-circle"></i> Xác nhận đơn
+                <i class="bi bi-check-circle"></i> Confirm Order
             </button>
 
             <button wire:click="cancelOrder" class="btn btn-danger btn-sm">
-                <i class="bi bi-x-circle"></i> Hủy đơn
+                <i class="bi bi-x-circle"></i> Cancel Order
+            </button>
+        </div>
+    @elseif ($status->value === 'confirmed')
+        <div class="modal-footer border-top">
+            <button wire:click="shipOrder" class="btn btn-success btn-sm">
+                <i class="bi bi-check-circle"></i> Ship
+            </button>
+        </div>
+    @elseif ($status->value === 'shipping')
+        <div class="modal-footer border-top">
+            <button wire:click="failedOrder" class="btn btn-success btn-sm">
+                <i class="bi bi-check-circle"></i> Order Failed
+            </button>
+
+            <button wire:click="doneOrder" class="btn btn-danger btn-sm">
+                <i class="bi bi-x-circle"></i> Order Delivered
             </button>
         </div>
     @endif

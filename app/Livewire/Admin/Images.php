@@ -62,8 +62,23 @@ class Images extends Component
         }
     }
 
-    public function deleteImage($imageId) {
-        return $this->imageRepository->delete($imageId);
+     public function confirmDelete($imageId)
+    {
+        $this->dispatch(
+            'showConfirm',
+            'Confirm image deletion',
+            'Are you sure you want to delete this image <<'.$imageId.'>>?',
+            'delete-image',
+            ['image_id' => $imageId],
+        );
+    }
+
+    #[On('delete-image')]
+    public function deleteImage($data)
+    {
+        $imageId = $data['image_id'];
+        $this->imageRepository->delete($imageId);
+        $this->dispatch('showToast', 'success', 'Success', 'image Deleted');
     }
 
     public function showImage($imageUrl){
@@ -79,8 +94,6 @@ class Images extends Component
     public function uploadImage($selectedImageId){
         $this->dispatch('imagesSelected', $selectedImageId);
     }
-
-
 
     #[Computed]
     public function images()

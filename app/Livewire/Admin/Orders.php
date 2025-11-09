@@ -41,8 +41,23 @@ class Orders extends Component
         $this->reset(['detailsOrderId']);
     }
 
-    public function deleteOrder($orderId){
-        return $this->orderRepository->delete($orderId);
+    public function confirmDelete($orderId)
+    {
+        $this->dispatch(
+            'showConfirm',
+            'Confirm order deletion',
+            'Are you sure you want to delete this order <<#ORD'.$orderId.'>>?',
+            'delete-order',
+            ['order_id' => $orderId],
+        );
+    }
+
+    #[On('delete-order')]
+    public function deleteOrder($data)
+    {
+        $orderId = $data['order_id'];
+        $this->orderRepository->delete($orderId);
+        $this->dispatch('showToast', 'success', 'Success','Order Deleted');
     }
 
     #[On('searchPerformed')]

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Livewire\Admin\Blog\CreateBlog;
+use App\Livewire\Admin\Blog\EditBlog;
+use App\Livewire\Admin\Blogs;
 use App\Livewire\Dashboard;
 use App\Livewire\Admin\Users;
 use App\Livewire\Admin\User\CreateUser;
@@ -14,7 +17,13 @@ use App\Livewire\Admin\Product\CreateProduct;
 use App\Livewire\Admin\Products;
 use App\Livewire\Admin\Mails;
 use App\Livewire\Admin\Mail\CreateMail;
+use App\Livewire\Admin\Notification\CreateNotification;
+use App\Livewire\Admin\Notification\EditNotification;
+use App\Livewire\Admin\Notifications;
 use App\Livewire\Admin\Product\EditProduct;
+use App\Mail\OrderCancelledMail;
+use App\Models\Mail;
+use Illuminate\Support\Facades\Mail as MailFacade;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,7 +41,7 @@ Route::get('/', function () {
 //         Route::view('/alert', 'admin.components.alert')->name('alert');
 // });
 
-Route::prefix('admin')->name('admin.')->group(function(){
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'loginShow'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
@@ -49,4 +58,23 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::get('/mails', Mails::class)->name('mails');
     Route::get('/mails/create', CreateMail::class)->name('create_mail');
     Route::get('/mails/{editingMailId}/edit', EditMail::class)->name('edit_mail');
+    Route::get('/notifications', Notifications::class)->name('notifications');
+    Route::get('/notifications/create', CreateNotification::class)->name('create_notification');
+    Route::get('/notifications/{editingNotificationId}/edit', EditNotification::class)->name('edit_notification');
+    Route::get('/blogs', Blogs::class)->name('blogs');
+    Route::get('/blogs/create', CreateBlog::class)->name('create_blog');
+    Route::get('/blogs/{editingBlogId}/edit', EditBlog::class)->name('edit_blog');
 });
+Route::get('/test-mail', function () {
+    $template = Mail::first();
+    $variables = [
+        'user_name' => 'Mai Huy',
+        'order_code' => 'ORD123',
+        'cancel_reason' => 'Customer request',
+        'app_name' => config('app.name'),
+    ];
+
+    MailFacade::to('your_email@gmail.com')->sendNow(new OrderCancelledMail($template, $variables));
+    return 'Đã gửi mail thử';
+});
+Route::view('/toast', 'admin.components.toast');

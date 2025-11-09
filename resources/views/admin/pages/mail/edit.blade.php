@@ -7,7 +7,7 @@
     <div class="header-section">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center">
-                <h1 class="main-title">Edit Template</h1>
+                <h2>Edit Template</h2>
             </div>
         </div>
     </div>
@@ -17,18 +17,20 @@
                 <!-- Form Section -->
                 <div class="col-lg-6">
                     <div class="form-section preview-section">
-                        <div class="mb-4">
-                            <label for="type" class="form-label">Loại Email</label>
-                            <select id="type" class="form-control @error('type') is-invalid @enderror"
-                                wire:model="type">
-                                <option value="">-- Chọn loại email --</option>
-                                @foreach (\App\Enums\MailType::cases() as $case)
-                                    <option value="{{ $case->value }}">{{ $case->label() }}</option>
-                                @endforeach
-                            </select>
-                            @error('type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="mb-4 flex-grow-1">
+                                <label for="type" class="form-label">Email Type</label>
+                                <select id="type" class="form-control @error('type') is-invalid @enderror"
+                                    wire:model="type">
+                                    <option value="">-- Select email type --</option>
+                                    @foreach (\App\Enums\MailType::cases() as $case)
+                                        <option value="{{ $case->value }}">{{ $case->label() }}</option>
+                                    @endforeach
+                                </select>
+                                @error('type')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Template Title</label>
@@ -44,7 +46,7 @@
                             <livewire:admin.components.text-editor :content="$body" />
                         </div>
 
-                        <div class="mb-4">
+                        {{-- <div class="mb-4">
                             <label class="form-label">Variables</label>
                             @foreach ($variables as $key => $value)
                                 <div class="d-flex mb-2">
@@ -68,26 +70,35 @@
                             @error('variables')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
-                        </div>
-
+                        </div> --}}
+                        <!-- Variables Section -->
                         <div class="mb-4">
-                            <label class="form-label">Scheduled At</label>
-                            <input type="datetime-local" id="scheduledAt"
-                            class="form-control @error('scheduled_at') is-invalid @enderror"
-                            wire:model="scheduled_at">
-                            @error('scheduled_at')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <!-- Existing Variables Table -->
+                            @if (count($variables) > 0)
+                                <div class="variables-preview mt-4">
+                                    <div class="variables-label">
+                                        <i class="bi bi-code-slash"></i> Template Variables
+                                    </div>
+                                    <div class="variables-list">
+                                        @foreach ($variables as $key => $value)
+                                            <div class="variable-item">
+                                                <code class="variable-key">{{ $key }}</code>
+                                                <span class="variable-arrow">→</span>
+                                                <span class="variable-value">{{ $value }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @error('variables')
+                                    <div class="alert alert-danger alert-sm py-2" role="alert">{{ $message }}</div>
+                                @enderror
+                            @endif
                         </div>
-
-
-                        <button id="update"
-                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Lưu Nội
+{{-- #update is used in ckeditor by js --}}
+                        <button id="update" class="btn-primary-custom">Lưu Nội
                             Dung</button>
-
                     </div>
                 </div>
-
                 <!-- Preview Section -->
                 <div class="col-lg-6">
                     <div class="preview-section" style="top: 20px;">
@@ -121,30 +132,12 @@
                             <!-- Email Body -->
                             <div class="email-body">
                                 <div class="email-content" id="previewContent">
-                                    @if($body)
+                                    @if ($body)
                                         {!! $body !!}
                                     @else
                                         <p class="text-muted">Your email content will appear here...</p>
                                     @endif
                                 </div>
-
-                                <!-- Variables Preview -->
-                                @if(count($variables) > 0)
-                                    <div class="variables-preview mt-4">
-                                        <div class="variables-label">
-                                            <i class="bi bi-code-slash"></i> Template Variables
-                                        </div>
-                                        <div class="variables-list">
-                                            @foreach($variables as $key => $value)
-                                                <div class="variable-item">
-                                                    <code class="variable-key">{{ '{' . $key . '}' }}</code>
-                                                    <span class="variable-arrow">→</span>
-                                                    <span class="variable-value">{{ $value }}</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
 
                                 <!-- Email Footer -->
                                 <div class="email-footer">
@@ -167,7 +160,7 @@
                             <div class="d-flex justify-content-between text-muted small">
                                 <span>
                                     <i class="bi bi-clock"></i>
-                                    @if($scheduled_at)
+                                    @if ($scheduled_at)
                                         Scheduled: {{ date('M d, Y H:i', strtotime($scheduled_at)) }}
                                     @else
                                         Not scheduled
@@ -178,46 +171,49 @@
                                 </span>
                             </div>
                         </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Live preview update for title
-    const titleInput = document.getElementById('templateTitle');
-    const previewTitle = document.getElementById('previewTitle');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Live preview update for title
+        const titleInput = document.getElementById('templateTitle');
+        const previewTitle = document.getElementById('previewTitle');
 
-    if (titleInput) {
-        titleInput.addEventListener('input', function() {
-            previewTitle.textContent = this.value || 'Your email title';
-        });
-    }
+        if (titleInput) {
+            titleInput.addEventListener('input', function() {
+                previewTitle.textContent = this.value || 'Your email title';
+            });
+        }
 
-    // Desktop/Mobile view toggle
-    const desktopBtn = document.getElementById('desktopView');
-    const mobileBtn = document.getElementById('mobileView');
-    const previewContainer = document.getElementById('emailPreviewContainer');
+        // Desktop/Mobile view toggle
+        const desktopBtn = document.getElementById('desktopView');
+        const mobileBtn = document.getElementById('mobileView');
+        const previewContainer = document.getElementById('emailPreviewContainer');
 
-    if (desktopBtn && mobileBtn) {
-        desktopBtn.addEventListener('click', function() {
-            previewContainer.classList.remove('mobile-view');
-            desktopBtn.classList.add('active');
-            mobileBtn.classList.remove('active');
-        });
+        if (desktopBtn && mobileBtn) {
+            desktopBtn.addEventListener('click', function() {
+                previewContainer.classList.remove('mobile-view');
+                desktopBtn.classList.add('active');
+                mobileBtn.classList.remove('active');
+            });
 
-        mobileBtn.addEventListener('click', function() {
-            previewContainer.classList.add('mobile-view');
-            mobileBtn.classList.add('active');
-            desktopBtn.classList.remove('active');
-        });
-    }
+            mobileBtn.addEventListener('click', function() {
+                previewContainer.classList.add('mobile-view');
+                mobileBtn.classList.add('active');
+                desktopBtn.classList.remove('active');
+            });
+        }
 
-    // Livewire event listener for content updates
-    if (typeof Livewire !== 'undefined') {
-        Livewire.on('contentUpdated', function(content) {
-            document.getElementById('previewContent').innerHTML = content || '<p class="text-muted">Your email content will appear here...</p>';
-        });
-    }
-});
+        // Livewire event listener for content updates
+        if (typeof Livewire !== 'undefined') {
+            Livewire.on('contentUpdated', function(content) {
+                document.getElementById('previewContent').innerHTML = content ||
+                    '<p class="text-muted">Your email content will appear here...</p>';
+            });
+        }
+    });
 </script>

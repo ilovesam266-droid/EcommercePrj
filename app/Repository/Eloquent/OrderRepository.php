@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Models\Mail;
 use App\Models\Order;
 use App\Repository\Constracts\OrderRepositoryInterface;
 

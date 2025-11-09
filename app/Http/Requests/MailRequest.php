@@ -24,7 +24,6 @@ class MailRequest extends FormRequest
     public function rules(string $type = 'create', $id = null): array
     {
         $rules =  [
-            'name' => 'required|string|max:255|unique:mails,name',
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'type' => ['required', new Enum(MailType::class)],
@@ -40,10 +39,6 @@ class MailRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The name field is required.',
-            'name.string' => 'The name must be a valid string.',
-            'name.max' => 'The name may not be greater than 255 characters.',
-            'name.unique' => 'This name has already been taken.',
             'title.required' => 'Please enter the email subject.',
             'title.max' => 'The subject may not be greater than 255 characters.',
             'body.required' => 'Please enter the email content.',

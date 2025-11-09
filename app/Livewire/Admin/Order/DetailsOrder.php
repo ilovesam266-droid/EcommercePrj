@@ -3,6 +3,11 @@
 namespace App\Livewire\Admin\Order;
 
 use App\Enums\OrderStatus;
+use App\Events\OrderFailed;
+use App\Events\OrderShipping;
+use App\Events\OrderCancelled;
+use App\Events\OrderConfirmed;
+use App\Events\OrderDone;
 use App\Repository\Constracts\OrderRepositoryInterface;
 use App\Repository\Constracts\UserRepositoryInterface;
 use Livewire\Component;
@@ -86,14 +91,49 @@ class DetailsOrder extends Component
     {
         $this->status = OrderStatus::CANCELED;
         $orderStatus['status'] = $this->status;
-        $this->orderRepository->update($this->orderId, $orderStatus);
+        $orderStatus['canceled_at'] = now();
+        $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $order->load('owner');
+        event(new OrderCancelled($order));
     }
 
     public function confirmOrder()
     {
         $this->status = OrderStatus::CONFIRMED;
         $orderStatus['status'] = $this->status;
-        $this->orderRepository->update($this->orderId, $orderStatus);
+        $orderStatus['confirmed_at'] = now();
+        $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $order->load('owner');
+        event(new OrderConfirmed($order));
+    }
+
+    public function shipOrder()
+    {
+        $this->status = OrderStatus::SHIPPING;
+        $orderStatus['status'] = $this->status;
+        $orderStatus['shipping_at'] = now();
+        $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $order->load('owner');
+        event(new OrderShipping($order));
+    }
+
+    public function failedOrder()
+    {
+        $this->status = OrderStatus::FAILED;
+        $orderStatus['status'] = $this->status;
+        $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $order->load('owner');
+        event(new OrderFailed($order));
+    }
+
+    public function doneOrder()
+    {
+        $this->status = OrderStatus::DONE;
+        $orderStatus['status'] = $this->status;
+        $orderStatus['done_at'] = now();
+        $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $order->load('owner');
+        event(new OrderDone($order));
     }
 
     public function saveAdminNote()

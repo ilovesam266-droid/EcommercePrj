@@ -66,7 +66,7 @@ const editor = await ClassicEditor.create(element, {
             'alignment', 'outdent', 'indent',
             '|',
             'link', 'blockQuote', 'code', 'codeBlock',
-            '-',
+            '|',
             'insertTable', 'insertImage', 'mediaEmbed', 'horizontalLine', 'htmlEmbed',
             '|',
             'strikethrough', 'subscript', 'superscript',

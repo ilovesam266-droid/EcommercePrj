@@ -1,7 +1,7 @@
 <div class="variant-table">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="section-title mb-0">Product Variant</h3>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#variantModal"
+        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#variantModal"
             wire:click="showCreateVariantModal">
             + Add Product Variant
         </button>

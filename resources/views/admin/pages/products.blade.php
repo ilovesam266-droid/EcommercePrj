@@ -11,8 +11,8 @@
                     <h3 class="mb-0">
                         <i class="bi bi-box-seam"></i> Product List
                     </h3>
-                    <a href="{{ route('admin.create_product') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Add Product
+                    <a href="{{ route('admin.create_product') }}" class="btn btn-primary-custom">
+                        <i class="bi bi-plus-circle"></i>    + Add Product
                     </a>
                 </div>
                 <div class="p-4">
@@ -52,7 +52,7 @@
                                         <td>
                                             <div class="text-nowrap">{{ $product->name }}</div>
                                             <div class="small text-body-secondary text-nowrap">
-                                                <span>{{ $product->name }}</span> |
+                                                <span>#PRODUCT-{{ $product->id }}</span> |
                                                 Created At:
                                                 {{ $product->created_at->format('d/m/Y') ?? 'Not updated yet' }}
                                             </div>
@@ -87,8 +87,7 @@
                                                         </i>
                                                     </a>
                                                     <button class="btn btn-sm btn-danger btn-action"
-                                                        wire:click="deleteProduct({{ $product->id }})"
-                                                        wire:confirm="Are you sure you want to delete this product?">
+                                                        wire:click="confirmDelete({{ $product->id }})">
                                                         <i class="bi bi-pencil">
                                                             <svg class="nav-icon" style="width: 20px;height: 20px;">
                                                                 <use
@@ -109,6 +108,7 @@
                 </div>
             </div>
         </div>
+        <livewire:admin.components.modal-confirm />
         <div class="mt-4">
             {{ $this->products->onEachSide(1)->links() }}
         </div>

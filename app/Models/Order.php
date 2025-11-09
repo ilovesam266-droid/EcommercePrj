@@ -31,6 +31,7 @@ class Order extends Model
         'status',
         'customer_note',
         'admin_note',
+        'canceled_at',
     ];
 
     public $casts=[

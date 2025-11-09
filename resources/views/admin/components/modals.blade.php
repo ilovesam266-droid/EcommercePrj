@@ -1,18 +1,32 @@
-<!-- Modal -->
-<div class="modal fade" id="exampleModalLive" tabindex="-1" aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLiveLabel">Modal title</h5>
-                <button class="btn-close" type="button" data-coreui-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Woohoo, you're reading this text in a modal!</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
-                <button class="btn btn-primary" type="button">Save changes</button>
+<div>
+    <!-- Modal -->
+    <div class="modal fade @if($show) show d-block @endif" tabindex="-1" @if($show) style="background:rgba(0,0,0,0.5);" @endif
+    wire:click.self="cancel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">{{ $title }}</h5>
+                    <button type="button" class="btn-close" wire:click="cancel"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ $message }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" wire:click="cancel">Hủy</button>
+                    <button class="btn btn-danger" wire:click="confirm">Xác nhận</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Optional: Ngăn cuộn khi modal mở -->
+@if($show)
+    <script>
+        document.body.classList.add('modal-open');
+    </script>
+@else
+    <script>
+        document.body.classList.remove('modal-open');
+    </script>
+@endif

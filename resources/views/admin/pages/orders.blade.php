@@ -4,9 +4,9 @@
             {{ session('message') }}
         </div>
     @endif
-<div class="card shadow-sm rounded mb-4">
-            <livewire:admin.components.search-filter :filterConfigs="$orderFiltersConfig" placeholderSearch="Search by name" />
-        </div>
+    <div class="card shadow-sm rounded mb-4">
+        <livewire:admin.components.search-filter :filterConfigs="$orderFiltersConfig" placeholderSearch="Search by name" />
+    </div>
     <!-- Orders Table -->
     <div class="card shadow-sm rounded">
         <div class="table-responsive align-middle">
@@ -14,8 +14,8 @@
                 <h3 class="mb-0">
                     <i class="bi bi-box-seam"></i> Order List
                 </h3>
-                <a class="btn btn-primary" href="{{ route('admin.create_order') }}">
-                    <i class="bi bi-plus-circle"></i> Add Order
+                <a class="btn btn-primary-custom" href="{{ route('admin.create_order') }}">
+                    <i class="bi bi-plus-circle"></i> + Add Order
                 </a>
             </div>
             <div class="p-4">
@@ -40,7 +40,7 @@
                                         <div class="text-nowrap">#ORD-{{ $order->id }}</div>
                                     </td>
                                     <td>
-                                                {{-- <div class="d-flex align-items-center py-1">
+                                        {{-- <div class="d-flex align-items-center py-1">
                                                     <div class="rounded-circle bg-danger bg-opacity-10 d-flex align-items-center justify-content-center me-2"
                                                         style="width: 28px; height: 28px; min-width: 28px;">
                                                         <i class="bi bi-geo-alt-fill text-danger"
@@ -53,7 +53,8 @@
                                         <div class="small text-body-secondary text-nowrap">
                                             <span>{{ $order->owner->username }}</span>
                                         </div>
-                                        <div class="small text-body-secondary text-nowrap">{{ $order->owner->email }}</div>
+                                        <div class="small text-body-secondary text-nowrap">{{ $order->owner->email }}
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">{{ $order->province }}</div>
@@ -83,8 +84,9 @@
                                                     </use>
                                                 </svg>
                                             </button>
-                                            <button class="btn btn-sm btn-danger btn-action" title="Delete" wire:click="deleteOrder({{ $order->id }})"
-                                                wire:confirm="Are you sure you want to delete this order">
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete"
+                                                wire:click="confirmDelete({{ $order->id }})"
+                                                >
                                                 <svg class="nav-icon" style="width: 20px;height: 20px;">
                                                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-trash">
                                                     </use>
@@ -122,6 +124,7 @@
             </div>
         </div>
     @endif
+    <livewire:admin.components.modal-confirm />
     <!-- Pagination -->
     <div class="mt-4">
         {{ $this->orders->onEachSide(1)->links() }}

@@ -80,9 +80,23 @@ class Users extends Component
         $this->reset(['editingUserId']); // Xóa ID người dùng đang chỉnh sửa
     }
 
-    public function deleteUser($userId)
+    public function confirmDelete($userId)
     {
-        return $this->userRepository->delete($userId);
+        $this->dispatch(
+            'showConfirm',
+            'Confirm user deletion',
+            'Are you sure you want to delete this user <<'.$userId.'>>?',
+            'delete-user',
+            ['user_id' => $userId],
+        );
+    }
+
+    #[On('delete-user')]
+    public function deleteUser($data)
+    {
+        $userId = $data['user_id'];
+        $this->userRepository->delete($userId);
+        $this->dispatch('userDeleted');
     }
 
     #[Computed()]

@@ -19,26 +19,18 @@
                     <div class="form-section preview-section">
                         <div class="d-flex align-items-center gap-3">
                             <div class="mb-4 flex-grow-1">
-                            <label for="emailName" class="form-label">Email Name</label>
-                            <input type="text" id="emailName" name="name" class="form-control @error('name') is-invalid @enderror"
-                                placeholder="Enter email name" wire:model="name">
-                                @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-4 flex-grow-1">
-                            <label for="type" class="form-label">Email Type</label>
-                            <select id="type" class="form-control @error('type') is-invalid @enderror"
-                                wire:model="type">
-                                <option value="">-- Select email type --</option>
-                                @foreach (\App\Enums\MailType::cases() as $case)
-                                    <option value="{{ $case->value }}">{{ $case->label() }}</option>
-                                @endforeach
-                            </select>
-                            @error('type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                <label for="type" class="form-label">Email Type</label>
+                                <select id="type" class="form-control @error('type') is-invalid @enderror"
+                                    wire:model="type">
+                                    <option value="">-- Select email type --</option>
+                                    @foreach (\App\Enums\MailType::cases() as $case)
+                                        <option value="{{ $case->value }}">{{ $case->label() }}</option>
+                                    @endforeach
+                                </select>
+                                @error('type')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Template Title</label>
@@ -51,34 +43,30 @@
                         <div class="mb-4">
                             <label class="form-label">Email Content</label>
                             {{-- <textarea class="form-control" id="emailContent" placeholder="Write your email content here..."></textarea> --}}
-                            <livewire:admin.components.text-editor />
+                            <livewire:admin.components.text-editor :content="$body"/>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label">Variables</label>
-                            @foreach ($variables as $key => $value)
-                                <div class="d-flex mb-2">
-                                    <input type="text" class="form-control me-2"
-                                        wire:model.defer="variables.{{ $key }}"
-                                        placeholder="{{ $key }}">
-                                    <button type="button" wire:click="removeVariable('{{ $key }}')"
-                                        class="btn btn-danger btn-sm">X</button>
+                            <!-- Existing Variables Table -->
+                            @if (count($variables) > 0)
+                                <div class="variables-preview mt-4">
+                                    <div class="variables-label">
+                                        <i class="bi bi-code-slash"></i> Template Variables
+                                    </div>
+                                    <div class="variables-list">
+                                        @foreach ($variables as $key => $value)
+                                            <div class="variable-item">
+                                                <code class="variable-key">{{ $key }}</code>
+                                                <span class="variable-arrow">→</span>
+                                                <span class="variable-value">{{ $value }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            @endforeach
-
-                            <div class="d-flex">
-                                <input type="text" class="form-control me-2" wire:model.defer="newVariableKey"
-                                    placeholder="Key">
-                                <input type="text" class="form-control me-2" wire:model.defer="newVariableValue"
-                                    placeholder="Value">
-                                <button type="button" wire:click="addVariable"
-                                    class="btn btn-primary btn-sm">Add</button>
-                            </div>
-
-                            @error('variables')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
+                                @error('variables')
+                                    <div class="alert alert-danger alert-sm py-2" role="alert">{{ $message }}</div>
+                                @enderror
+                            @endif
                         </div>
-
                         <div class="mb-4">
                             <label class="form-label">Scheduled At</label>
                             <input type="datetime-local" id="scheduledAt"
@@ -88,7 +76,8 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button id="save" class="btn btn-primary">Lưu Nội Dung</button>
+                        {{-- #save is used in ckeditor by js --}}
+                        <button id="save" class="btn btn-primary-custom">Lưu Nội Dung</button>
                     </div>
                 </div>
 
@@ -112,7 +101,7 @@
                             <div class="email-header">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="bi bi-envelope-fill text-primary me-2"></i>
-                                    <small class="text-muted">noreply@yourcompany.com</small>
+                                    <small class="text-white">noreply@yourcompany.com</small>
                                 </div>
                                 <div class="email-subject">
                                     <div class="subject-label">SUBJECT</div>

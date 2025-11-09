@@ -47,6 +47,10 @@
         </div>
       </div>
     @include('admin.partials.footer')
+    <livewire:admin.components.toast />
+
+    @livewireScripts
+    {{-- <script src="//unpkg.com/alpinejs" defer></script> --}}
     </div>
     @vite(['resources/js/app.js'/* , 'resources/js/ckeditor.js' */])
     <!-- CoreUI and necessary plugins-->

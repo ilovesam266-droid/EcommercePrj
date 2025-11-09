@@ -21,7 +21,6 @@
         .upload-header h2 {
             font-size: 2.2em;
             margin-bottom: 10px;
-            color: #007bff;
             font-weight: 700;
         }
 
