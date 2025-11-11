@@ -60,7 +60,16 @@
                                             </div>
                                     </td>
                                     <td>
-                                        <div class="text-nowrap">{{ $review->product->name }}</div>
+                                        <div class="text-nowrap">{{ $review->product->name }}<span class="copy-icon"
+                                                    onclick="copyToClipboard('{{ $review->product->name }}')"
+                                                    title="Copy review">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18"
+                                                        height="18" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path d="M10 1.5v1H4a1 1 0 0 0-1 1v8H2V3a2 2 0 0 1 2-2h6z" />
+                                                        <path
+                                                            d="M5 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5zm1 0v9h6V5H6z" />
+                                                    </svg>
+                                                </span></div>
                                         <div class="small text-body-secondary text-nowrap">
                                             <span>SKU: {{ $review->product->slug ?? 'N/A' }}</span>
                                         </div>

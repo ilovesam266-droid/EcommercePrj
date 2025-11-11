@@ -21,6 +21,7 @@
                     <table class="table table-hover border mb-0">
                         <thead class="table-light align-middle centered-cell">
                             <tr>
+                                <th>#</th>
                                 <th>Notification</th>
                                 <th>Category</th>
                                 <th>Content</th>
@@ -31,6 +32,9 @@
                         <tbody>
                             @foreach ($this->notifications as $notification)
                                 <tr class="align-middle">
+                                    <td>
+                                        <div class="text-nowrap">{{ $loop->iteration }}</div>
+                                    </td>
                                     <td>
                                         <div class="text-nowrap">Title: {{ $notification->title }}</div>
                                         <div class="small text-body-secondary text-nowrap">#NOTIFICATION-{{ $notification->id }}

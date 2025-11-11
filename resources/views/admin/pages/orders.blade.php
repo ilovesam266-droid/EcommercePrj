@@ -23,7 +23,7 @@
                     <table class="table table-hover border mb-0">
                         <thead class="table-light align-middle centered-cell">
                             <tr>
-                                <th>Order</th>
+                                <th>#</th>
                                 <th>User</th>
                                 <th>Address</th>
                                 <th>Total Price</th>
@@ -37,7 +37,7 @@
                             @foreach ($this->orders as $order)
                                 <tr class="align-middle">
                                     <td>
-                                        <div class="text-nowrap">#ORD-{{ $order->id }}</div>
+                                        <div class="text-nowrap">{{ $loop->iteration }}</div>
                                     </td>
                                     <td>
                                         {{-- <div class="d-flex align-items-center py-1">
