@@ -18,14 +18,20 @@
                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
                 </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a>
         </li>
-        <li class="nav-title">Theme</li>
+        <li class="nav-title">User</li>
         <li class="nav-item">
             <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.user') }}">
                 <svg class="nav-icon">
                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-user"></use>
                 </svg> User</a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.addresses') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-address-book"></use>
+                </svg> Address</a>
+        </li>
+        <li class="nav-title">Product</li>
         <li class="nav-item">
             <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.products') }}">
                 <svg class="nav-icon">
@@ -33,11 +39,33 @@
                 </svg> Product</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.review') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-star"></use>
+                </svg> Review</a>
+        </li>
+
+        <li class="nav-title">Blog</li>
+        <li class="nav-item">
+            <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.blogs') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-align-left"></use>
+                </svg> Blog</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.comments') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-comment-bubble"></use>
+                </svg> Comment</a>
+        </li>
+        <li class="nav-title">Order</li>
+        <li class="nav-item">
             <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.orders') }}">
                 <svg class="nav-icon">
                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-notes"></use>
                 </svg> Order</a>
         </li>
+        <li class="nav-title">Noti</li>
         <li class="nav-item">
             <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.mails') }}">
                 <svg class="nav-icon">
@@ -49,12 +77,6 @@
                 <svg class="nav-icon">
                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
                 </svg> Notification</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.blogs') }}">
-                <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-envelope-closed"></use>
-                </svg> Blog</a>
         </li>
         <li class="nav-title">Image</li>
         <li class="nav-item">

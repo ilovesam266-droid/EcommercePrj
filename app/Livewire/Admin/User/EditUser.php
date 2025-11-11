@@ -10,11 +10,13 @@ use Livewire\WithFileUploads;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
+use Livewire\Attributes\Title;
 
 class EditUser extends Component
 {
     use WithFileUploads;
 
+    protected UserRepositoryInterface $userRepository;
     public $userId = null;
     public $first_name;
     public $last_name;
@@ -25,8 +27,6 @@ class EditUser extends Component
     public $role;
     public $status;
     public $avatar;
-
-    protected UserRepositoryInterface $userRepository;
 
     public function boot(UserRepositoryInterface $repository)
     {
@@ -98,6 +98,7 @@ class EditUser extends Component
     }
 
     #[Layout('layouts.page-layout')]
+    #[Title('Edit User')]
     public function render()
     {
         return view('admin.pages.user.update');

@@ -13,6 +13,7 @@ class SendOrderCancelledEmail implements ShouldQueue
     use InteractsWithQueue;
 
     protected MailService $mailService;
+
     public function __construct(MailService $mail_service)
     {
         $this->mailService = $mail_service;

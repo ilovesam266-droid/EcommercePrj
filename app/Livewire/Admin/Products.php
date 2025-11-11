@@ -76,7 +76,10 @@ class Products extends Component
             ['*'],
             ['images' => function ($query) {
                 $query->wherePivot('is_primary', true);
-            }, 'categories'],
+            }, 'categories',
+            'reviews' => function ($query) {
+                $query->select('product_id', 'rating');
+            }, 'creator'],
             false,
         );
     }

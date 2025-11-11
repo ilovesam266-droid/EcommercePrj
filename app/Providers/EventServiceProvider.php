@@ -9,6 +9,7 @@ use App\Events\OrderDone;
 use App\Events\OrderFailed;
 use App\Events\OrderShipping;
 use App\Listeners\SendOrderCancelledEmail;
+use App\Listeners\SendOrderCancelledNotification;
 use App\Listeners\SendOrderDoneEmail;
 use App\Listeners\SendOrderFailedEmail;
 use App\Listeners\SendOrderShippingEmail;
@@ -20,6 +21,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         OrderCancelled::class => [
             SendOrderCancelledEmail::class,
+            SendOrderCancelledNotification::class,
         ],
         OrderConfirmed::class => [
             SendOrderConfirmedEmail::class,

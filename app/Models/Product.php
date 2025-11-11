@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Enums\ProductStatus;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Product extends Model
@@ -34,6 +35,7 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
     public function variant_sizes()
     {
         return $this->hasMany(ProductVariantSize::class, 'product_id');
@@ -49,6 +51,16 @@ class Product extends Model
         return $this->morphToMany(Image::class, 'imageable')
                     ->withPivot('is_primary', 'order_of_images')
                     ->withTimestamps();
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->HasMany(Review::class, 'product_id');
+    }
+
+    public function averageRating(): float
+    {
+        return $this->reviews->avg('rating') ?? 0;
     }
 
     protected static function booted()

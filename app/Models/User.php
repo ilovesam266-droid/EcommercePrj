@@ -12,6 +12,7 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -82,14 +83,14 @@ class User extends Authenticatable
             set: fn($value) => strtolower($value),
         );
     }
-    public function scopePublished()
-    {
-        $this->where('created_at', '<=', Carbon::now());
-    }
-    public function scopeSearch()
-    {
-        $this->where('username');
-    }
+    // public function scopePublished()
+    // {
+    //     $this->where('created_at', '<=', Carbon::now());
+    // }
+    // public function scopeSearch()
+    // {
+    //     $this->where('username');
+    // }
 
     public function products(): HasMany
     {
@@ -106,9 +107,9 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'owner_id');
     }
 
-    public function addressUsers(): HasMany
+    public function addresses(): HasMany
     {
-        return $this->hasMany(AddressUser::class, 'user_id');
+        return $this->HasMany(Address::class, 'user_id');
     }
 
     public function categories()

@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Livewire\Admin\Addresses;
 use App\Livewire\Admin\Blog\CreateBlog;
 use App\Livewire\Admin\Blog\EditBlog;
 use App\Livewire\Admin\Blogs;
+use App\Livewire\Admin\Comments;
 use App\Livewire\Dashboard;
 use App\Livewire\Admin\Users;
 use App\Livewire\Admin\User\CreateUser;
@@ -21,8 +23,11 @@ use App\Livewire\Admin\Notification\CreateNotification;
 use App\Livewire\Admin\Notification\EditNotification;
 use App\Livewire\Admin\Notifications;
 use App\Livewire\Admin\Product\EditProduct;
+use App\Livewire\Admin\Reviews;
 use App\Mail\OrderCancelledMail;
 use App\Models\Mail;
+use App\Models\Order;
+use App\Notifications\OrderCancelledNotification;
 use Illuminate\Support\Facades\Mail as MailFacade;
 
 Route::get('/', function () {
@@ -64,17 +69,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/blogs', Blogs::class)->name('blogs');
     Route::get('/blogs/create', CreateBlog::class)->name('create_blog');
     Route::get('/blogs/{editingBlogId}/edit', EditBlog::class)->name('edit_blog');
+    Route::get('/reviews', Reviews::class)->name('review');
+    Route::get('/comments', Comments::class)->name('comments');
+    Route::get('/addresses', Addresses::class)->name('addresses');
 });
-Route::get('/test-mail', function () {
-    $template = Mail::first();
-    $variables = [
-        'user_name' => 'Mai Huy',
-        'order_code' => 'ORD123',
-        'cancel_reason' => 'Customer request',
-        'app_name' => config('app.name'),
-    ];
+// Route::get('/test-mail', function () {
+//     $template = Mail::first();
+//     $variables = [
+//         'user_name' => 'Mai Huy',
+//         'order_code' => 'ORD123',
+//         'cancel_reason' => 'Customer request',
+//         'app_name' => config('app.name'),
+//     ];
 
-    MailFacade::to('your_email@gmail.com')->sendNow(new OrderCancelledMail($template, $variables));
-    return 'Đã gửi mail thử';
-});
+//     MailFacade::to('your_email@gmail.com')->sendNow(new OrderCancelledMail($template, $variables));
+//     return 'Đã gửi mail thử';
+// });
+// Route::get('/test-notification', function () {
+//     // Giả sử bạn có 1 order để test
+//     $order = Order::with('owner')->first();
+//     // dd($order);
+//     if (!$order || !$order->owner) {
+//         return 'Không tìm thấy order hoặc user.';
+//     }
+
+//     // Gửi notification (chạy ngay, không queue)
+//     $order->owner->notify(new OrderCancelledNotification($order));
+
+//     return '✅ Notification đã gửi — kiểm tra bảng notification_recipients nhé!';
+// });
 Route::view('/toast', 'admin.components.toast');

@@ -14,6 +14,8 @@ class Blogs extends Component
 {
     use WithPagination;
     protected BlogRepositoryInterface $blogRepository;
+    public string $search = '';
+    public array $filter = [];
     public $sort = ['created_at' => 'asc'];
     public $perPage = 5;
     public $blogId = null;
@@ -27,12 +29,24 @@ class Blogs extends Component
         'userDeleted' => '$refresh',
     ];
 
+    #[On('searchPerformed')]
+    public function updatedSearchTemp($searchTemp)
+    {
+        $this->search = $searchTemp;
+    }
+
+    #[On('resetPage')]
+    public function Search()
+    {
+        $this->resetPage();
+    }
+
     public function confirmDelete($blogId)
     {
         $this->dispatch(
             'showConfirm',
             'Confirm blog deletion',
-            'Are you sure you want to delete this blog <<'.$blogId.'>>?',
+            'Are you sure you want to delete this blog <<' . $blogId . '>>?',
             'delete-blog',
             ['blog_id' => $blogId],
         );
@@ -65,6 +79,7 @@ class Blogs extends Component
     #[Title('Blogs')]
     public function render()
     {
-        return view('admin.pages.blogs');
+         $blogFiltersConfig = [];
+        return view('admin.pages.blogs', compact('blogFiltersConfig'));
     }
 }

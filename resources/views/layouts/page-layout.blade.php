@@ -34,7 +34,7 @@
     <link href="{{ asset('css/examples.css') }}" rel="stylesheet">
     <script src="{{ asset('js/config.js') }}"></script>
     <script src="{{ asset('js/color-modes.js') }}"></script>
-    {{-- <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script> --}}
+    <script src="{{ asset('js/copy.js') }}"></script>
   </head>
   <body>
     @include('admin.partials.sidebar')
