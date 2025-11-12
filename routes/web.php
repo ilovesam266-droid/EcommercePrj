@@ -7,6 +7,8 @@ use App\Livewire\Admin\Blog\CreateBlog;
 use App\Livewire\Admin\Blog\EditBlog;
 use App\Livewire\Admin\Blogs;
 use App\Livewire\Admin\Categories;
+use App\Livewire\Admin\Category\CreateCategory;
+use App\Livewire\Admin\Category\EditCategory;
 use App\Livewire\Admin\Comments;
 use App\Livewire\Dashboard;
 use App\Livewire\Admin\Users;
@@ -32,20 +34,8 @@ use App\Notifications\OrderCancelledNotification;
 use Illuminate\Support\Facades\Mail as MailFacade;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('admin/login');
 });
-
-/**
- * Check action view
- */
-// Route::prefix('admin')->name('admin.')->group(function(){
-//         Route::view('/', 'admin.pages.auth.login')->name('login');
-//         Route::view('/login', 'admin.pages.auth.login')->name('login');
-//         Route::view('/register', 'admin.pages.auth.register')->name('register');
-//         Route::view('/forgot-password', 'admin.pages.auth.forgot')->name('password.request');
-//         Route::view('/dashboard', 'admin.pages.dashboard')->name('dashboard');
-//         Route::view('/alert', 'admin.components.alert')->name('alert');
-// });
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'loginShow'])->name('login');
@@ -53,28 +43,53 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/user', Users::class)->name('user');
-    Route::post('/user/create', CreateUser::class)->name('create_user');
+    Route::prefix('user')->group(function () {
+        Route::get('', Users::class)->name('user');
+        Route::post('/create', CreateUser::class)->name('create_user');
+    });
+
     Route::get('/images', Images::class)->name('images');
-    Route::get('/products', Products::class)->name('products');
-    Route::get('/products/create', CreateProduct::class)->name('create_product');
-    Route::get('/products/{editingProductId}/edit', EditProduct::class)->name('edit_product');
-    Route::get('/orders', Orders::class)->name('orders');
-    Route::get('/orders/create', CreateOrder::class)->name('create_order');
-    Route::get('/mails', Mails::class)->name('mails');
-    Route::get('/mails/create', CreateMail::class)->name('create_mail');
-    Route::get('/mails/{editingMailId}/edit', EditMail::class)->name('edit_mail');
-    Route::get('/notifications', Notifications::class)->name('notifications');
-    Route::get('/notifications/create', CreateNotification::class)->name('create_notification');
-    Route::get('/notifications/{editingNotificationId}/edit', EditNotification::class)->name('edit_notification');
-    Route::get('/blogs', Blogs::class)->name('blogs');
-    Route::get('/blogs/create', CreateBlog::class)->name('create_blog');
-    Route::get('/blogs/{editingBlogId}/edit', EditBlog::class)->name('edit_blog');
+
+    Route::prefix('products')->group(function () {
+        Route::get('', Products::class)->name('products');
+        Route::get('/create', CreateProduct::class)->name('create_product');
+        Route::get('/{editingProductId}/edit', EditProduct::class)->name('edit_product');
+    });
+
+    Route::prefix('orders')->group(function () {
+        Route::get('', Orders::class)->name('orders');
+        Route::get('/create', CreateOrder::class)->name('create_order');
+    });
+
+    Route::prefix('mails')->group(function () {
+        Route::get('', Mails::class)->name('mails');
+        Route::get('/create', CreateMail::class)->name('create_mail');
+        Route::get('/{editingMailId}/edit', EditMail::class)->name('edit_mail');
+    });
+
+    Route::prefix('notifications')->group(function () {
+        Route::get('', Notifications::class)->name('notifications');
+        Route::get('/create', CreateNotification::class)->name('create_notification');
+        Route::get('/{editingNotificationId}/edit', EditNotification::class)->name('edit_notification');
+    });
+
+    Route::prefix('blogs')->group(function () {
+        Route::get('', Blogs::class)->name('blogs');
+        Route::get('/create', CreateBlog::class)->name('create_blog');
+        Route::get('/{editingBlogId}/edit', EditBlog::class)->name('edit_blog');
+    });
+
+    Route::prefix('categories')->group(function () {
+        Route::get('', Categories::class)->name('categories');
+        Route::get('/create', CreateCategory::class)->name('create_category');
+        Route::get('/{editingCategoryId}/edit', EditCategory::class)->name('edit_category');
+    });
+
     Route::get('/reviews', Reviews::class)->name('review');
     Route::get('/comments', Comments::class)->name('comments');
     Route::get('/addresses', Addresses::class)->name('addresses');
-    Route::get('categories', Categories::class)->name('categories');
 });
+Route::view('/index', 'clients.pages.index');
 // Route::get('/test-mail', function () {
 //     $template = Mail::first();
 //     $variables = [
