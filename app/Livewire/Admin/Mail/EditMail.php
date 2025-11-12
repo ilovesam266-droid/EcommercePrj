@@ -13,6 +13,7 @@ use Livewire\Attributes\Title;
 class EditMail extends Component
 {
     protected MailRepositoryInterface $mailRepository;
+    protected MailRequest $mailRequest;
     public $editingMailId = null;
     public $name = '';
     public $title = '';
@@ -21,19 +22,24 @@ class EditMail extends Component
     public $type = 'notification';
     public $scheduled_at;
 
-    public function rules()
+    public function __construct()
     {
-        return (new MailRequest()->rules('edit', $this->editingMailId));
-    }
-
-    public function messages()
-    {
-        return (new MailRequest()->messages());
+        $this->mailRequest = new MailRequest();
     }
 
     public function boot(MailRepositoryInterface $mail_repository)
     {
         $this->mailRepository = $mail_repository;
+    }
+
+    public function rules()
+    {
+        return $this->mailRequest->rules('edit', $this->editingMailId);
+    }
+
+    public function messages()
+    {
+        return $this->mailRequest->messages();
     }
 
     public function mount($editingMailId)
@@ -77,7 +83,9 @@ class EditMail extends Component
         ]);
         $mail = $this->mailRepository->update($this->editingMailId, $mailData);
         if ($mail) {
-            session()->flash('message', 'Mail is updated successfully!');
+            $this->dispatch('showToast', 'success', 'Success', 'Mail is updated successfully!');
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Mail is updated failed!');
         }
     }
 

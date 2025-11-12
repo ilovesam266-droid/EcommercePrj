@@ -9,12 +9,18 @@ use Livewire\Component;
 class CreateProductVariant extends Component
 {
     protected ProductVariantSizeRepositoryInterface $productVariantRepository;
+    protected ProductVariantRequest $productVariantRequest;
     public $productId = null;
     public $variant_size = '';
     public $sku = '';
     public $price = 0;
     public $total_sold = 0;
     public $stock = 0;
+
+    public function __construct()
+    {
+        $this->productVariantRequest = new ProductVariantRequest();
+    }
 
     public function boot(ProductVariantSizeRepositoryInterface $repository)
     {
@@ -23,12 +29,12 @@ class CreateProductVariant extends Component
 
     public function rules()
     {
-        return (new ProductVariantRequest()->rules());
+        return $this->productVariantRequest->rules();
     }
 
     public function messages()
     {
-        return (new ProductVariantRequest()->messages());
+        return $this->productVariantRequest->messages();
     }
 
     public function mount($productId)
@@ -48,9 +54,13 @@ class CreateProductVariant extends Component
         ]);
         $productVariantData['product_id'] = $this->productId;
 
-        $this->productVariantRepository->create($productVariantData);
-        $this->reset(['variant_size', 'sku', 'price', 'total_sold', 'stock']);
-        session()->flash('message', 'Product variant created successfully!');
+        $productVariant = $this->productVariantRepository->create($productVariantData);
+        if ($productVariant) {
+            $this->reset(['variant_size', 'sku', 'price', 'total_sold', 'stock']);
+            $this->dispatch('showToast', 'success', 'Success', 'Product variant created successfully!');
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Product variant created failed!');
+        }
     }
 
     public function render()

@@ -13,11 +13,17 @@ use App\Repository\Constracts\MailRepositoryInterface;
 class CreateMail extends Component
 {
     protected MailRepositoryInterface $mailRepository;
+    protected MailRequest $mailRequest;
     public $title = '';
     public $body = '';
     public $variables = [];
     public $type = 'notification';
     public $scheduled_at;
+
+    public function __construct()
+    {
+        $this->mailRequest = new MailRequest();
+    }
 
     public function boot(MailRepositoryInterface $mail_repository)
     {
@@ -26,12 +32,12 @@ class CreateMail extends Component
 
     public function rules()
     {
-        return (new MailRequest()->rules());
+        return $this->mailRequest->rules();
     }
 
     public function messages()
     {
-        return (new MailRequest()->messages());
+        return $this->mailRequest->messages();
     }
 
     #[On('save-mail')]
@@ -55,7 +61,9 @@ class CreateMail extends Component
         $mailData['created_by'] = Auth::id();
         $mail = $this->mailRepository->create($mailData);
         if ($mail) {
-            session()->flash('message', 'Mail is created successfully!');
+            $this->dispatch('showToast', 'success', 'Success', 'Mail is created successfully!');
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Mail is created failed!');
         }
     }
 

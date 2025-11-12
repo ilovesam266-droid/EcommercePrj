@@ -12,6 +12,7 @@ use Livewire\Component;
 class EditNotification extends Component
 {
     protected NotificationRepositoryInterface $notificationRepository;
+    protected NotificationRequest $notificationRequest;
     public $editingNotificationId = null;
     public $name = '';
     public $title = '';
@@ -20,6 +21,11 @@ class EditNotification extends Component
     public $type = 'notification';
     public $scheduled_at;
 
+    public function __construct()
+    {
+        $this->notificationRequest = new NotificationRequest();
+    }
+
     public function boot(NotificationRepositoryInterface $notification_repository)
     {
         $this->notificationRepository = $notification_repository;
@@ -27,12 +33,12 @@ class EditNotification extends Component
 
     public function rules()
     {
-        return (new NotificationRequest()->rules());
+        return $this->notificationRequest->rules();
     }
 
     public function messages()
     {
-        return (new NotificationRequest()->messages());
+        return $this->notificationRequest->messages();
     }
 
     public function mount($editingNotificationId)
@@ -76,7 +82,9 @@ class EditNotification extends Component
         ]);
         $notification = $this->notificationRepository->update($this->editingNotificationId, $notificationData);
         if ($notification) {
-            session()->flash('message', 'Mail is updated successfully!');
+            $this->dispatch('showToast', 'success', 'Success', 'Notification is updated successfully!');
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Notification is updated failed!');
         }
     }
 

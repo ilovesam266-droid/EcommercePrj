@@ -17,6 +17,7 @@ class EditProduct extends Component
     protected ProductRepositoryInterface $productRepository;
     protected ImageRepositoryInterface $imageRepository;
     protected CategoryRepositoryInterface $categoryRepository;
+    protected ProductRequest $productRequest;
     public $productId = null;
     public $name = '';
     public $slug = '';
@@ -24,6 +25,11 @@ class EditProduct extends Component
     public $status = 'active';
     public $selectedCategories = [];
     public $image_ids = [];
+
+    public function __construct()
+    {
+        $this->productRequest = new ProductRequest();
+    }
 
     public function boot(ProductRepositoryInterface $product_repository, ImageRepositoryInterface $image_repository, CategoryRepositoryInterface $category_repository)
     {
@@ -37,11 +43,11 @@ class EditProduct extends Component
 
     public function rules()
     {
-        return (new ProductRequest()->rules());
+        return $this->productRequest->rules();
     }
     public function messages()
     {
-        return (new ProductRequest()->messages());
+        return $this->productRequest->messages();
     }
 
     public function mount($editingProductId)
@@ -75,22 +81,25 @@ class EditProduct extends Component
             'status',
         ]);
         $product = $this->productRepository->update($this->productId, $productData);
-        if (!empty($this->selectedCategories)) {
-            $product->categories()->sync($this->selectedCategories);
-        }
-        if (!empty($this->image_ids)) {
-            $imagePivotData = [];
-            foreach ($this->image_ids as $index => $image) {
-                $imagePivotData[$image] = [
-                    'is_primary' => $index == 0,
-                    'order_of_images' => $index,
-                ];
+        if ($product) {
+            if (!empty($this->selectedCategories)) {
+                $product->categories()->sync($this->selectedCategories);
             }
-            $product->images()->sync($imagePivotData);
+            if (!empty($this->image_ids)) {
+                $imagePivotData = [];
+                foreach ($this->image_ids as $index => $image) {
+                    $imagePivotData[$image] = [
+                        'is_primary' => $index == 0,
+                        'order_of_images' => $index,
+                    ];
+                }
+                $product->images()->sync($imagePivotData);
+            }
+            $this->dispatch('showToast', 'success', 'Success', 'Product is updated successfully!');
+            return redirect(route('admin.products'));
+        } else {
+            $this->dispatch('showToast', 'success', 'Success', 'Product is updated failed!');
         }
-
-        session()->flash('message', 'User is created successfully!');
-        return redirect(route('admin.products'));
     }
 
     #[On('imagesSelected')]
@@ -141,6 +150,6 @@ class EditProduct extends Component
             $query->whereIn('id', $this->image_ids)
                 ->when($this->image_ids, fn($innerQuery) => $innerQuery->orderByRaw('FIELD(id, ' . implode(',', $this->image_ids) . ')'));
         }, [], true);
-        return view('admin.pages.product.edit', compact('images','categories'));
+        return view('admin.pages.product.edit', compact('images', 'categories'));
     }
 }

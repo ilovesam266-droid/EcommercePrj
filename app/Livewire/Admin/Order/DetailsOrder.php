@@ -142,7 +142,7 @@ class DetailsOrder extends Component
         $order = $this->orderRepository->update($this->orderId, $adminNote);
 
         if ($order) {
-            session()->flash('message', 'Update admin note successfully!!!');
+            $this->dispatch('showToast', 'success', 'Success', 'Update admin note successfully!!!');
             $this->isEditingAdminNote = false;
         }
     }

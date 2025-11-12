@@ -17,12 +17,18 @@ class EditBlog extends Component
     protected BlogRepositoryInterface $blogRepository;
     protected CategoryRepositoryInterface $categoryRepository;
     protected ImageRepositoryInterface $imageRepository;
+    protected BlogRequest $blogRequest;
     public $editingBlogId = null;
     public $title = '';
     public $content = '';
     public $selectedCategories = [];
     public bool $openImageModal = false;
     public bool $openCategoryModal = false;
+
+    public function __construct()
+    {
+        $this->blogRequest = new BlogRequest();
+    }
 
     public function boot(BlogRepositoryInterface $blog_repository, CategoryRepositoryInterface $category_repository, ImageRepositoryInterface $image_repository)
     {
@@ -33,12 +39,11 @@ class EditBlog extends Component
 
     public function rules()
     {
-        return (new BlogRequest()->rules());
+        return $this->blogRequest->rules();
     }
-
     public function messages()
     {
-        return (new BlogRequest()->messages());
+        return $this->blogRequest->messages();
     }
 
     public function mount($editingBlogId)
@@ -76,7 +81,13 @@ class EditBlog extends Component
         ]);
         $blog = $this->blogRepository->update($this->editingBlogId, $blogData);
         if ($blog) {
-            session()->flash('message', 'Blog is updated successfully!');
+            if (!empty($this->selectedCategories)) {
+                $blog->categories()->sync($this->selectedCategories);
+            }
+            $this->dispatch('showToast', 'success', 'Success', 'Blog is updated successfully!');
+            return redirect(route('admin.blogs'));
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Blog is updated failed!');
         }
     }
 

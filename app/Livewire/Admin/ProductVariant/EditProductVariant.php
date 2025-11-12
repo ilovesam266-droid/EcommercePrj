@@ -9,12 +9,18 @@ use Livewire\Component;
 class EditProductVariant extends Component
 {
     protected ProductVariantSizeRepositoryInterface $productVariantRepository;
+    protected ProductVariantRequest $productVariantRequest;
     public $productVariantId = null;
     public $variant_size = '';
     public $sku = '';
     public $price = 0;
     public $total_sold = 0;
     public $stock = 0;
+
+    public function __construct()
+    {
+        $this->productVariantRequest = new ProductVariantRequest();
+    }
 
     public function boot(ProductVariantSizeRepositoryInterface $repository)
     {
@@ -23,12 +29,12 @@ class EditProductVariant extends Component
 
     public function rules()
     {
-        return (new ProductVariantRequest()->rules());
+        return $this->productVariantRequest->rules();
     }
 
     public function messages()
     {
-        return (new ProductVariantRequest()->messages());
+        return $this->productVariantRequest->messages();
     }
 
     public function mount($productVariantId)
@@ -64,9 +70,9 @@ class EditProductVariant extends Component
         $success = $this->productVariantRepository->update($this->productVariantId, $productVariantData);
         if ($success) {
             $this->dispatch('userUpdated');
-            session()->flash('message', 'Thông tin người dùng đã được cập nhật thành công!');
+            $this->dispatch('showToast', 'success', 'Success', 'Product variant updated successfully!');
         } else {
-            session()->flash('error', 'Có lỗi xảy ra khi cập nhật người dùng.');
+            $this->dispatch('showToast', 'error', 'Error', 'Product variant updated failed!');
         }
     }
 

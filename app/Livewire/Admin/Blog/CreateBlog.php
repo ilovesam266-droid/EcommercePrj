@@ -18,11 +18,17 @@ class CreateBlog extends Component
     protected BlogRepositoryInterface $blogRepository;
     protected CategoryRepositoryInterface $categoryRepository;
     protected ImageRepositoryInterface $imageRepository;
+    protected BlogRequest $blogRequest;
     public $title = '';
     public $content = '';
     public $selectedCategories = [];
     public bool $openImageModal = false;
     public bool $openCategoryModal = false;
+
+    public function __construct()
+    {
+        $this->blogRequest = new BlogRequest();
+    }
 
     public function boot(BlogRepositoryInterface $blog_repository, CategoryRepositoryInterface $category_repository, ImageRepositoryInterface $image_repository)
     {
@@ -33,11 +39,11 @@ class CreateBlog extends Component
 
     public function rules()
     {
-        return (new BlogRequest()->rules());
+        return $this->blogRequest->rules();
     }
     public function messages()
     {
-        return (new BlogRequest()->messages());
+        return $this->blogRequest->messages();
     }
 
     #[On('save-mail')]
@@ -45,15 +51,6 @@ class CreateBlog extends Component
     {
         $this->content = $content;
         $this->createBlog();
-    }
-
-    public function showCategoryModal()
-    {
-        $this->openCategoryModal = true;
-    }
-    public function hideCategoryModal()
-    {
-        $this->openCategoryModal = false;
     }
 
     public function createBlog()
@@ -66,12 +63,24 @@ class CreateBlog extends Component
         $blogData['created_by'] = Auth::id();
         $blog = $this->blogRepository->create($blogData);
 
-        if (!empty($this->selectedCategories)) {
-            $blog->categories()->sync($this->selectedCategories);
+        if ($blog) {
+            if (!empty($this->selectedCategories)) {
+                $blog->categories()->sync($this->selectedCategories);
+            }
+            $this->dispatch('showToast', 'success', 'Success', 'Blog is created successfully!');
+            return redirect(route('admin.blogs'));
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Blog is created failed!');
         }
+    }
 
-        session()->flash('message', 'Product is created successfully!');
-        return redirect(route('admin.blogs'));
+    public function showCategoryModal()
+    {
+        $this->openCategoryModal = true;
+    }
+    public function hideCategoryModal()
+    {
+        $this->openCategoryModal = false;
     }
 
     #[Computed()]

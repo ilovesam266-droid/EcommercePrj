@@ -11,6 +11,7 @@ use Livewire\Component;
 class EditAddress extends Component
 {
     protected AddressRepositoryInterface $addressRepository;
+    protected AddressRequest $addressRequest;
     public $addressId = null;
     public $recipient_name;
     public $recipient_phone;
@@ -21,6 +22,11 @@ class EditAddress extends Component
     public $is_default;
     public $user_id;
 
+    public function __construct()
+    {
+        $this->addressRequest = new AddressRequest();
+    }
+
     public function boot(AddressRepositoryInterface $repository)
     {
         $this->addressRepository = $repository;
@@ -28,11 +34,11 @@ class EditAddress extends Component
 
     public function rules()
     {
-        return (new AddressRequest()->rules());
+        return $this->addressRequest->rules();
     }
     public function messages()
     {
-        return (new AddressRequest()->messages());
+        return $this->addressRequest->messages();
     }
 
     public function mount($addressId)

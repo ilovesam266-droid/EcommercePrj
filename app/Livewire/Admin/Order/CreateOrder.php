@@ -14,6 +14,7 @@ use Livewire\Attributes\Title;
 class CreateOrder extends Component
 {
     protected OrderRepositoryInterface $orderRepository;
+    protected OrderRequest $orderRequest;
     public $owner_id = null;
     public $status = 'pending';
     public $total_amount = 0;
@@ -35,6 +36,11 @@ class CreateOrder extends Component
     public $canceled_at;
     public $done_at;
 
+    public function __construct()
+    {
+        $this->orderRequest = new OrderRequest();
+    }
+
     public function boot(OrderRepositoryInterface $order_repository)
     {
         $this->orderRepository = $order_repository;
@@ -42,11 +48,11 @@ class CreateOrder extends Component
 
     public function rules()
     {
-        return (new OrderRequest()->rules());
+        return $this->orderRequest->rules();
     }
     public function messages()
     {
-        return (new OrderRequest()->messages());
+        return $this->orderRequest->messages();
     }
 
     public function createOrder()
@@ -76,10 +82,10 @@ class CreateOrder extends Component
         $orderData['owner_id'] = Auth::id();
         $order = $this->orderRepository->create($orderData);
         if($order){
-            session()->flash('message', 'Order is created successfully!');
+            $this->dispatch('showToast', 'success', 'Success', 'Order is created successfully!');
             return redirect()->route('admin.orders');
         }else{
-            session()->flash('error', 'Order is not created!');
+            $this->dispatch('showToast', 'error', 'Error', 'Product is created failed!');
         }
 
     }

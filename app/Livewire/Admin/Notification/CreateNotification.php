@@ -13,11 +13,17 @@ use Livewire\Component;
 class CreateNotification extends Component
 {
     protected NotificationRepositoryInterface $notificationRepository;
+    protected NotificationRequest $notificationRequest;
     public $title = '';
     public $body = '';
     public $variables = [];
     public $type = 'notification';
     public $scheduled_at;
+
+    public function __construct()
+    {
+        $this->notificationRequest = new NotificationRequest();
+    }
 
     public function boot(NotificationRepositoryInterface $notification_repository)
     {
@@ -26,12 +32,12 @@ class CreateNotification extends Component
 
     public function rules()
     {
-        return (new NotificationRequest()->rules());
+        return $this->notificationRequest->rules();
     }
 
     public function messages()
     {
-        return (new NotificationRequest()->messages());
+        return $this->notificationRequest->messages();
     }
 
     #[On('save-mail')]
@@ -55,9 +61,12 @@ class CreateNotification extends Component
         $notificationData['created_by'] = Auth::id();
         $notification = $this->notificationRepository->create($notificationData);
         if ($notification) {
-            session()->flash('message', 'Notification is created successfully!');
+            $this->dispatch('showToast', 'success', 'Success', 'Notification is created successfully!');
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Notification is created failed!');
         }
     }
+
     #[Layout('layouts.page-layout')]
     #[Title('Create Notification')]
     public function render()

@@ -27,25 +27,31 @@ class EditUser extends Component
     public $role;
     public $status;
     public $avatar;
+    protected UserRequest $userRequest;
 
     public function boot(UserRepositoryInterface $repository)
     {
         $this->userRepository = $repository;
     }
 
-    public function rules()
+    public function __construct()
     {
-        return (new UserRequest()->rules('edit', $this->userId));
-    }
-    public function messages()
-    {
-        return (new UserRequest()->messages());
+        $this->userRequest = new UserRequest();
     }
 
     public function mount($userId)
     {
         $this->userId = $userId;
         $this->loadUser();
+    }
+
+    public function rules()
+    {
+        return $this->userRequest->rules('edit', $this->userId);
+    }
+    public function messages()
+    {
+        return $this->userRequest->messages();
     }
 
     public function loadUser()
@@ -64,8 +70,8 @@ class EditUser extends Component
         $this->status = $user->status->value;
         }
         else {
-            session()->flash('error', 'Không tìm thấy người dùng để chỉnh sửa.');
-            $this->dispatch('userUpdated'); // Close modal if user not exists
+            $this->dispatch('showToast', 'error', 'Error','No user found to edit.');
+            $this->dispatch('userUpdated');
         }
     }
 
@@ -91,9 +97,9 @@ class EditUser extends Component
         $success = $this->userRepository->update($this->userId, $userData);
         if ($success) {
             $this->dispatch('userUpdated');
-            session()->flash('message', 'Thông tin người dùng đã được cập nhật thành công!');
+            $this->dispatch('showToast', 'success', 'Success','User info is updated successfully!');
         } else {
-            session()->flash('error', 'Có lỗi xảy ra khi cập nhật người dùng.');
+            $this->dispatch('showToast', 'error', 'Error','Some error occur while updating user info');
         }
     }
 

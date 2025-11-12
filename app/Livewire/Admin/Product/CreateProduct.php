@@ -18,13 +18,7 @@ class CreateProduct extends Component
     protected ProductRepositoryInterface $productRepository;
     protected ImageRepositoryInterface $imageRepository;
     protected CategoryRepositoryInterface $categoryRepository;
-    public function boot(ProductRepositoryInterface $product_repository, ImageRepositoryInterface $image_repository, CategoryRepositoryInterface $category_repository)
-    {
-        $this->productRepository = $product_repository;
-        $this->imageRepository = $image_repository;
-        $this->categoryRepository = $category_repository;
-    }
-
+    protected ProductRequest $productRequest;
     public $name = '';
     public $slug = '';
     public $description = null;
@@ -32,17 +26,28 @@ class CreateProduct extends Component
     public $selectedCategories = [];
     public $image_ids = [];
     public $productId = null;
-
     public bool $openImageModal = false;
     public bool $openCategoryModal = false;
 
+    public function __construct()
+    {
+        $this->productRequest = new ProductRequest();
+    }
+
+    public function boot(ProductRepositoryInterface $product_repository, ImageRepositoryInterface $image_repository, CategoryRepositoryInterface $category_repository)
+    {
+        $this->productRepository = $product_repository;
+        $this->imageRepository = $image_repository;
+        $this->categoryRepository = $category_repository;
+    }
+
     public function rules()
     {
-        return (new ProductRequest()->rules());
+        return $this->productRequest->rules();
     }
     public function messages()
     {
-        return (new ProductRequest()->messages());
+        return $this->productRequest->messages();
     }
 
     public function createProduct()
@@ -55,26 +60,29 @@ class CreateProduct extends Component
             'status',
         ]);
         $productData['created_by'] = Auth::id();
-        dd($productData);
         $product = $this->productRepository->create($productData);
 
-        if (!empty($this->selectedCategories)) {
-            $product->categories()->sync($this->selectedCategories);
-        }
-        if (!empty($this->image_ids)) {
-            $imagePivotData = [];
-            foreach ($this->image_ids as $index => $image) {
-                $imagePivotData[$image] = [
-                    'is_primary' => $index == 0,
-                    'order_of_images' => $index,
-                ];
+        if ($product) {
+            if (!empty($this->selectedCategories)) {
+                $product->categories()->sync($this->selectedCategories);
             }
-            $product->images()->sync($imagePivotData);
-        }
-        $this->productId = $product->id;
+            if (!empty($this->image_ids)) {
+                $imagePivotData = [];
+                foreach ($this->image_ids as $index => $image) {
+                    $imagePivotData[$image] = [
+                        'is_primary' => $index == 0,
+                        'order_of_images' => $index,
+                    ];
+                }
+                $product->images()->sync($imagePivotData);
+            }
+            $this->productId = $product->id;
 
-        session()->flash('message', 'Product is created successfully!');
-        return redirect(route('admin.products'));
+            $this->dispatch('showToast', 'success', 'Success', 'Product is created successfully!');
+            return redirect(route('admin.products'));
+        } else {
+            $this->dispatch('showToast', 'error', 'Error', 'Product is created failed!');
+        }
     }
 
     #[On('imagesSelected')]
@@ -126,6 +134,6 @@ class CreateProduct extends Component
             $query->whereIn('id', $this->image_ids)
                 ->when($this->image_ids, fn($innerQuery) => $innerQuery->orderByRaw('FIELD(id, ' . implode(',', $this->image_ids) . ')'));
         }, [], true);
-        return view('admin.pages.product.create', compact('images','categories'));
+        return view('admin.pages.product.create', compact('images', 'categories'));
     }
 }
