@@ -20,7 +20,7 @@ class Users extends Component
         'status' => '',
         'role' => '',
     ];
-    public array $sort = ['created_at' => 'asc'];
+    public array $sort = ['created_at' => 'desc'];
     public int $perPage = 5;
     public bool $showCreateModal = false;
     public bool $showEditModal = false;

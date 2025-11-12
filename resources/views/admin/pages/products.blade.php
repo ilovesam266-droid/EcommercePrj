@@ -47,7 +47,7 @@
                                                         alt="">
                                                 @else
                                                     <img class="avatar-img" style="width: 70px"
-                                                        src="{{ asset('storage/products/PluNzUha2Q50b1aRmTGByWjCh0vpy6ef1sM0yGUp.jpg') }}"
+                                                        src="{{ asset('storage/products/e88a5f1d3aafe0b2939c298687adbab0.jpg') }}"
                                                         alt="">
                                                 @endif
                                             </div>

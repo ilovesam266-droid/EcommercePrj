@@ -22,8 +22,8 @@ class MailSeeder extends Seeder
                 'title' => 'Welcome New User',
                 'created_by' => 1,
                 'body' => '<p>Hello {{$fullname}},</p>
-        <p>Thank you for registering an account at {{$app_name}}.</p>
-        <p>Please confirm your account by clicking <a href="{{verification_link}}">this link</a>.</p>',
+                <p>Thank you for registering an account at {{$app_name}}.</p>
+                <p>Please confirm your account by clicking <a href="{{verification_link}}">this link</a>.</p>',
                 'type' => 'user_registered',
                 'variables' => json_encode([
                     '{{$fullname}}' => 'User name',

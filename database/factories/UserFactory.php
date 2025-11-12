@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 /**
@@ -23,6 +25,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $filename = 'avatars/' . uniqid() . '.jpg';
+        $imageContent = Http::get('https://i.pravatar.cc/150')->body();
+        Storage::disk('public')->put($filename, $imageContent);
         $first_name = fake()->firstName();
         $last_name = fake()->lastName();
         $username = Str::lower($first_name . '.' . $last_name . fake()->randomNumber());
@@ -31,7 +36,7 @@ class UserFactory extends Factory
             'last_name' => $last_name,
             'username' => $username,
             'birthday' => fake()->optional()->date('Y-m-d', '-20 years'),
-            'avatar' => "https://i.pravatar.cc/150?u={$username}",
+            'avatar' => $filename,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

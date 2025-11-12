@@ -23,16 +23,16 @@ class ImageFactory extends Factory
         $filename = 'products/' . uniqid() . '.jpg';
         $name = $this->faker->unique()->words(3, true);
 
-    // Tải ảnh ngẫu nhiên từ Lorem Picsum
-    $imageContent = Http::get('https://picsum.photos/300/300')->body();
+        // Tải ảnh ngẫu nhiên từ Lorem Picsum
+        $imageContent = Http::get('https://picsum.photos/300/300')->body();
 
-    // Lưu ảnh vào storage
-    Storage::disk('public')->put($filename, $imageContent);
+        // Lưu ảnh vào storage
+        Storage::disk('public')->put($filename, $imageContent);
 
-    return [
-        'created_by' => User::inRandomOrder()->first()?->id ?? 1,
-        'url' => $filename,
-        'name' => ucfirst($name),
-    ];
+        return [
+            'created_by' => User::inRandomOrder()->first()?->id ?? 1,
+            'url' => $filename,
+            'name' => ucfirst($name),
+        ];
     }
 }
