@@ -78,12 +78,18 @@
                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
                 </svg> Notification</a>
         </li>
-        <li class="nav-title">Image</li>
+        <li class="nav-title">Shared</li>
         <li class="nav-item">
             <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.images') }}">
                 <svg class="nav-icon">
                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-image"></use>
                 </svg> Image</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" wire:current.strict="font-bold" href="{{ route('admin.categories') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-basket"></use>
+                </svg> Category</a>
         </li>
     </ul>
     <div class="sidebar-footer border-top d-none d-md-flex">

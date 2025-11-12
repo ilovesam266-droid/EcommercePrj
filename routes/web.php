@@ -6,6 +6,7 @@ use App\Livewire\Admin\Addresses;
 use App\Livewire\Admin\Blog\CreateBlog;
 use App\Livewire\Admin\Blog\EditBlog;
 use App\Livewire\Admin\Blogs;
+use App\Livewire\Admin\Categories;
 use App\Livewire\Admin\Comments;
 use App\Livewire\Dashboard;
 use App\Livewire\Admin\Users;
@@ -72,6 +73,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reviews', Reviews::class)->name('review');
     Route::get('/comments', Comments::class)->name('comments');
     Route::get('/addresses', Addresses::class)->name('addresses');
+    Route::get('categories', Categories::class)->name('categories');
 });
 // Route::get('/test-mail', function () {
 //     $template = Mail::first();

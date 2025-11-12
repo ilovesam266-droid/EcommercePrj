@@ -42,6 +42,7 @@ class CreateUser extends Component
     {
         return $this->userRequest->rules();
     }
+
     public function messages()
     {
         return $this->userRequest->messages();

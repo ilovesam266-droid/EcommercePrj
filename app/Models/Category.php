@@ -25,9 +25,9 @@ class Category extends Model
         'created_by' => 'integer',
     ];
 
-    public function categoryable(): MorphTo
+    public function creator(): BelongsTo
     {
-        return $this->morphTo(User::class, 'created_by');
+        return $this->BelongsTo(User::class, 'created_by');
     }
 
     public function products()

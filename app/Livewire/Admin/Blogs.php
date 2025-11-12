@@ -64,7 +64,7 @@ class Blogs extends Component
     public function blogs()
     {
         return $this->blogRepository->all(
-            [],
+            $this->blogRepository->getFilteredBlog(),
             $this->sort,
             $this->perPage,
             ['*'],

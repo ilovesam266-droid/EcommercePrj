@@ -39,12 +39,6 @@ class EditUser extends Component
         $this->userRequest = new UserRequest();
     }
 
-    public function mount($userId)
-    {
-        $this->userId = $userId;
-        $this->loadUser();
-    }
-
     public function rules()
     {
         return $this->userRequest->rules('edit', $this->userId);
@@ -52,6 +46,12 @@ class EditUser extends Component
     public function messages()
     {
         return $this->userRequest->messages();
+    }
+
+    public function mount($userId)
+    {
+        $this->userId = $userId;
+        $this->loadUser();
     }
 
     public function loadUser()
