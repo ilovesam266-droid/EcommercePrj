@@ -9,6 +9,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/users', [UserController::class, 'index']);
-Route::get('/hello', function () {
-    return response()->json(['message' => 'Xin chào từ API!']);
-});
+Route::post('users/{id}', );
