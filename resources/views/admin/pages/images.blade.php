@@ -53,26 +53,16 @@
                             </button>
                         </li>
                     </ul>
-                    {{-- <div class="row">
-                        <div class="selected-count" id="selectedCount">
-                            <strong id="countText">0 ảnh được chọn</strong>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary" id="selectAllBtn">
-                                <i class="bi bi-check-square"></i> Chọn Tất Cả
-                            </button>
-                            <button class="btn btn-secondary" id="deselectAllBtn">
-                                <i class="bi bi-square"></i> Bỏ Chọn Tất Cả
-                            </button>
-                        </div>
-                    </div> --}}
+
                     <!-- Tab 2: My Images -->
                     <div id="my-images" class="tab-content active">
                         <div class="image-grid" id="grid-all">
                             <!-- Image Card 1 -->
                             @forelse ($this->images as $image)
                                 <div wire:key="modal-library-image-{{ $image->id }}"
-                                    wire:click="toggleSelection({{ $image->id }})"
+                                    @if ($currentPage)
+                                        wire:click="toggleSelection({{ $image->id }})"
+                                    @endif
                                     class="image-card relative w-full aspect-w-1 aspect-h-1 overflow-hidden rounded-lg border-2 cursor-pointer transition-all
                                         {{ in_array($image->id, $selectedImageId) ? 'selected border-blue-500 ring-2 ring-blue-500' : 'border-gray-200 hover:border-blue-300' }}">
                                     <div class="image-wrapper">

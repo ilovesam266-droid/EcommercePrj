@@ -7,6 +7,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Repository\Constracts\ImageRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -54,7 +55,8 @@ class Images extends Component
         return [];
     }
 
-    public function toggleSelection($imageId){
+    public function toggleSelection($imageId)
+    {
         if (in_array($imageId, $this->selectedImageId)) {
             $this->selectedImageId = array_diff($this->selectedImageId, [$imageId]);
         } else {
@@ -62,12 +64,12 @@ class Images extends Component
         }
     }
 
-     public function confirmDelete($imageId)
+    public function confirmDelete($imageId)
     {
         $this->dispatch(
             'showConfirm',
             'Confirm image deletion',
-            'Are you sure you want to delete this image <<'.$imageId.'>>?',
+            'Are you sure you want to delete this image <<' . $imageId . '>>?',
             'delete-image',
             ['image_id' => $imageId],
         );
@@ -81,18 +83,28 @@ class Images extends Component
         $this->dispatch('showToast', 'success', 'Success', 'image Deleted');
     }
 
-    public function showImage($imageUrl){
+    public function showImage($imageUrl)
+    {
         $this->selectedImage = $imageUrl;
         $this->showedImage = true;
     }
 
-    public function hideImage(){
+    public function hideImage()
+    {
         $this->selectedImage = '';
         $this->showedImage = false;
     }
 
-    public function uploadImage($selectedImageId){
+    public function uploadImage($selectedImageId)
+    {
         $this->dispatch('imagesSelected', $selectedImageId);
+        $urls = collect($this->selectedImageId)->map(function ($id) {
+            $image = $this->imageRepository->find($id);
+            return $image->url ? Storage::url($image->url) : null;
+        })->filter()->values()->all();
+        // Emit array URL sang JS
+        $this->dispatch('imagesInsert', ...$urls);
+        $this->dispatch('hideImagePicker');
     }
 
     #[Computed]

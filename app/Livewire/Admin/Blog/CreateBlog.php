@@ -87,6 +87,7 @@ class CreateBlog extends Component
     {
         $this->openImageModal = true;
     }
+    #[On('hideImagePicker')]
     public function hideImageModal()
     {
         $this->openImageModal = false;
@@ -106,7 +107,7 @@ class CreateBlog extends Component
     }
 
     #[Layout('layouts.page-layout')]
-    #[Title('Mails')]
+    #[Title('Create Blog')]
     public function render()
     {
         $categories = $this->categoryRepository->find($this->selectedCategories)->pluck('name')->toArray();

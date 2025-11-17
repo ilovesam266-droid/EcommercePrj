@@ -132,7 +132,7 @@
         </div>
     </div>
     @if ($openImageModal)
-        <div class="modal fade show d-block" tabindex="-1" role="dialog"
+        <div class="modal fade show d-block" tabindex="-1" role="dialog"  wire:click.self="hideImageModal"
             style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
                 <div class="modal-content">

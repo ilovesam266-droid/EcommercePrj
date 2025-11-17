@@ -99,6 +99,16 @@ class EditBlog extends Component
     {
         $this->openCategoryModal = false;
     }
+    #[On('openImagePicker')]
+    public function showImageModal()
+    {
+        $this->openImageModal = true;
+    }
+    #[On('hideImagePicker')]
+    public function hideImageModal()
+    {
+        $this->openImageModal = false;
+    }
 
     #[Computed()]
     public function categories()

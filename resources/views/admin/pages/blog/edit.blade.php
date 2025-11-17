@@ -102,26 +102,28 @@
                                         <p class="text-muted">Your email content will appear here...</p>
                                     @endif
                                 </div>
-
-                                <!-- Email Footer -->
-                                {{-- <div class="email-footer">
-                                    <div class="footer-content">
-                                        <p class="mb-2">© 2025 Your Company. All rights reserved.</p>
-                                        <p class="mb-0 text-muted small">
-                                            <i class="bi bi-geo-alt"></i> 123 Main Street, City, Country
-                                        </p>
-                                        <div class="mt-2">
-                                            <a href="#" class="footer-link">Unsubscribe</a> |
-                                            <a href="#" class="footer-link">Privacy Policy</a>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
+            @if ($openImageModal)
+                <div class="modal fade show d-block" tabindex="-1" role="dialog" wire:click.self="hideImageModal"
+                    style="background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title  text-white">Add Image to Blog</h5>
+                                <button type="button" class="btn-close" wire:click="hideImageModal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <livewire:Admin.Images :currentPage="true" wire:key="images-modal" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
             @if ($openCategoryModal)
                 <div class="modal fade show d-block" tabindex="-1" role="dialog"
                     style="background-color: rgba(0,0,0,0.5);">

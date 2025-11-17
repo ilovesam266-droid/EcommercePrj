@@ -50,7 +50,7 @@ const editor = await ClassicEditor.create(element, {
         RemoveFormat,
         Mention, SpecialCharacters, SpecialCharactersEssentials,
         HtmlEmbed, Notification, CustomUploadPlugin,
-    ],extraPlugins: [CustomUploadPlugin],
+    ], extraPlugins: [CustomUploadPlugin],
 
 
     toolbar: {
@@ -77,10 +77,19 @@ const editor = await ClassicEditor.create(element, {
     },
 
     image: {
+        styles: [
+            'alignLeft',
+            'alignCenter',
+            'alignRight','inline', 'block', 'side'
+        ],
         toolbar: [
-            'imageStyleInline',
-            'imageStyleBlock',
-            'imageStyleSide',
+            'imageStyle:alignLeft',
+            'imageStyle:alignCenter',
+            'imageStyle:alignRight',
+            '|',
+            'imageStyle:inline',
+            'imageStyle:block',
+            'imageStyle:side',
             '|',
             'toggleImageCaption',
             'imageTextAlternative',
@@ -182,8 +191,8 @@ const editor = await ClassicEditor.create(element, {
         }
     });
 }).catch(error => {
-        console.error(error);
-    });
+    console.error(error);
+});
 
 
 // window.editor = editor;
