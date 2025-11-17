@@ -34,21 +34,22 @@ class ProductRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Tên sản phẩm là bắt buộc.',
-            'name.string' => 'Tên sản phẩm phải là chuỗi ký tự.',
-            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
+            'name.required' => 'Product name is required.',
+            'name.string' => 'Product name must be a string.',
+            'name.max' => 'Product name may not exceed 255 characters.',
 
-            'description.string' => 'Mô tả sản phẩm phải là chuỗi ký tự.',
+            'description.string' => 'Product description must be a string.',
 
-            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.required' => 'Status is required.',
 
-            'selectedCategories.required' => 'Tên danh mục là bắt buộc.',
-            'selectedCategories.array' => 'Danh mục phải là một mảng.',
-            'selectedCategories.*.exists' => 'Danh mục đã chọn không tồn tại trong hệ thống.',
+            'selectedCategories.required' => 'Category name is required.',
+            'selectedCategories.array' => 'Categories must be an array.',
+            'selectedCategories.*.exists' => 'The selected category does not exist in the system.',
 
-            'image_ids.required' => 'ảnh là bắt buộc.',
-            'image_ids.array' => 'Danh sách ảnh phải là một mảng.',
-            'image_ids.*.exists' => 'Ảnh đã chọn không tồn tại trong hệ thống.',
+            'image_ids.required' => 'Image is required.',
+            'image_ids.array' => 'Image list must be an array.',
+            'image_ids.*.exists' => 'The selected image does not exist in the system.',
+
         ];
     }
 }

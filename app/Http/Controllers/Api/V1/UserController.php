@@ -6,18 +6,17 @@ use App\Helpers\ImageUpload;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\StoreUserRequest;
 use App\Http\Requests\Api\User\UpdateUserRequest;
-use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\Resources\UserTransformer;
-use App\Repository\Eloquent\UserRepository;
+use App\Repository\Constracts\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected UserRepository $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected $perPage;
-    public function __construct()
+    public function __construct(UserRepositoryInterface $userRepo)
     {
-        $this->userRepository = new UserRepository();
+        $this->userRepository = $userRepo;
         $this->perPage = config('app.per_page');
     }
 
@@ -26,7 +25,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // $perPage = $request->query('per_page', $this->perPage);
         $users = $this->userRepository->all([], ['created_at' => 'asc'], $this->perPage, ['*'], [], false);
         return response()->json([
             'data' => UserTransformer::collection($users),
@@ -36,7 +34,7 @@ class UserController extends Controller
                 'per_page'     => $users->perPage(),
                 'total'        => $users->total(),
             ]
-        ],200);
+        ], 200);
     }
 
     /**
