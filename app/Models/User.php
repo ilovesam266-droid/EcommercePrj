@@ -69,20 +69,20 @@ class User extends Authenticatable
         );
     }
 
-    protected function first_name(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => ucfirst($value),
-            set: fn($value) => strtolower($value),
-        );
-    }
-    protected function last_name(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => ucfirst($value),
-            set: fn($value) => strtolower($value),
-        );
-    }
+    // protected function first_name(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn($value) => ucfirst($value),
+    //         set: fn($value) => strtolower($value),
+    //     );
+    // }
+    // protected function last_name(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn($value) => ucfirst($value),
+    //         set: fn($value) => strtolower($value),
+    //     );
+    // }
     // public function scopePublished()
     // {
     //     $this->where('created_at', '<=', Carbon::now());

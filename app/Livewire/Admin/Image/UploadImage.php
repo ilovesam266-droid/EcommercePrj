@@ -74,8 +74,6 @@ class UploadImage extends Component
         array_splice($this->images, $index, 1);
     }
 
-
-
     public function render()
     {
         return view('admin.components.upload-image');

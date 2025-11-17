@@ -1,3 +1,4 @@
+import CustomUploadPlugin from './custom-upload-image.js';
 import {
     ClassicEditor,
     // Cơ bản
@@ -48,8 +49,9 @@ const editor = await ClassicEditor.create(element, {
         HorizontalLine, Indent, IndentBlock,
         RemoveFormat,
         Mention, SpecialCharacters, SpecialCharactersEssentials,
-        HtmlEmbed, Notification
-    ],
+        HtmlEmbed, Notification, CustomUploadPlugin,
+    ],extraPlugins: [CustomUploadPlugin],
+
 
     toolbar: {
         items: [
@@ -67,7 +69,7 @@ const editor = await ClassicEditor.create(element, {
             '|',
             'link', 'blockQuote', 'code', 'codeBlock',
             '|',
-            'insertTable', 'insertImage', 'mediaEmbed', 'horizontalLine', 'htmlEmbed',
+            'insertTable', 'imageUpload', 'mediaEmbed', 'horizontalLine', 'htmlEmbed', 'chooseImage',
             '|',
             'strikethrough', 'subscript', 'superscript',
         ],
@@ -179,7 +181,9 @@ const editor = await ClassicEditor.create(element, {
             feedback.style.color = '#2ecc71'; // green
         }
     });
+}).catch(error => {
+        console.error(error);
+    });
 
-});
 
 // window.editor = editor;

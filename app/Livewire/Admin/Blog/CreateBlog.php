@@ -82,6 +82,15 @@ class CreateBlog extends Component
     {
         $this->openCategoryModal = false;
     }
+    #[On('openImagePicker')]
+    public function showImageModal()
+    {
+        $this->openImageModal = true;
+    }
+    public function hideImageModal()
+    {
+        $this->openImageModal = false;
+    }
 
     #[Computed()]
     public function categories()

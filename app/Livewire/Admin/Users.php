@@ -3,6 +3,8 @@
 namespace App\Livewire\Admin;
 
 use App\Repository\Constracts\UserRepositoryInterface;
+use Error;
+use Illuminate\Database\QueryException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -95,8 +97,12 @@ class Users extends Component
     public function deleteUser($data)
     {
         $userId = $data['user_id'];
-        $this->userRepository->delete($userId);
-        $this->dispatch('userDeleted');
+        try {
+            $this->userRepository->delete($userId);
+            $this->dispatch('userDeleted');
+        }catch(QueryException $e){
+            $this->dispatch('showToast', 'error', 'Error', 'User is used in other places');
+        }
     }
 
     #[Computed()]

@@ -55,7 +55,7 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Blog Content</label>
-                            <livewire:admin.components.text-editor :content="$content"/>
+                            <livewire:admin.components.text-editor :content="$content" />
                         </div>
                         {{-- #save is used in ckeditor by js --}}
 
@@ -122,6 +122,22 @@
                     </div>
                 </div>
             </div>
+            @if ($openImageModal)
+                <div class="modal fade show d-block" tabindex="-1" role="dialog"
+                    style="background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title  text-white">Add Image to product</h5>
+                                <button type="button" class="btn-close" wire:click="hideImageModal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <livewire:Admin.Images :currentPage="true" wire:key="images-modal" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
             @if ($openCategoryModal)
                 <div class="modal fade show d-block" tabindex="-1" role="dialog"
                     style="background-color: rgba(0,0,0,0.5);">
@@ -135,32 +151,31 @@
 
                             </div>
                             <div class="modal-body card">
-                                    <div class="card-body">
-                                        <div class="checkbox-container">
-                                            {{-- @dd($this->categories) --}}
-                                            @forelse ($this->categories as $category)
-                                                <div class="checkbox-item mb-2">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="category-{{ $category->id }}"
-                                                            value="{{ $category->id }}"
-                                                            wire:model.live="selectedCategories">
-                                                        <label class="form-check-label"
-                                                            for="category-{{ $category->id }}">
-                                                            {{ $category->name }}
-                                                        </label>
-                                                    </div>
+                                <div class="card-body">
+                                    <div class="checkbox-container">
+                                        {{-- @dd($this->categories) --}}
+                                        @forelse ($this->categories as $category)
+                                            <div class="checkbox-item mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="category-{{ $category->id }}" value="{{ $category->id }}"
+                                                        wire:model.live="selectedCategories">
+                                                    <label class="form-check-label"
+                                                        for="category-{{ $category->id }}">
+                                                        {{ $category->name }}
+                                                    </label>
                                                 </div>
-                                            @empty
-                                                <p>Have not any category be used</p>
-                                            @endforelse
-                                        </div>
-                                        {{-- <button class="btn btn-primary btn-get-values w-100" wire:click="getSelectedValues">
+                                            </div>
+                                        @empty
+                                            <p>Have not any category be used</p>
+                                        @endforelse
+                                    </div>
+                                    {{-- <button class="btn btn-primary btn-get-values w-100" wire:click="getSelectedValues">
                                     Lấy Giá Trị Đã Chọn
                                 </button> --}}
 
-                                        <div class="result-text" id="resultText"></div>
-                                    </div>
+                                    <div class="result-text" id="resultText"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
