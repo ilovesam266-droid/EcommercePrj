@@ -15,12 +15,12 @@ class UpdateProductRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:active,inactive,pending,rejected',
-            'selectedCategories' => 'required|array',
+            'status' => 'sometimes|required|in:active,inactive,pending,rejected',
+            'selectedCategories' => 'sometimes|required|array',
             'selectedCategories.*' => 'exists:categories,id',
-            'image_ids' => 'required|array',
+            'image_ids' => 'sometimes|required|array',
             'image_ids.*' => 'exists:images,id',
         ];
     }

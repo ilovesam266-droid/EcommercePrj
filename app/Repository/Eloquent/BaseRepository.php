@@ -148,6 +148,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         }
         return $query;
     }
+
     public function handleCriteria(Builder $query, $field, $value)
     {
         if (is_callable($value)) {
@@ -179,6 +180,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
         $query->where($field, $value);
     }
+
     public function exists(array|callable $criteria): bool
     {
         $query = $this->query();

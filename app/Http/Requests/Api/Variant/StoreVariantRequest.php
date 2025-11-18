@@ -16,7 +16,7 @@ class StoreVariantRequest extends ApiFormRequest
     {
         return [
             'variant_size' => 'required|string|max:255',
-            'sku' => 'string|max:255|unique:product_variants,sku',
+            'sku' => 'string|max:255|unique:product_variant_sizes,sku',
             'price' => 'required|integer|min:1000',
             'total_sold' => 'required|integer|min:0',
             'stock' => 'required|integer|min:10',

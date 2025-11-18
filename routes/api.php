@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductVariantController;
@@ -17,17 +18,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('variants', ProductVariantController::class);
+    Route::apiResource('addresses', AddressController::class);
 });
 
-// Route::middleware(['auth:api'])->group(function () {
-//     Route::middleware([''])
-//     Route::apiResource('users', UserController::class);
-// });
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::apiResource('users', UserController::class);
 });
-
-
-Route::apiResource('products', ProductController::class);
-Route::apiResource('variants', ProductVariantController::class);
-// Route::put('products/edit/{id}', [ProductController::class, 'update']);
