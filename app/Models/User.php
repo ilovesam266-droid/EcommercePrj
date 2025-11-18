@@ -13,12 +13,22 @@ use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -68,29 +78,6 @@ class User extends Authenticatable
             get: fn($value, $Attribute) => ucfirst($Attribute['first_name'] . ' ' . $Attribute['last_name'])
         );
     }
-
-    // protected function first_name(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn($value) => ucfirst($value),
-    //         set: fn($value) => strtolower($value),
-    //     );
-    // }
-    // protected function last_name(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn($value) => ucfirst($value),
-    //         set: fn($value) => strtolower($value),
-    //     );
-    // }
-    // public function scopePublished()
-    // {
-    //     $this->where('created_at', '<=', Carbon::now());
-    // }
-    // public function scopeSearch()
-    // {
-    //     $this->where('username');
-    // }
 
     public function products(): HasMany
     {
