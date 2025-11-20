@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrderRequest extends FormRequest
@@ -22,7 +25,7 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in:pending,confirmed,shipping,canceled,failed,done',
+            'status' => 'required|in:'.OrderStatus::cases(),
             'total_amount' => 'required|integer|min:0',
             'shipping_fee' => 'required|integer|min:0',
             'recipient_name' => 'required|string|max:100',
@@ -31,8 +34,8 @@ class OrderRequest extends FormRequest
             'district' => 'required|string|max:100',
             'ward' => 'required|string|max:100',
             'detailed_address' => 'required|string|max:255',
-            'payment_method' => 'required|integer|in:0,1,2',
-            'payment_status' => 'required|integer|in:0,1,2',
+            'payment_method' => 'required|integer|in:'.PaymentMethod::cases(),
+            'payment_status' => 'required|integer|in:'.PaymentStatus::cases(),
             'payment_transaction_code' => 'nullable|string|max:100',
             'customer_note' => 'nullable|string',
             'admin_note' => 'nullable|string',

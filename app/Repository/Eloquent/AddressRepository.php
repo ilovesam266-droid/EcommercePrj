@@ -11,6 +11,7 @@ class AddressRepository extends BaseRepository implements AddressRepositoryInter
     {
         return Address::class;
     }
+
     public function getFilteredAddress(array $filter = [], ?string $search = null)
     {
         return function ($query) use ($filter, $search) {
@@ -36,5 +37,10 @@ class AddressRepository extends BaseRepository implements AddressRepositoryInter
                 });
             }
         };
+    }
+
+    public function getAllAddress($perPage, $sort, $search, $filter){
+        return $this->all($this->getFilteredAddress(
+            $filter, $search), ['created_at' => $sort], $perPage, ['*'], [], false);
     }
 }

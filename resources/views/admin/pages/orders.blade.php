@@ -103,7 +103,7 @@
         </div>
     </div>
     @if ($showDetailsModal && $detailsOrderId)
-        <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+        <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" wire:click.self="closeDetailsModal"
             style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">

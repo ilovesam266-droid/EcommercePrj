@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductVariantController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -22,9 +23,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResource('products', ProductController::class);
-    Route::apiResource('variants', ProductVariantController::class);
+    Route::apiResource('products.variants', ProductVariantController::class);
+    // Route::apiResource('variants', ProductVariantController::class);
     Route::apiResource('addresses', AddressController::class);
     Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('orders', OrderController::class);
 });
 
 Route::middleware(['auth:api', 'role:admin'])->group(function () {

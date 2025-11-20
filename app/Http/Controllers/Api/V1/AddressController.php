@@ -7,18 +7,22 @@ use App\Http\Requests\Api\Address\StoreAddressRequest;
 use App\Http\Requests\Api\Address\UpdateAddressRequest;
 use App\Http\Resources\AddressTransformer;
 use App\Repository\Constracts\AddressRepositoryInterface;
+use App\Repository\Constracts\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use function Laravel\Prompts\error;
 
 class AddressController extends BaseApiController
 {
     protected AddressRepositoryInterface $addressRepo;
+    protected UserRepositoryInterface $userRepo;
 
-    public function __construct(AddressRepositoryInterface $address_repo)
+    public function __construct(AddressRepositoryInterface $address_repo, UserRepositoryInterface $user_repo)
     {
         parent::__construct();
         $this->addressRepo = $address_repo;
+        $this->userRepo = $user_repo;
     }
     /**
      * Display a listing of the resource.
@@ -27,14 +31,13 @@ class AddressController extends BaseApiController
     {
         $this->searchFilterPerpage($request);
 
-        $addresses = $this->addressRepo->all(
-            $this->addressRepo->getFilteredAddress(
-            $this->filter, $this->search), ['created_at' => $this->sort], $this->perPage, ['*'], [], false);
+        $user = $this->userRepo->find(Auth::id());
+        $addresses = $user->addresses;
         if ($addresses->isEmpty()) {
             return $this->error("No address retrived.");
         }
 
-        return $this->paginate(AddressTransformer::collection($addresses), "Address list retrived successfully.", 200);
+        return $this->success($addresses, 'Address list retrived successfully.');
     }
 
     /**
@@ -42,13 +45,15 @@ class AddressController extends BaseApiController
      */
     public function store(StoreAddressRequest $request)
     {
+        $user = $this->userRepo->find(Auth::id());
         $validated = $request->validated();
-        $address = $this->addressRepo->create($validated);
+
+        $address = $user->addresses()->create($validated);
         if (!$address){
             return $this->error('Address is not created');
         }
 
-        return $this->success($address, "Address is created successfully");
+        return $this->success(new AddressTransformer($address), "Address is created successfully", 201);
     }
 
     /**
@@ -56,12 +61,13 @@ class AddressController extends BaseApiController
      */
     public function show(int $id)
     {
-        $address = $this->addressRepo->find($id);
+        $user = $this->userRepo->find(Auth::id());
+        $address = $user->addresses()->find($id);
         if (!$address){
             return $this->error('Not exists this address');
         }
 
-        return $this->success($address, "Address retrived successfully.");
+        return $this->success(new AddressTransformer($address), "Address retrived successfully.");
     }
 
     /**
@@ -75,7 +81,7 @@ class AddressController extends BaseApiController
             return $this->error('Address is not updated');
         }
 
-        return $this->success($address, "Address is updated successfully.");
+        return $this->success(new AddressTransformer($address), "Address is updated successfully.");
     }
 
     /**

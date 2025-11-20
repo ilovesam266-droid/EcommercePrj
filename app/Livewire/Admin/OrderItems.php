@@ -17,25 +17,31 @@ class OrderItems extends Component
     public $sort = ['created_at' => 'asc'];
     public $perPage = 5;
 
-    public function boot(OrderItemRepositoryInterface $order_item_repository,ProductVariantSizeRepositoryInterface $product_variant_size_repository, ProductRepositoryInterface $product_repository)
+    public function boot(OrderItemRepositoryInterface $order_item_repository, ProductVariantSizeRepositoryInterface $product_variant_size_repository, ProductRepositoryInterface $product_repository)
     {
         $this->orderItemRepository = $order_item_repository;
         $this->productRepository = $product_repository;
         $this->productVariantRepository = $product_variant_size_repository;
     }
 
-    public function mount($orderId){
+    public function mount($orderId)
+    {
         $this->orderId = $orderId;
     }
 
     #[Computed()]
-    public function order_items(){
+    public function order_items()
+    {
         return $this->orderItemRepository->all(
             ['order_id' => $this->orderId],
             $this->sort,
             $this->perPage,
             ['*'],
-            ['productVariantSize.product'],
+            ['productVariantSize' => function ($query) {
+                $query->withTrashed();
+            }, 'productVariantSize.product' => function ($query) {
+                $query->withTrashed();
+            }],
             false
         );
     }

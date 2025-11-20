@@ -20,7 +20,6 @@ class StoreVariantRequest extends ApiFormRequest
             'price' => 'required|integer|min:1000',
             'total_sold' => 'required|integer|min:0',
             'stock' => 'required|integer|min:10',
-            'product_id' => 'required|integer|exists:products,id',
         ];
     }
 }

@@ -17,7 +17,6 @@ class StoreProductRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'created_by' => 'required|integer',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive,pending,rejected',

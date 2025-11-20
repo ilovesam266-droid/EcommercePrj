@@ -133,6 +133,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         }
         return false;
     }
+
     //xử lý filter: buildCriteria để xử lý callback thành query, xử lý handleCriteria là xử lý giá trị truyền vào cho từng object, xử lý exists
     public function buildCriteria(Builder $query, mixed $criteria)
     {

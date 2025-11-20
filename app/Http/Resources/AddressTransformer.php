@@ -16,7 +16,6 @@ class AddressTransformer extends JsonResource
     {
         return [
             'id'              => $this->id,
-            'user_id'         => $this->user_id,
             'recipient_name'  => $this->recipient_name,
             'recipient_phone' => $this->recipient_phone,
             'province'        => $this->province,

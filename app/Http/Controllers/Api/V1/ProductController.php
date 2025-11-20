@@ -2,59 +2,40 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\Product\StoreProductRequest;
 use App\Http\Requests\Api\Product\UpdateProductRequest;
 use App\Http\Resources\ProductTransformer;
 use App\Repository\Constracts\ProductRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 use function Laravel\Prompts\info;
 
-class ProductController extends Controller
+class ProductController extends BaseApiController
 {
     protected ProductRepositoryInterface $productRepository;
-    protected $perPage;
+
     public function __construct(ProductRepositoryInterface $productRepo)
     {
+        parent::__construct();
         $this->productRepository = $productRepo;
-        $this->perPage = config('app.per_page');
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = $this->productRepository->all(
-            [],
-            ['created_at' => 'asc'],
-            $this->perPage,
-            ['*'],
-            [
-                'images' => function ($query) {
-                    $query->wherePivot('is_primary', true);
-                },
-                'categories',
-                'reviews' => function ($query) {
-                    $query->select('product_id', 'rating');
-                },
-                'creator'
-            ],
-            false
-        );
-        return response()->json(
-            [
-                'data' => ProductTransformer::collection($products),
-                'meta' => [
-                    'current_page' => $products->currentPage(),
-                    'last_page'    => $products->lastPage(),
-                    'per_page'     => $products->perPage(),
-                    'total'        => $products->total(),
-                ]
-            ],
-            200
-        );
+        $this->searchFilterPerpage($request);
+
+        $products = $this->productRepository->getAllProducts($this->perPage, $this->sort, $this->filter, $this->search);
+        if ($products->isEmpty()){
+            return $this->error("No product retrived.");
+        }
+
+        return $this->paginate(ProductTransformer::collection($products), 'Product list retrived successfully.');
     }
 
     /**
@@ -62,14 +43,13 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $productData = $request->only([
-            'name',
-            'slug',
-            'description',
-            'status',
-            'created_by',
-        ]);
+        $productData = $request->validated();
+        $productData['created_by'] = Auth::id();
         $product = $this->productRepository->create($productData);
+        if (!$product){
+            return $this->error('Product is not created');
+        }
+
         if (!empty($request->selectedCategories)) {
             $product->categories()->sync($request->selectedCategories);
         }
@@ -83,12 +63,8 @@ class ProductController extends Controller
             }
             $product->images()->sync($imagePivotData);
         }
-        return response()->json(
-            [
-                'data' => new ProductTransformer($product)
-            ],
-            201
-        );
+
+        return $this->success(new ProductTransformer($product), "Product is created successfully", 201);
     }
 
     /**
@@ -97,7 +73,7 @@ class ProductController extends Controller
     public function show(int $id)
     {
         $product = $this->productRepository->find($id);
-        return response()->json($product, 200);
+        return $this->success(new ProductTransformer($product), "Product retrived successfully", 200);
     }
 
     /**
@@ -105,12 +81,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, int $id)
     {
-        $product = $request->only([
-            'name',
-            'slug',
-            'description',
-            'status',
-        ]);
+        $product = $request->validated();
         $product = $this->productRepository->update($id, $product);
             if ($request->filled('selectedCategories')) {
                 $product->categories()->sync($request->selectedCategories);
@@ -125,7 +96,11 @@ class ProductController extends Controller
                 }
                 $product->images()->sync($imagePivotData);
         }
-        return response()->json($product, 200);
+        if (!$product){
+            return $this->error('Product updated failed.');
+        }
+
+        return $this->success($product, 'Product updated successfully.');
     }
 
     /**
@@ -134,6 +109,10 @@ class ProductController extends Controller
     public function destroy(int $id)
     {
         $product = $this->productRepository->delete($id);
-        return response()->json($product, 200);
+        if(!$product){
+            return $this->error('Product deleted failed.');
+        }
+
+        return $this->success($product, 'Product deleted successfully.');
     }
 }
