@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductVariantController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -22,6 +24,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('products', ProductController::class);
     Route::apiResource('variants', ProductVariantController::class);
     Route::apiResource('addresses', AddressController::class);
+    Route::apiResource('categories', CategoryController::class);
 });
 
 Route::middleware(['auth:api', 'role:admin'])->group(function () {

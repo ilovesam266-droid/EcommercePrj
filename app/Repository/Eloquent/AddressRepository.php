@@ -28,9 +28,9 @@ class AddressRepository extends BaseRepository implements AddressRepositoryInter
                         ->orWhere('detailed_address', 'like', "%{$search}%");
 
                     $q->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%")
+                        $userQuery->where('first_name', $search)
+                            ->orWhere('last_name', $search)
+                            ->orWhere('email', 'like', $search)
                             ->orWhere('username', 'like', "%{$search}%");
                     });
                 });

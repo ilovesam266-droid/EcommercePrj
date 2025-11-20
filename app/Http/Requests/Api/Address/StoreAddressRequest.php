@@ -14,6 +14,7 @@ class StoreAddressRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
+            'user_id'          => 'nullable|exists:users,id',
             'recipient_name'   => 'required|string|max:255',
             'recipient_phone'  => 'required|string|max:20|regex:/^[0-9+\-\s()]+$/',
             'province'         => 'nullable|string|max:255',

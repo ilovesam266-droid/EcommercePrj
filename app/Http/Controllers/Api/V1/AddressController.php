@@ -9,25 +9,31 @@ use App\Http\Resources\AddressTransformer;
 use App\Repository\Constracts\AddressRepositoryInterface;
 use Illuminate\Http\Request;
 
+use function Laravel\Prompts\error;
+
 class AddressController extends BaseApiController
 {
     protected AddressRepositoryInterface $addressRepo;
-    protected $perPage;
-    protected $sort;
 
     public function __construct(AddressRepositoryInterface $address_repo)
     {
+        parent::__construct();
         $this->addressRepo = $address_repo;
-        $this->perPage = config('app.per_page');
-        $this->sort = config('app.sort');
     }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        // $perPage = min($request->get('per_page', 20), 50);
-        $addresses = $this->addressRepo->all([], ['created_at' => $this->sort], $this->perPage, ['*'], [], false);
+        $this->searchFilterPerpage($request);
+
+        $addresses = $this->addressRepo->all(
+            $this->addressRepo->getFilteredAddress(
+            $this->filter, $this->search), ['created_at' => $this->sort], $this->perPage, ['*'], [], false);
+        if ($addresses->isEmpty()) {
+            return $this->error("No address retrived.");
+        }
+
         return $this->paginate(AddressTransformer::collection($addresses), "Address list retrived successfully.", 200);
     }
 
@@ -38,6 +44,10 @@ class AddressController extends BaseApiController
     {
         $validated = $request->validated();
         $address = $this->addressRepo->create($validated);
+        if (!$address){
+            return $this->error('Address is not created');
+        }
+
         return $this->success($address, "Address is created successfully");
     }
 
@@ -61,6 +71,9 @@ class AddressController extends BaseApiController
     {
         $validated = $request->validated();
         $address = $this->addressRepo->update($id, $validated);
+        if (!$address){
+            return $this->error('Address is not updated');
+        }
 
         return $this->success($address, "Address is updated successfully.");
     }
@@ -71,7 +84,10 @@ class AddressController extends BaseApiController
     public function destroy(int $id)
     {
         $address = $this->addressRepo->delete($id);
+        if ($address == false){
+            return $this->error('Delete Failed');
+        }
 
-        return $this->success()
+        return $this->success($address, "Address is deleted successfully.");
     }
 }

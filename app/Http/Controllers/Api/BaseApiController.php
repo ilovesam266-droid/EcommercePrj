@@ -7,16 +7,27 @@ use Illuminate\Http\Request;
 
 class BaseApiController extends Controller
 {
-    protected function paginate($collection, $message = 'Success', $status = 200)
+    protected $perPage;
+    protected $sort;
+    protected $search;
+    protected $filter;
+
+    public function __construct()
     {
-        // Mặc định tự động build format pagination
-        // $data = [
-        //     'data' => ->items(),
+        $this->perPage = config('app.per_page');
+        $this->sort = config('app.sort');
+    }
 
-        // ];
+    protected function searchFilterPerpage(Request $request)
+    {
+        $this->search = $request->get('search');
+        $this->filter = $request->get('filter');
+        $this->perPage = max(min($request->get('perPage'), 50), $this->perPage);
+    }
 
+    public function paginate($collection, $message = 'Success', $status = 200)
+    {
         return response()->json([
-            'status'  => 'success',
             'message' => $message,
             'data'    => $collection,
             'meta' => [
@@ -31,7 +42,6 @@ class BaseApiController extends Controller
     protected function success($data = null, $message = 'Success', $status = 200)
     {
         return response()->json([
-            'status'  => 'success',
             'message' => $message,
             'data'    => $data,
         ], $status);
@@ -40,7 +50,6 @@ class BaseApiController extends Controller
     protected function error($message = 'Error', $status = 400)
     {
         return response()->json([
-            'status'  => 'error',
             'message' => $message,
         ], $status);
     }
