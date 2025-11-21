@@ -24,15 +24,20 @@ class CategoryRepository  extends BaseRepository implements CategoryRepositoryIn
                         })
                         ->orWhereHas('blogs', function ($blogQuery) use ($search) {
                             $blogQuery->where('title', 'like', '%' . $search . '%')
-                                        ->orWhere('content', 'like', '%' . $search . '%');
+                                ->orWhere('content', 'like', '%' . $search . '%');
                         })
                         ->orWhereHas('creator', function ($creatorQuery) use ($search) {
                             $creatorQuery->where('first_name', 'like', '%' . $search . '%')
-                        ->orWhere('last_name', 'like', '%' . $search . '%')
-                        ->orWhere('username', 'like', '%' . $search . '%')
-                        ->orWhere('email', 'like', '%' . $search . '%');
+                                ->orWhere('last_name', 'like', '%' . $search . '%')
+                                ->orWhere('username', 'like', '%' . $search . '%')
+                                ->orWhere('email', 'like', '%' . $search . '%');
+                        });
                 });
-            });
+            }
         };
-    };
-}}
+    }
+    public function getAllCategories($perPage, $sort, array $filter = [], ?string $search = null)
+    {
+        return $this->all($this->getFilteredCategory($filter, $search), ['created_at' => $sort], $perPage, ['*'], [], false);
+    }
+}

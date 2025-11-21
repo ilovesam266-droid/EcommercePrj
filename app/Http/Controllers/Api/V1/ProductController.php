@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Requests\Api\Product\StoreProductRequest;
 use App\Http\Requests\Api\Product\UpdateProductRequest;
+use App\Http\Resources\Product\ProductDetailsTransformer;
 use App\Http\Resources\ProductTransformer;
+use App\Http\Resources\ProductVariantTransformer;
 use App\Repository\Constracts\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,10 +72,14 @@ class ProductController extends BaseApiController
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(Request $request, int $id)
     {
-        $product = $this->productRepository->find($id);
-        return $this->success(new ProductTransformer($product), "Product retrived successfully", 200);
+        $this->searchFilterPerpage($request);
+
+        $products = $this->productRepository->getProduct($id);
+        $variants = $this->paginate(ProductVariantTransformer::collection($products->variant_sizes()->paginate($this->perPage)), 'Variant retrived successfully.');
+
+        return $this->success(new ProductDetailsTransformer($products, $variants), "Product retrived successfully", 200);
     }
 
     /**

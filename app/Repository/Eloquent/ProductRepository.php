@@ -49,11 +49,23 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
                 },
                 'categories',
                 'reviews' => function ($query) {
-                    $query->select('product_id', 'rating');
+                    $query->select('product_id', 'user_id', 'rating');
                 },
                 'creator'
             ],
             false
         );
+    }
+
+    public function getProduct(int $productId){
+        return $this->find($productId,
+                ['images',
+                'categories',
+                'reviews' => function ($query) {
+                    $query->select('product_id','user_id', 'rating');
+                },
+                'creator',
+                'variant_sizes',
+            ]);
     }
 }

@@ -22,7 +22,7 @@ class BaseApiController extends Controller
     {
         $this->search = $request->get('search');
         $this->filter = $request->get('filter');
-        $this->perPage = max(min($request->get('perPage'), 50), $this->perPage);
+        $this->perPage = min($request->get('perPage') ?? 10, 50, $this->perPage);
     }
 
     public function paginate($collection, $message = 'Success', $status = 200)
