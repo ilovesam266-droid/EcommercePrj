@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Api\V1\Payment\Stripe;
 use Stripe\Webhook;
 use Stripe\StripeClient;
 use App\Http\Controllers\Controller;
-use App\Repository\Constracts\OrderRepositoryInterface;
 use App\Repository\Constracts\PaymentRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +15,6 @@ use function Laravel\Prompts\info;
 class StripeWebhookController extends Controller
 {
     public function __construct(
-        protected OrderRepositoryInterface $orders,
         protected PaymentRepositoryInterface $payments
     ) {}
 
@@ -64,11 +62,6 @@ class StripeWebhookController extends Controller
             'status' => 'completed',
             'metadata' => $pi
         ]);
-
-        $this->orders->update($payment->order_id, [
-            'status' => 'done',
-            'confirmed_at' => now()
-        ]);
     }
 
     protected function handleFailed($pi)
@@ -80,10 +73,6 @@ class StripeWebhookController extends Controller
             'status' => 'failed',
             'metadata' => $pi
         ]);
-
-        $this->orders->update($payment->order_id, [
-            'status' => 'payment_failed'
-        ]);
     }
 
     protected function handleRefund($charge)
@@ -94,10 +83,6 @@ class StripeWebhookController extends Controller
         $this->payments->update($payment->id, [
             'status' => 'refunded',
             'metadata' => $charge
-        ]);
-
-        $this->orders->update($payment->order_id, [
-            'status' => 'refunded'
         ]);
     }
 }
