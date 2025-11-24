@@ -13,6 +13,7 @@ use App\Repository\Constracts\NotificationRecipientRepositoryInterface;
 use App\Repository\Constracts\NotificationRepositoryInterface;
 use App\Repository\Constracts\OrderItemRepositoryInterface;
 use App\Repository\Constracts\OrderRepositoryInterface;
+use App\Repository\Constracts\PaymentRepositoryInterface;
 use App\Repository\Constracts\ProductRepositoryInterface;
 use App\Repository\Constracts\ProductVariantSizeRepositoryInterface;
 use App\Repository\Constracts\ReviewRepositoryInterface;
@@ -28,6 +29,7 @@ use App\Repository\Eloquent\NotificationRecipientRepository;
 use App\Repository\Eloquent\NotificationRepository;
 use App\Repository\Eloquent\OrderItemRepository;
 use App\Repository\Eloquent\OrderRepository;
+use App\Repository\Eloquent\PaymentRepository;
 use App\Repository\Eloquent\ProductRepository;
 use App\Repository\Eloquent\ProductVariantSizeRepository;
 use App\Repository\Eloquent\ReviewRepository;
@@ -52,6 +54,7 @@ class RepositoryServiceProvider extends ServiceProvider
         ReviewRepositoryInterface::class => ReviewRepository::class,
         CommentRepositoryInterface::class => CommentRepository::class,
         AddressRepositoryInterface::class => AddressRepository::class,
+        PaymentRepositoryInterface::class => PaymentRepository::class,
     ];
 
     /**
