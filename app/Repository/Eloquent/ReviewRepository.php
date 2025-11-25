@@ -42,4 +42,17 @@ class ReviewRepository extends BaseRepository implements ReviewRepositoryInterfa
             }
         };
     }
+
+    public function isExists($user_id, $product_id, $order_id)
+    {
+        return $this->model
+            ->where('user_id', $user_id)
+            ->where('product_id', $product_id)
+            ->where('order_id', $order_id)
+            ->exists();
+    }
+
+    public function getReviewByUser(int $userId){
+        return $this->model->where('user_id', $userId);
+    }
 }

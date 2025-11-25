@@ -29,6 +29,8 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('products', ProductController::class);
     Route::apiResource('products.variants', ProductVariantController::class);
     Route::apiResource('products.reviews', ReviewController::class);
+    Route::get('reviews/me', [ReviewController::class, 'myReviews']);
+    Route::delete('reviews/me/{reviewId}', [ReviewController::class, 'delete']);
     Route::apiResource('addresses', AddressController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('orders', OrderController::class);

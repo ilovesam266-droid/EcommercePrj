@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Api\BaseApiController;
+use App\Http\Controllers\Api\V1\Payment\Stripe\StripePaymentController;
 use App\Http\Requests\Api\Order\StoreOrderRequest;
 use App\Http\Resources\OrderTransformer;
 use App\Repository\Constracts\OrderItemRepositoryInterface;
@@ -53,6 +54,7 @@ class OrderController extends BaseApiController
     /**
      * Store a newly created resource in storage.
      */
+    //is lacked of add default address of this user
     public function store(StoreOrderRequest $request)
     {
         DB::beginTransaction();
@@ -84,6 +86,14 @@ class OrderController extends BaseApiController
 
                 $this->reduceStock($item['variant_id'], $item['qty']);
             }
+
+            $paymentController = app(StripePaymentController::class);
+
+            $paymentResponse = $paymentController->createPaymentIntent(new Request([
+                'order_id' => $order->id,
+                'payment_method' => $request->payment_method,
+            ]));
+
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -100,7 +110,7 @@ class OrderController extends BaseApiController
     {
         $user = $this->userRepo->find(Auth::id());
         $order = $user->orders()->find($id);
-        if (!$order){
+        if (!$order) {
             return $this->error('Order is not exist');
         }
 
@@ -121,7 +131,7 @@ class OrderController extends BaseApiController
     public function destroy(int $id)
     {
         $order = $this->orderRepo->delete($id);
-        if(!$order){
+        if (!$order) {
             return $this->error('Order deleted failed.');
         }
         return $this->success($order, 'Order deleted successfully.');

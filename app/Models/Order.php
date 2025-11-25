@@ -81,16 +81,6 @@ class Order extends Model
         return number_format($this->total_amount - $this->shipping_fee, 0, ',', '.') . ' ₫';
     }
 
-    // public function getPaymentMethodLabelAttribute()
-    // {
-    //     return self::PAYMENT_METHODS[$this->payment_method] ?? 'Unknown';
-    // }
-
-    // public function getPaymentStatusLabelAttribute()
-    // {
-    //     return self::PAYMENT_STATUSES[$this->payment_status] ?? 'Unknown';
-    // }
-
     protected function fulladdress() : Attribute
     {
         return Attribute::make(
@@ -109,5 +99,8 @@ class Order extends Model
     public function payment() : HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+    public function review() : HasMany{
+        return $this->hasMany(Review::class, 'order_id');
     }
 }

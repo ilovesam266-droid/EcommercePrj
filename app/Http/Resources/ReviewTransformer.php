@@ -15,7 +15,7 @@ class ReviewTransformer extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'product_id'    => $this->product_id,
+            'user_name'     => $this->user->full_name,
             'rating'        => $this->rating,
             'body'          => $this->body,
             'created_at'    => $this->created_at,

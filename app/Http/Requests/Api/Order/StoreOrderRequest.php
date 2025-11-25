@@ -7,6 +7,7 @@ use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Http\Requests\Api\ApiFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreOrderRequest extends ApiFormRequest
 {
@@ -24,13 +25,10 @@ class StoreOrderRequest extends ApiFormRequest
             'district' => 'required|string|max:100',
             'ward' => 'required|string|max:100',
             'detailed_address' => 'required|string|max:255',
-            // 'payment_method' => 'required|integer|in:'.PaymentMethod::cases(),
-            // 'payment_status' => 'required|integer|in:'.PaymentStatus::cases(),
-            // 'payment_transaction_code' => 'nullable|string|max:100',
             'customer_note' => 'nullable|string',
             'admin_note' => 'nullable|string',
 
-            'payment_method' => 'required|in:cod,banking,momo,vnpay,zalopay',
+            'payment_method' => ['required', Rule::in(array_map(fn($case) => $case->value, PaymentMethod::cases()))],
 
             'items' => 'required|array|min:1',
             'items.*.variant_id' => 'required|exists:product_variant_sizes,id',

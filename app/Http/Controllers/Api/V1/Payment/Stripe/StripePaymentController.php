@@ -103,6 +103,7 @@ class StripePaymentController extends Controller
         }
     }
 
+    //add request to authenticate exactly user of that payment is allowed to pay
     public function confirmPaymentIntent(Request $request)
     {
         $request->validate([
@@ -117,7 +118,6 @@ class StripePaymentController extends Controller
         $stripe = new StripeClient(config('stripe.secret'));
         try {
             $pi = $stripe->paymentIntents->retrieve($payment->transaction_code);
-            Log::info($pi->status == 'requires_payment_method');
             if ($pi->status == 'requires_payment_method') {
                 $pi = $stripe->paymentIntents->confirm($payment->transaction_code, [
                     'payment_method' => 'pm_card_visa',
