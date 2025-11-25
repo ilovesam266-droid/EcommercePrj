@@ -19,8 +19,8 @@ class Addresses extends Component
     public array $filter = [
         'is_default' => '',
     ];
-    public $sort = ['created_at' => 'asc'];
-    public $perPage = 5;
+    public $sort;
+    public $perPage;
     public bool $showEditModal = false;
     public $editingAddressId = null;
 
@@ -28,6 +28,11 @@ class Addresses extends Component
     public function boot(AddressRepositoryInterface $address_repository)
     {
         $this->addressRepository = $address_repository;
+    }
+
+    public function mount(){
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
     }
 
     public function confirmDelete($addressId){
@@ -93,14 +98,7 @@ class Addresses extends Component
     #[Computed()]
     public function addresses()
     {
-        return $this->addressRepository->all(
-            $this->addressRepository->getFilteredAddress($this->filter, $this->search),
-            $this->sort,
-            $this->perPage,
-            ['*'],
-            [],
-            false,
-        );
+        return $this->addressRepository->getAllAddress($this->perPage, $this->sort, $this->search, $this->filter);
     }
 
     #[Layout('layouts.page-layout')]
@@ -117,7 +115,10 @@ class Addresses extends Component
                 ],
             ],
         ];
+        $totalDefault = $this->addressRepository->getDefault();
+        $missingField = $this->addressRepository->countMissingFields();
+        $topProvinces = $this->addressRepository->topProvinces();
 
-        return view('admin.pages.addresses', compact('addressFiltersConfig'));
+        return view('admin.pages.addresses', compact('addressFiltersConfig', 'totalDefault', 'missingField', 'topProvinces'));
     }
 }

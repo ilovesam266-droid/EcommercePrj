@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Enums\UserStatus;
 use App\Repository\Constracts\UserRepositoryInterface;
 use Error;
 use Illuminate\Database\QueryException;
@@ -22,8 +23,8 @@ class Users extends Component
         'status' => '',
         'role' => '',
     ];
-    public array $sort = ['created_at' => 'desc'];
-    public int $perPage = 5;
+    public $sort;
+    public $perPage;
     public bool $showCreateModal = false;
     public bool $showEditModal = false;
     public $editingUserId = null;
@@ -37,6 +38,23 @@ class Users extends Component
     public function boot(UserRepositoryInterface $repository)
     {
         $this->userRepository = $repository;
+    }
+
+    public function mount()
+    {
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
+    }
+
+    public function toggleStatus($userId)
+    {
+        $user = $this->userRepository->find((int)$userId);
+        if (!$user) return;
+
+        $user->status = $user->status === UserStatus::ACTIVE ? UserStatus::INACTIVE : UserStatus::ACTIVE;
+        $user->save();
+
+        $this->dispatch('showToast', 'success', 'Success', "User has been updated {$user->status->value}");
     }
 
     //search & filter feature
@@ -87,7 +105,7 @@ class Users extends Component
         $this->dispatch(
             'showConfirm',
             'Confirm user deletion',
-            'Are you sure you want to delete this user <<'.$userId.'>>?',
+            'Are you sure you want to delete this user <<' . $userId . '>>?',
             'delete-user',
             ['user_id' => $userId],
         );
@@ -100,7 +118,7 @@ class Users extends Component
         try {
             $this->userRepository->delete($userId);
             $this->dispatch('userDeleted');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             $this->dispatch('showToast', 'error', 'Error', 'User is used in other places');
         }
     }
@@ -108,14 +126,7 @@ class Users extends Component
     #[Computed()]
     public function users()
     {
-        return $this->userRepository->all(
-            $this->userRepository->getFilteredUsers($this->filter, $this->search),
-            $this->sort,
-            $this->perPage,
-            ['*'],
-            [],
-            false,
-        );
+        return $this->userRepository->getAllUser($this->perPage, $this->sort, $this->search, $this->filter);
     }
 
     #[Layout('layouts.page-layout')]
@@ -132,6 +143,9 @@ class Users extends Component
                 ['label' => 'Inactive', 'value' => 'inactive'],
             ]],
         ];
-        return view('admin.pages.user', compact('userFiltersConfig'));
+        $totalActiveUsers = $this->userRepository->countActive();
+        $usersNeedingAttention = $this->userRepository->countNeedingAttention();
+
+        return view('admin.pages.user', compact('userFiltersConfig', 'totalActiveUsers', 'usersNeedingAttention'));
     }
 }

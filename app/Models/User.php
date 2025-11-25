@@ -13,6 +13,7 @@ use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -77,6 +78,11 @@ class User extends Authenticatable implements JWTSubject
         return Attribute::make(
             get: fn($value, $Attribute) => ucfirst($Attribute['first_name'] . ' ' . $Attribute['last_name'])
         );
+    }
+
+    public function defaultAddress(): HasOne
+    {
+        return $this->hasOne(Address::class, 'user_id')->where('is_default', 1);
     }
 
     public function products(): HasMany

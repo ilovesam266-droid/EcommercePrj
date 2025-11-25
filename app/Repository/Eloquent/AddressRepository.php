@@ -12,6 +12,40 @@ class AddressRepository extends BaseRepository implements AddressRepositoryInter
         return Address::class;
     }
 
+    public function getAllAddress($perPage, $sort, $search, $filter)
+    {
+        return $this->all($this->getFilteredAddress(
+            $filter,
+            $search
+        ), ['created_at' => $sort], $perPage, ['*'], ['user'], false);
+    }
+
+    public function getDefault()
+    {
+        return $this->model->where('is_default', 1)->count();
+    }
+
+    public function countMissingFields(array $requiredFields = ['detailed_address', 'ward', 'district', 'province']): int
+    {
+        return $this->model->where(function ($query) use ($requiredFields) {
+            foreach ($requiredFields as $field) {
+                $query->orWhereNull($field)
+                    ->orWhere($field, '');
+            }
+        })->count();
+    }
+
+    public function topProvinces(int $limit = 3)
+    {
+        return $this->model
+            ->select('province')
+            ->selectRaw('COUNT(*) as total')
+            ->groupBy('province')
+            ->orderByDesc('total')
+            ->limit($limit)
+            ->get();
+    }
+
     public function getFilteredAddress(array $filter = [], ?string $search = null)
     {
         return function ($query) use ($filter, $search) {
@@ -37,10 +71,5 @@ class AddressRepository extends BaseRepository implements AddressRepositoryInter
                 });
             }
         };
-    }
-
-    public function getAllAddress($perPage, $sort, $search, $filter){
-        return $this->all($this->getFilteredAddress(
-            $filter, $search), ['created_at' => $sort], $perPage, ['*'], [], false);
     }
 }
