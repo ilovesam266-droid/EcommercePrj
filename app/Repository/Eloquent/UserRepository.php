@@ -44,12 +44,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function getFilteredUsers(array $filter = [], ?string $search = null)
     {
         return function ($query) use ($filter, $search) {
-            // Lọc theo status hoặc role nếu có
+            // Filter by status or role
             if (!empty($filter['status']) || !empty($filter['role'])) {
                 $this->buildCriteria($query, $filter);
             }
 
-            // Tìm kiếm theo từ khóa
+            // Search by keys
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
                     $q->where('first_name', 'like', '%' . $search . '%')

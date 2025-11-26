@@ -19,7 +19,6 @@
                     :icon="'vendors/@coreui/icons/svg/free.svg#cil-chart'" :chartId="'card-top-province'" :dropdownItems="$topProvinces->pluck('province')->toArray()" />
             </div>
         </div>
-
     </div>
 
     <div class="p-4 bg-white rounded shadow-lg">

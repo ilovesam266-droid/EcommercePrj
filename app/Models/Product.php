@@ -41,16 +41,16 @@ class Product extends Model
         return $this->hasMany(ProductVariantSize::class, 'product_id');
     }
 
-    public function categories() : MorphToMany
+    public function categories(): MorphToMany
     {
         return $this->morphToMany(Category::class, 'categoryable');
     }
 
-    public function images() : MorphToMany
+    public function images(): MorphToMany
     {
         return $this->morphToMany(Image::class, 'imageable')
-                    ->withPivot('is_primary', 'order_of_images')
-                    ->withTimestamps();
+            ->withPivot('is_primary', 'order_of_images')
+            ->withTimestamps();
     }
 
     public function reviews(): HasMany
@@ -61,6 +61,11 @@ class Product extends Model
     public function averageRating(): float
     {
         return $this->reviews->avg('rating') ?? 0;
+    }
+
+    public function sumStock(): int
+    {
+        return $this->variant_sizes()->sum('stock') ?? 0;
     }
 
     protected static function booted()
@@ -76,5 +81,32 @@ class Product extends Model
                 $product->slug = Str::slug($product->name);
             }
         });
+    }
+
+    public function stockStatus()
+    {
+        $stock = $this->sumStock();
+
+        if ($stock === 0) {
+            return [
+                'label' => 'Out of stock',
+                'class' => 'text-danger',
+                'dot'   => '●', // red dot
+            ];
+        }
+
+        if ($stock < 10) {
+            return [
+                'label' => 'Low stock',
+                'class' => 'text-warning',
+                'dot'   => '●', // yellow dot
+            ];
+        }
+
+        return [
+            'label' => 'In stock',
+            'class' => 'text-success',
+            'dot'   => '●', // green dot
+        ];
     }
 }

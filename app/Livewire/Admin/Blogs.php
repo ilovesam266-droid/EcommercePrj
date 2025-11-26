@@ -16,13 +16,18 @@ class Blogs extends Component
     protected BlogRepositoryInterface $blogRepository;
     public string $search = '';
     public array $filter = [];
-    public $sort = ['created_at' => 'asc'];
-    public $perPage = 5;
+    public $sort;
+    public $perPage;
     public $blogId = null;
 
     public function boot(BlogRepositoryInterface $blog_repository)
     {
         $this->blogRepository = $blog_repository;
+    }
+
+    public function mount(){
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
     }
 
     protected $listener = [
@@ -63,23 +68,17 @@ class Blogs extends Component
     #[Computed()]
     public function blogs()
     {
-        return $this->blogRepository->all(
-            $this->blogRepository->getFilteredBlog(),
-            $this->sort,
-            $this->perPage,
-            ['*'],
-            [
-                'user',
-            ],
-            false,
-        );
+        return $this->blogRepository->getAllBlogs($this->perPage, $this->sort, $this->search, $this->filter);
     }
 
     #[Layout('layouts.page-layout')]
     #[Title('Blogs')]
     public function render()
     {
-         $blogFiltersConfig = [];
-        return view('admin.pages.blogs', compact('blogFiltersConfig'));
+        $blogFiltersConfig = [];
+        $trashedBlogs = $this->blogRepository->trashedCount();
+        $topCategories = $this->blogRepository->topCategories();
+        $totalComments = $this->blogRepository->totalComments();
+        return view('admin.pages.blogs', compact('blogFiltersConfig', 'trashedBlogs', 'topCategories', 'totalComments'));
     }
 }

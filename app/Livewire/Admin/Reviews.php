@@ -21,13 +21,17 @@ class Reviews extends Component
         'rating' => '',
         'status' => '',
     ];
-    public $sort = ['created_at' => 'asc'];
-    public $perPage = 5;
-
+    public $sort;
+    public $perPage;
 
     public function boot(ReviewRepositoryInterface $review_repository)
     {
         $this->reviewRepository = $review_repository;
+    }
+
+    public function mount(){
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
     }
 
     public function approveReview($reviewId)
@@ -87,7 +91,7 @@ class Reviews extends Component
     {
         return $this->reviewRepository->all(
             $this->reviewRepository->getFilteredReview($this->filter, $this->search),
-            $this->sort,
+            ['created_at' => $this->sort],
             $this->perPage,
             ['*'],
             ['user', 'product'],
@@ -121,6 +125,10 @@ class Reviews extends Component
                 ],
             ],
         ];
-        return view('admin.pages.reviews', compact('reviewFiltersConfig'));
+        $approvedReviewsCount = $this->reviewRepository->approvedCount();
+        $pendingReviewsCount = $this->reviewRepository->pendingCount();
+        $lowRatingCount = $this->reviewRepository->lowRatingCount();
+
+        return view('admin.pages.reviews', compact('reviewFiltersConfig', 'approvedReviewsCount', 'pendingReviewsCount', 'lowRatingCount'));
     }
 }

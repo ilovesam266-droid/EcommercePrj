@@ -4,7 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Enums\UserStatus;
 use App\Repository\Constracts\UserRepositoryInterface;
-use Error;
+use App\Services\UserService;
 use Illuminate\Database\QueryException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -17,7 +17,7 @@ class Users extends Component
 {
     use WithPagination;
 
-    protected UserRepositoryInterface $userRepository;
+    protected UserService $service;
     public string $search = '';
     public array $filter = [
         'status' => '',
@@ -35,9 +35,9 @@ class Users extends Component
         'userDeleted' => '$refresh',
     ];
 
-    public function boot(UserRepositoryInterface $repository)
+    public function boot(UserService $service)
     {
-        $this->userRepository = $repository;
+        $this->service = $service;
     }
 
     public function mount()
@@ -46,15 +46,16 @@ class Users extends Component
         $this->perPage = config('app.per_page');
     }
 
+    //switch user status
     public function toggleStatus($userId)
     {
-        $user = $this->userRepository->find((int)$userId);
-        if (!$user) return;
+        $status = $this->service->toggleStatus((int)$userId);
 
-        $user->status = $user->status === UserStatus::ACTIVE ? UserStatus::INACTIVE : UserStatus::ACTIVE;
-        $user->save();
-
-        $this->dispatch('showToast', 'success', 'Success', "User has been updated {$user->status->value}");
+        if ($status) {
+            $this->dispatch('showToast', 'success', 'Success', "User has been updated {$status}");
+        }else{
+            $this->dispatch('showToast', 'error', 'Error', "User has been updated failed");
+        }
     }
 
     //search & filter feature
@@ -78,6 +79,7 @@ class Users extends Component
         $this->resetPage();
     }
 
+    // modal create user
     public function openCreateModal()
     {
         $this->showCreateModal = true;
@@ -88,6 +90,7 @@ class Users extends Component
         $this->showCreateModal = false;
     }
 
+    //modal edit user
     public function openEditModal($userId)
     {
         $this->editingUserId = $userId;
@@ -97,9 +100,10 @@ class Users extends Component
     public function closeEditModal()
     {
         $this->showEditModal = false;
-        $this->reset(['editingUserId']); // Xóa ID người dùng đang chỉnh sửa
+        $this->reset(['editingUserId']);
     }
 
+    //delete user
     public function confirmDelete($userId)
     {
         $this->dispatch(
@@ -116,7 +120,7 @@ class Users extends Component
     {
         $userId = $data['user_id'];
         try {
-            $this->userRepository->delete($userId);
+            $this->service->deleteUser($userId);
             $this->dispatch('userDeleted');
         } catch (QueryException $e) {
             $this->dispatch('showToast', 'error', 'Error', 'User is used in other places');
@@ -126,7 +130,7 @@ class Users extends Component
     #[Computed()]
     public function users()
     {
-        return $this->userRepository->getAllUser($this->perPage, $this->sort, $this->search, $this->filter);
+        return $this->service->getUsers($this->perPage, $this->sort, $this->search, $this->filter);
     }
 
     #[Layout('layouts.page-layout')]
@@ -143,8 +147,8 @@ class Users extends Component
                 ['label' => 'Inactive', 'value' => 'inactive'],
             ]],
         ];
-        $totalActiveUsers = $this->userRepository->countActive();
-        $usersNeedingAttention = $this->userRepository->countNeedingAttention();
+        $totalActiveUsers = $this->service->countActive();
+        $usersNeedingAttention = $this->service->countNeedingAttention();
 
         return view('admin.pages.user', compact('userFiltersConfig', 'totalActiveUsers', 'usersNeedingAttention'));
     }

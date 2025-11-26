@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Enums\ReviewStatus;
 use App\Models\Review;
 use App\Repository\Constracts\ReviewRepositoryInterface;
 
@@ -54,5 +55,40 @@ class ReviewRepository extends BaseRepository implements ReviewRepositoryInterfa
 
     public function getReviewByUser(int $userId){
         return $this->model->where('user_id', $userId);
+    }
+
+    public function total(): int
+    {
+        return $this->model->count();
+    }
+
+    /**
+     * Take review approved
+     */
+    public function approvedCount(): int
+    {
+        return $this->model
+            ->where('status', ReviewStatus::Approved)
+            ->count();
+    }
+
+    /**
+     * Take review pending
+     */
+    public function pendingCount(): int
+    {
+        return $this->model
+            ->where('status', ReviewStatus::Pending)
+            ->count();
+    }
+
+    /**
+     * Take review rating low (≤ threshold)
+     */
+    public function lowRatingCount(int $threshold = 2): int
+    {
+        return $this->model
+            ->where('rating', '<=', $threshold)
+            ->count();
     }
 }

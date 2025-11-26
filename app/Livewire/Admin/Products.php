@@ -20,12 +20,17 @@ class Products extends Component
     public array $filter = [
         'status' => '',
     ];
-    public int $perPage = 5;
-    public array $sort = ['created_at' => 'asc'];
+    public int $perPage;
+    public string $sort;
 
     public function boot(ProductRepositoryInterface $repository)
     {
         $this->productRepository = $repository;
+    }
+
+    public function mount(){
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
     }
 
     public function confirmDelete($productId)
@@ -69,19 +74,7 @@ class Products extends Component
     #[Computed]
     public function products()
     {
-        return $this->productRepository->all(
-            $this->productRepository->getFilteredProduct($this->filter, $this->search),
-            $this->sort,
-            $this->perPage,
-            ['*'],
-            ['images' => function ($query) {
-                $query->wherePivot('is_primary', true);
-            }, 'categories',
-            'reviews' => function ($query) {
-                $query->select('product_id', 'rating');
-            }, 'creator'],
-            false,
-        );
+        return $this->productRepository->getAllProducts($this->perPage, $this->sort, $this->search, $this->filter);
     }
 
     #[Layout('layouts.page-layout')]
@@ -94,6 +87,9 @@ class Products extends Component
                 ['label' => 'In Active', 'value' => 'inactive'],
             ]],
         ];
-        return view('admin.pages.products', compact('productFiltersConfig'));
+        $totalStock = $this->productRepository->getTotalStock();
+        $outOfStockCount = $this->productRepository->outOfStockCount();
+        $lowStockCount = $this->productRepository->lowStockCount();
+        return view('admin.pages.products', compact('productFiltersConfig', 'totalStock', 'outOfStockCount', 'lowStockCount'));
     }
 }

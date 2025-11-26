@@ -1,3 +1,26 @@
+<div>
+    <div class="row g-4 mb-4">
+    <div class="row g-3">
+
+        <!-- 1) Total Reviews -->
+        <livewire:admin.components.dashboard-widget :title="'Total Reviews'" :value="$this->reviews->total()" :color="'primary'"
+            :icon="'vendors/@coreui/icons/svg/free.svg#cil-note'" :chartId="'card-total-reviews'" :dropdownItems="['All']" />
+
+        <!-- 2) Approved Reviews -->
+        <livewire:admin.components.dashboard-widget :title="'Approved Reviews'" :value="$approvedReviewsCount" :subtext="round(($approvedReviewsCount / $this->reviews->total()) * 100, 1) . '%'"
+            :color="'success'" :icon="'vendors/@coreui/icons/svg/free.svg#cil-check'" :chartId="'card-approved-reviews'" :dropdownItems="['Approved']" />
+
+        <!-- 3) Pending Reviews -->
+        <livewire:admin.components.dashboard-widget :title="'Pending Reviews'" :value="$pendingReviewsCount" :color="'warning'"
+            :icon="'vendors/@coreui/icons/svg/free.svg#cil-time'" :chartId="'card-pending-reviews'" :dropdownItems="['Pending']" />
+
+        <!-- 4) Low Rating / Negative Reviews -->
+        <livewire:admin.components.dashboard-widget :title="'Low Rating Reviews'" :value="$lowRatingCount" :color="'danger'"
+            :icon="'vendors/@coreui/icons/svg/free.svg#cil-warning'" :chartId="'card-low-rating'" :dropdownItems="['Rating ≤ 2']" />
+
+    </div>
+</div>
+
 <div class="p-4 bg-white rounded shadow">
     @if (session()->has('message'))
         <div class="alert alert-success">
@@ -24,8 +47,8 @@
                                 <th>User</th>
                                 <th>Product</th>
                                 <th>Rating</th>
-                                <th>Review</th>
                                 <th>Status</th>
+                                <th>Review</th>
                                 <th>Created At</th>
                                 <th>Action</th>
                             </tr>
@@ -40,36 +63,37 @@
                                         {{ $loop->iteration }}
                                     </td>
                                     <td>
-                                        <div class="text-nowrap">{{ $review->user->first_name }}
-                                                {{ $review->user->last_name }}</div>
-                                            <div class="small text-body-secondary text-nowrap">
-                                                <span>{{ $review->user->username }}</span>
-                                                <span class="copy-icon"
-                                                    onclick="copyToClipboard('{{ $review->user->username }}')"
-                                                    title="Copy review">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18"
-                                                        height="18" fill="currentColor" viewBox="0 0 16 16">
-                                                        <path d="M10 1.5v1H4a1 1 0 0 0-1 1v8H2V3a2 2 0 0 1 2-2h6z" />
-                                                        <path
-                                                            d="M5 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5zm1 0v9h6V5H6z" />
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                            <div class="small text-body-secondary text-nowrap">
-                                                {{ $review->user->email }}
-                                            </div>
+                                        <div class="text-truncate fw-medium">{{ $review->user->first_name }}
+                                            {{ $review->user->last_name }}</div>
+                                        <div class="small text-body-secondary text-nowrap">
+                                            <span>{{ $review->user->username }}</span>
+                                            <span class="copy-icon"
+                                                onclick="copyToClipboard('{{ $review->user->username }}')"
+                                                title="Copy review">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                    fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M10 1.5v1H4a1 1 0 0 0-1 1v8H2V3a2 2 0 0 1 2-2h6z" />
+                                                    <path
+                                                        d="M5 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5zm1 0v9h6V5H6z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="small text-body-secondary text-nowrap">
+                                            {{ $review->user->email }}
+                                        </div>
                                     </td>
                                     <td>
-                                        <div class="text-nowrap">{{ $review->product->name }}<span class="copy-icon"
-                                                    onclick="copyToClipboard('{{ $review->product->name }}')"
-                                                    title="Copy review">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18"
-                                                        height="18" fill="currentColor" viewBox="0 0 16 16">
-                                                        <path d="M10 1.5v1H4a1 1 0 0 0-1 1v8H2V3a2 2 0 0 1 2-2h6z" />
-                                                        <path
-                                                            d="M5 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5zm1 0v9h6V5H6z" />
-                                                    </svg>
-                                                </span></div>
+                                        <div class="text-truncate fw-medium">{{ $review->product->name }}<span
+                                                class="copy-icon"
+                                                onclick="copyToClipboard('{{ $review->product->name }}')"
+                                                title="Copy review">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                    fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M10 1.5v1H4a1 1 0 0 0-1 1v8H2V3a2 2 0 0 1 2-2h6z" />
+                                                    <path
+                                                        d="M5 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5zm1 0v9h6V5H6z" />
+                                                </svg>
+                                            </span></div>
                                         <div class="small text-body-secondary text-nowrap">
                                             <span>SKU: {{ $review->product->slug ?? 'N/A' }}</span>
                                         </div>
@@ -80,20 +104,33 @@
                                                 <i class="bi bi-star-fill {{ $i <= $review->rating ? 'text-warning' : 'text-muted' }}"
                                                     style="font-size: 14px;"></i>
                                             @endfor
-                                            <span class="ms-2 fw-bold">{{ $review->rating }}/5</span>
+                                            <span class="text-truncate fw-medium">{{ $review->rating }}/5</span>
                                         </div>
+                                    </td>
+                                    <td>
+                                        @php
+                                            $icon = match ($review->status) {
+                                                \App\Enums\ReviewStatus::Approved => 'cil-check',
+                                                \App\Enums\ReviewStatus::Pending => 'cil-av-timer',
+                                                \App\Enums\ReviewStatus::Rejected => 'cil-x',
+                                            };
+                                        @endphp
+                                        <span class="status-badge {{ $review->status->colorClass() }}">
+                                            <svg class="icon icon-sm me-1">
+                                                <use
+                                                    xlink:href="vendors/@coreui/icons/svg/free.svg#{{ $icon }}">
+                                                </use>
+                                            </svg>
+                                            {{ $review->status }}
+                                        </span>
                                     </td>
                                     <td>
                                         <div
                                             style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            {{ Str::limit($review->body, 20) ?? 'No comment' }}
+                                            {{ Str::limit($review->body, 30) ?? 'No comment' }}
                                         </div>
                                     </td>
-                                    <td>
-                                        <span class="status-badge {{ $review->status->colorClass() }}">
-                                            {{ $review->status }}
-                                        </span>
-                                    </td>
+
                                     <td>
                                         <div>{{ $review->created_at->format('d/m/Y') }}</div>
                                         <small
@@ -104,7 +141,7 @@
                                             @if ($review->status !== 'approved')
                                                 <button class="btn btn-sm btn-success btn-action" title="Approve"
                                                     wire:click="approveReview({{ $review->id }})">
-                                                    <svg class="icon">
+                                                    <svg class="icon text-white">
                                                         <use
                                                             xlink:href="vendors/@coreui/icons/svg/free.svg#cil-thumb-up">
                                                         </use>
@@ -114,7 +151,7 @@
                                             @if ($review->status !== 'rejected')
                                                 <button class="btn btn-sm btn-warning btn-action" title="Reject"
                                                     wire:click="rejectReview({{ $review->id }})">
-                                                    <svg class="icon">
+                                                    <svg class="icon text-white">
                                                         <use
                                                             xlink:href="vendors/@coreui/icons/svg/free.svg#cil-thumb-down">
                                                         </use>
@@ -123,7 +160,7 @@
                                             @endif
                                             <button class="btn btn-sm btn-danger btn-action" title="Delete"
                                                 wire:click="confirmDelete({{ $review->id }})">
-                                                <svg class="nav-icon" style="width: 20px;height: 20px;">
+                                                <svg class="nav-icon text-white" style="width: 20px;height: 20px;">
                                                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-trash">
                                                     </use>
                                                 </svg>
@@ -165,4 +202,6 @@
     <div class="mt-4">
         {{ $this->reviews->onEachSide(1)->links() }}
     </div>
+</div>
+
 </div>

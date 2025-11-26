@@ -36,7 +36,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         };
     }
 
-    public function getAllProducts($perPage, $sort, array $filter = [], ?string $search = null)
+    public function getAllProducts($perPage, $sort, ?string $search = null, array $filter = [])
     {
         return $this->all(
             $this->getFilteredProduct($filter, $search),
@@ -57,15 +57,43 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         );
     }
 
-    public function getProduct(int $productId){
-        return $this->find($productId,
-                ['images',
+    public function getProduct(int $productId)
+    {
+        return $this->find(
+            $productId,
+            [
+                'images',
                 'categories',
                 'reviews' => function ($query) {
-                    $query->select('product_id','user_id', 'rating');
+                    $query->select('product_id', 'user_id', 'rating');
                 },
                 'creator',
                 'variant_sizes',
-            ]);
+            ]
+        );
+    }
+
+    public function getTotalStock(): int
+    {
+        return $this->model->with('variant_sizes')->get()->sum(fn($product) => $product->variant_sizes->sum('stock'));
+    }
+
+    public function outOfStockCount(): int
+    {
+        return $this->model
+            ->with('variant_sizes')
+            ->get()
+            ->filter(fn($p) => $p->variant_sizes->sum('stock') === 0)
+            ->count();
+    }
+
+    public function lowStockCount(int $threshold = 10): int
+    {
+        return $this->model
+            ->with('variant_sizes')
+            ->get()
+            ->filter(fn($p) => $p->variant_sizes->sum('stock') > 0
+                && $p->variant_sizes->sum('stock') < $threshold)
+            ->count();
     }
 }

@@ -59,10 +59,6 @@ class StripePaymentController extends Controller
                         'allow_redirects' => 'never',
                     ],
 
-                    // 'payment_method' => 'pm_card_visa',
-                    // 'confirm' => true,
-                    // 'return_url' => 'https://your-site.com/payment-complete',
-
                     'metadata' => ['order_id' => $order->id],
                 ]);
 
