@@ -40,7 +40,6 @@ class Category extends Model
         return $this->morphedByMany(Blog::class, 'categoryable');
     }
 
-
     public static function boot()
     {
         parent::boot();

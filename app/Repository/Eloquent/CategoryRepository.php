@@ -4,6 +4,7 @@ namespace App\Repository\Eloquent;
 
 use App\Models\Category;
 use App\Repository\Constracts\CategoryRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class CategoryRepository  extends BaseRepository implements CategoryRepositoryInterface
 {
@@ -36,8 +37,38 @@ class CategoryRepository  extends BaseRepository implements CategoryRepositoryIn
             }
         };
     }
+
     public function getAllCategories($perPage, $sort, array $filter = [], ?string $search = null)
     {
         return $this->all($this->getFilteredCategory($filter, $search), ['created_at' => $sort], $perPage, ['*'], [], false);
+    }
+
+    public function totalCategories()
+    {
+        return $this->model->count();
+    }
+
+    public function totalCategoryables()
+    {
+        $totalProducts = $this->model->products()->count();
+
+        $totalBlogs = $this->model->blogs()->count();
+
+        return $totalProducts + $totalBlogs;
+    }
+
+    public function topAssignedCategory()
+    {
+        return $this->model
+            ->withCount('products')->withCount('blogs')
+            ->orderByDesc(DB::raw('products_count + blogs_count'))
+            ->first();
+    }
+
+    public function unusedCategories()
+    {
+        return $this->model->doesntHave('products')
+            ->doesntHave('blogs')
+            ->count();
     }
 }

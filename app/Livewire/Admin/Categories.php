@@ -15,8 +15,8 @@ class Categories extends Component
     use WithPagination;
 
     protected CategoryRepositoryInterface $categoryRepository;
-    public int $perPage = 5;
-    public array $sort = ['created_at' => 'asc'];
+    public int $perPage;
+    public $sort;
     public string $search = '';
     public array $filter = [];
     public string $currentTab = 'product';
@@ -33,6 +33,12 @@ class Categories extends Component
     public function boot(CategoryRepositoryInterface $category_repository)
     {
         $this->categoryRepository = $category_repository;
+    }
+
+    public function mount()
+    {
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
     }
 
     #[On('searchPerformed')]
@@ -91,25 +97,20 @@ class Categories extends Component
     #[Computed()]
     public function categories()
     {
-        return $this->categoryRepository->all(
-            $this->categoryRepository->getFilteredCategory($this->filter, $this->search),
-            $this->sort,
-            $this->perPage,
-            ['*'],
-            [
-                'creator',
-                'products',
-                'blogs'
-            ],
-            false,
-        );
+        return $this->categoryRepository->getAllCategories($this->perPage, $this->sort, $this->filter, $this->search);
     }
 
     #[Layout('layouts.page-layout')]
-    #[Title('Image')]
+    #[Title('Categories')]
     public function render()
     {
         $categoryFiltersConfig = [];
-        return view('admin.pages.categories', compact('categoryFiltersConfig'));
+
+        $totalCategories = $this->categoryRepository->totalCategories();
+        $totalAssignments = $this->categoryRepository->totalCategoryables();
+        $unusedCategories = $this->categoryRepository->unusedCategories();
+        $topCategory = $this->categoryRepository->topAssignedCategory();
+
+        return view('admin.pages.categories', compact('categoryFiltersConfig', 'totalCategories', 'totalAssignments', 'unusedCategories', 'topCategory'));
     }
 }

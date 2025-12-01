@@ -32,7 +32,7 @@ class MailService
                 'name' => $item->productVariantSize?->product?->name ?? 'Product is not valid',
                 'price' => number_format($item->unit_price),
                 'quantity' => $item->quantity,
-                'subtotal' => number_format($item->price * $item->quantity),
+                'subtotal' => number_format($item->unit_price * $item->quantity),
                 'thumbnail' => $item->productVariantSize?->product?->images->first() ?? null,
                 'sku' => $item->productVariantSize?->sku ?? null,
                 'variant' => $item->productVariantSize?->variant_size ?? null,
