@@ -18,10 +18,12 @@ class CartItem extends Model
     protected $casts=[
         'quantity'=>'integer',
     ];
+
     public function cart() : BelongsTo
     {
         return $this->belongsTo(Cart::class, 'cart_id');
     }
+
     public function productVariantSize() : BelongsTo
     {
         return $this->belongsTo(ProductVariantSize::class, 'product_variant_size_id');

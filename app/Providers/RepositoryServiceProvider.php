@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repository\Constracts\AddressRepositoryInterface;
 use App\Repository\Constracts\BlogRepositoryInterface;
+use App\Repository\Constracts\CartRepositoryInterface;
 use App\Repository\Constracts\CategoryRepositoryInterface;
 use App\Repository\Constracts\CommentRepositoryInterface;
 use App\Repository\Constracts\ImageRepositoryInterface;
@@ -20,6 +21,7 @@ use App\Repository\Constracts\ReviewRepositoryInterface;
 use App\Repository\Constracts\UserRepositoryInterface;
 use App\Repository\Eloquent\AddressRepository;
 use App\Repository\Eloquent\BlogRepository;
+use App\Repository\Eloquent\CartRepository;
 use App\Repository\Eloquent\CategoryRepository;
 use App\Repository\Eloquent\CommentRepository;
 use App\Repository\Eloquent\ImageRepository;
@@ -55,6 +57,7 @@ class RepositoryServiceProvider extends ServiceProvider
         CommentRepositoryInterface::class => CommentRepository::class,
         AddressRepositoryInterface::class => AddressRepository::class,
         PaymentRepositoryInterface::class => PaymentRepository::class,
+        CartRepositoryInterface::class => CartRepository::class,
     ];
 
     /**

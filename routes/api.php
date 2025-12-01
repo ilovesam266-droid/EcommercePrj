@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ImageController;
 use App\Http\Controllers\Api\V1\OrderController;
@@ -36,6 +37,8 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('orders', OrderController::class);
     Route::post('stripe/payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
     Route::post('stripe/confirm-payment', [StripePaymentController::class, 'confirmPaymentIntent']);
+    Route::post('cart', [CartController::class, 'addToCart']);
+    Route::get('cart', [CartController::class, 'show']);
 });
     // Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
     Route::post('stripe/webhook', [StripeWebhookController::class, 'handle'])
