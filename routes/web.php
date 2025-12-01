@@ -89,7 +89,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/comments', Comments::class)->name('comments');
     Route::get('/addresses', Addresses::class)->name('addresses');
 });
-Route::view('/index', 'clients.pages.index');
+Route::view('/index', 'layouts.pagef-layout');
+Route::view('/shop', 'clients.pages.shop');
 // Route::get('/test-mail', function () {
 //     $template = Mail::first();
 //     $variables = [
