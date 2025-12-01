@@ -25,9 +25,6 @@ class Order extends Model
         'district',
         'ward',
         'detailed_address',
-        'payment_method',
-        'payment_status',
-        'payment_transaction_code',
         'status',
         'customer_note',
         'admin_note',
@@ -37,8 +34,6 @@ class Order extends Model
     public $casts=[
         'shipping_fee' => 'integer',
         'total_amount'=>'integer',
-        'payment_method' =>'integer',
-        'payment_status' =>'integer',
         'status'=>OrderStatus::class,
         'owner_by'=>'integer',
     ];

@@ -16,12 +16,13 @@ class BlogRepository extends BaseRepository implements BlogRepositoryInterface
     public function getAllBlogs($perPage, $sort, $search, $filter)
     {
         return $this->all(
-            $this->getFilteredBlog($filter, $sort),
+            $this->getFilteredBlog($filter, $search),
             ['created_at' => $sort],
             $perPage,
             ['*'],
             [
                 'user',
+                'categories',
             ],
             false,
         );
@@ -35,7 +36,7 @@ class BlogRepository extends BaseRepository implements BlogRepositoryInterface
                     $q->where('title', 'like', '%' . $search . '%')
                         ->orWhere('content', 'like', '%' . $search . '%')
                         ->orWhereHas('user', function ($authorQuery) use ($search) {
-                            $authorQuery->where('name', 'like', '%' . $search . '%')
+                            $authorQuery->where('username', 'like', '%' . $search . '%')
                                 ->orWhere('email', 'like', '%' . $search . '%');
                         })
                         ->orWhereHas('categories', function ($categoryQuery) use ($search) {

@@ -1,7 +1,7 @@
 <div>
     <div>
         <div class="row g-4 mb-4">
-            <div class="row g-3">
+            <div class="row g-3  justify-content-center">
                 <!-- Total Blogs -->
                 <livewire:admin.components.dashboard-widget :title="'Total Blogs'" :value="$this->blogs->total()" :color="'primary'"
                     :icon="'vendors/@coreui/icons/svg/free.svg#cil-align-left'" :chartId="'card-total-blogs'" />
@@ -10,12 +10,9 @@
                 <livewire:admin.components.dashboard-widget :title="'Trashed Blogs'" :value="$trashedBlogs" :color="'warning'"
                     :icon="'vendors/@coreui/icons/svg/free.svg#cil-trash'" :chartId="'card-trashed-blogs'" />
 
-                <!-- Top Categories -->
-                <livewire:admin.components.dashboard-widget :title="'Top Categories'" :value="$topCategories->sum('total')" :color="'info'"
-                    :icon="'vendors/@coreui/icons/svg/free.svg#cil-chart'" :chartId="'card-top-categories'" :dropdownItems="$topCategories->pluck('name')->toArray()" />
 
                 <!-- Total Comments -->
-                <livewire:admin.components.dashboard-widget :title="'Total Comments'" :value="$totalComments->total()" :color="'secondary'"
+                <livewire:admin.components.dashboard-widget :title="'Total Comments'" :value="$totalComments" :color="'secondary'"
                     :icon="'vendors/@coreui/icons/svg/free.svg#cil-comment-bubble'" :chartId="'card-total-comments'" />
             </div>
         </div>
@@ -63,7 +60,7 @@
                                             <div class="text-nowrap">{{ $loop->iteration }}</div>
                                         </td>
                                         <td>
-                                            <div class="text-nowrap">Title: {{ Str::limit($blog->title, 40) }}
+                                            <div class="text-truncate fw-medium">Title: {{ Str::limit($blog->title, 40) }}
                                                 <span class="copy-icon" onclick="copyToClipboard('{{ $blog->title }}')"
                                                     title="Copy blog">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18"
@@ -80,15 +77,15 @@
                                         <td>
                                             @if ($blog->categories->isNotEmpty())
                                                 @foreach ($blog->categories as $category)
-                                                    <span class="badge bg-success">{{ $category->name }}</span>
+                                                    <span class="badge bg-primary">{{ $category->name }}</span>
                                                 @endforeach
                                             @else
                                                 <span class="text-muted">Not Exists Any Category</span>
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="text-nowrap">{{ $blog->user->first_name }}
-                                                {{ $blog->user->last_name }}</div>
+                                            <div class="text-truncate fw-medium">{{ $blog->user->full_name }}
+                                                </div>
                                             <div class="small text-body-secondary text-nowrap">
                                                 <span>{{ $blog->user->username }}</span>
                                                 <span class="copy-icon"

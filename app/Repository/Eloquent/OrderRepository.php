@@ -2,6 +2,7 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Enums\OrderStatus;
 use App\Models\Mail;
 use App\Models\Order;
 use App\Repository\Constracts\OrderRepositoryInterface;
@@ -11,6 +12,17 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     public function getModel()
     {
         return Order::class;
+    }
+
+    public function getAllOrders($perPage, $sort, $search, $filter){
+        return $this->all(
+            $this->getFilteredOrder($filter, $search),
+            ['created_at' => $sort],
+            $perPage,
+            ['*'],
+            ['owner', 'payment'],
+            false
+        );
     }
 
     public function getFilteredOrder(array $filter = [], ?string $search = null)
@@ -42,5 +54,20 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
                 });
             }
         };
+    }
+
+    public function totalPending()
+    {
+        return $this->model->where('status', OrderStatus::PENDING)->count();
+    }
+
+    public function totalCompleted()
+    {
+        return $this->model->where('status', OrderStatus::DONE)->count();
+    }
+
+    public function totalCancel()
+    {
+        return $this->model->where('status', OrderStatus::CANCELED)->count();
     }
 }

@@ -11,6 +11,19 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
     {
         return Comment::class;
     }
+
+    public function getAllComments($perPage, $sort, $search, $filter){
+        return $this->all(
+            $this->getFilteredComment($filter, $search),
+            ['created_at' => $sort],
+            $perPage,
+            ['*'],
+            ['user', 'blog'],
+            false,
+        );
+    }
+
+
     public function getFilteredComment(array $filter = [], ?string $search = null)
     {
         return function ($query) use ($filter, $search) {
@@ -50,5 +63,25 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
                 });
             }
         };
+    }
+
+    public function getApprovedCount()
+    {
+        return $this->model->where('status', 'approved')->count();
+    }
+
+    public function getPendingCount()
+    {
+        return $this->model->where('status', 'pending')->count();
+    }
+
+    public function getByBlog(int $blogId)
+    {
+        return $this->model->where('blog_id', $blogId)->get();
+    }
+
+    public function getReplies(int $parentId)
+    {
+        return $this->model->where('parent_id', $parentId)->get();
     }
 }

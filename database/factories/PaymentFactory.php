@@ -22,7 +22,7 @@ class PaymentFactory extends Factory
             'order_id' => $order->id,
             'user_id' => User::inRandomOrder()->first()?->id ?? 1,
             'amount' => $order->total_amount,
-            'payment_method' => $this->faker->randomElement(PaymentMethod::cases() ?? ['cod', 'paypal', 'credit card', 'bank_transfer']),
+            'payment_method' => $this->faker->randomElement(PaymentMethod::cases() ?? ['cod', 'paypal', 'credit card', 'bank_transfer', 'stripe']),
             'transaction_code' => strtoupper(Str::random(10)),
             'status' =>  $this->faker->randomElement(PaymentStatus::cases() ?? ['pending', 'complete', 'failed', 'refund']),
             'metadata' => json_encode([

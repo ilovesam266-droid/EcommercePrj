@@ -10,6 +10,7 @@ use App\Mail\OrderConfirmedMail;
 use App\Mail\OrderDoneMail;
 use App\Repository\Constracts\MailRecipientRepositoryInterface;
 use App\Repository\Constracts\MailRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class MailService
 {
@@ -19,6 +20,50 @@ class MailService
     {
         $this->mailRepository = $mail_repository;
         $this->mailRecipientRepository = $mail_recipient_repository;
+    }
+
+    private function buildOrderVariables($order)
+    {
+        $recipient = $order->owner;
+
+        // Map product details
+        $products = $order->orderItems->map(function ($item) {
+            return [
+                'name' => $item->productVariantSize?->product?->name ?? 'Product is not valid',
+                'price' => number_format($item->unit_price),
+                'quantity' => $item->quantity,
+                'subtotal' => number_format($item->price * $item->quantity),
+                'thumbnail' => $item->productVariantSize?->product?->images->first() ?? null,
+                'sku' => $item->productVariantSize?->sku ?? null,
+                'variant' => $item->productVariantSize?->variant_size ?? null,
+            ];
+        })->toArray();
+        Log::info($products);
+
+        return [
+            // customer info
+            'fullname' => $recipient->fullname,
+            'email' => $recipient->email,
+            'address' => $order->detailed_address ?? '',
+
+            // order info
+            'order_id' => $order->id,
+            'order_code' => '#' . $order->id,
+            'order_status' => $order->status,
+            'subtotal' => number_format($order->subtotal),
+            'order_total' => number_format($order->total_amount),
+
+            'payment_method' => $order->payment->payment_method,
+            'payment_status' => $order->payment->status,
+
+            // links
+            'app_name' => config('app.name'),
+            'app_url' => config('app.url'),
+            'order_url' => config('app.url') . '/orders/' . $order->id,
+
+            // list products
+            'products' => $products,
+        ];
     }
 
     public function buildMailRecipientData($recipient, $template, $status = 'unread', $error = null)
@@ -45,12 +90,9 @@ class MailService
         $template = $this->mailRepository->findByType('order_canceled');
 
         if ($template) {
-            $variables = [
-                'fullname' => $recipient->fullname,
-                'order_id' => $order->id,
+            $variables = array_merge($this->buildOrderVariables($order), [
                 'cancel_reason' => $order->cancel_reason ?? 'Customer request',
-                'app_name' => config('app.name'),
-            ];
+            ]);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderCancelledMail($template, $variables));

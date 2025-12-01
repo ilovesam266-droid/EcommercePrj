@@ -20,13 +20,20 @@ class Orders extends Component
         'status' => '',
         'payment_method' => '',
     ];
-    public $sort = ['created_at' => 'asc'];
-    public $perPage = 5;
+    public $sort;
+    public $perPage;
     public $detailsOrderId = null;
     public bool $showDetailsModal = false;
 
-    public function boot(OrderRepositoryInterface $repository){
+    public function boot(OrderRepositoryInterface $repository)
+    {
         $this->orderRepository = $repository;
+    }
+
+    public function mount()
+    {
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
     }
 
     public function openDetailsModal($orderId)
@@ -46,7 +53,7 @@ class Orders extends Component
         $this->dispatch(
             'showConfirm',
             'Confirm order deletion',
-            'Are you sure you want to delete this order <<#ORD'.$orderId.'>>?',
+            'Are you sure you want to delete this order <<#ORD' . $orderId . '>>?',
             'delete-order',
             ['order_id' => $orderId],
         );
@@ -57,7 +64,7 @@ class Orders extends Component
     {
         $orderId = $data['order_id'];
         $this->orderRepository->delete($orderId);
-        $this->dispatch('showToast', 'success', 'Success','Order Deleted');
+        $this->dispatch('showToast', 'success', 'Success', 'Order Deleted');
     }
 
     #[On('searchPerformed')]
@@ -80,15 +87,9 @@ class Orders extends Component
     }
 
     #[Computed()]
-    public function orders(){
-        return $this->orderRepository->all(
-            $this->orderRepository->getFilteredOrder($this->filter, $this->search),
-            $this->sort,
-            $this->perPage,
-            ['*'],
-            ['owner', 'payment'],
-            false
-        );
+    public function orders()
+    {
+        return $this->orderRepository->getAllOrders($this->perPage, $this->sort, $this->search, $this->filter);
     }
 
     #[Layout('layouts.page-layout')]
@@ -111,6 +112,11 @@ class Orders extends Component
                 ['label' => 'Bank Transfer', 'value' => 'bank transfer'],
             ]],
         ];
-        return view('admin.pages.orders', compact('orderFiltersConfig'));
+        $totalPending = $this->orderRepository->totalPending();
+        $totalCompleted = $this->orderRepository->totalCompleted();
+        $totalCanceled = $this->orderRepository->totalCancel();
+
+
+        return view('admin.pages.orders', compact('orderFiltersConfig', 'totalPending', 'totalCompleted', 'totalCanceled'));
     }
 }

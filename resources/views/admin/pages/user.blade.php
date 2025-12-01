@@ -82,7 +82,6 @@
                                                             d="M5 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5zm1 0v9h6V5H6z" />
                                                     </svg>
                                                 </span>
-
                                             </div>
                                             <div class="small text-body-secondary text-nowrap">
                                              Birthday:

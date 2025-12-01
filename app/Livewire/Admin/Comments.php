@@ -21,13 +21,19 @@ class Comments extends Component
         'rating' => '',
         'type' => '',
     ];
-    public $sort = ['created_at' => 'asc'];
-    public $perPage = 5;
+    public $sort;
+    public $perPage;
 
 
     public function boot(CommentRepositoryInterface $comment_repository)
     {
         $this->commentRepository = $comment_repository;
+    }
+
+    public function mount()
+    {
+        $this->sort = config('app.sort');
+        $this->perPage = config('app.per_page');
     }
 
     public function approveComment($commentId)
@@ -85,14 +91,7 @@ class Comments extends Component
     #[Computed()]
     public function comments()
     {
-        return $this->commentRepository->all(
-            $this->commentRepository->getFilteredComment($this->filter, $this->search),
-            $this->sort,
-            $this->perPage,
-            ['*'],
-            ['user', 'blog'],
-            false,
-        );
+        return $this->commentRepository->getAllComments($this->perPage, $this->sort, $this->search, $this->filter);
     }
 
     #[Layout('layouts.page-layout')]
@@ -118,7 +117,9 @@ class Comments extends Component
                 ],
             ],
         ];
+        $totalApprovedComments = $this->commentRepository->getApprovedCount();
+        $pendingComments      = $this->commentRepository->getPendingCount();
 
-        return view('admin.pages.comments', compact('commentFiltersConfig'));
+        return view('admin.pages.comments', compact('commentFiltersConfig', 'totalApprovedComments', 'pendingComments'));
     }
 }
