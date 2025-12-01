@@ -17,6 +17,7 @@ enum PaymentMethod : string
             self::CASH => 'bg-success text-white',
             self::CREDITCARD => 'bg-primary text-white',
             self::STRIPE => 'bg-info text-white',
+            self::PAYPAL => 'bg-black text-white',
             self::BANKTRANSFER => 'bg-warning text-white',
         };
     }

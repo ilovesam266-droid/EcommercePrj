@@ -57,6 +57,7 @@ class DetailsOrder extends Component
     public function loadOrder()
     {
         $order = $this->orderRepository->find($this->orderId, ['payment']);
+
         if ($order) {
             $this->fill($order->only([
                 'owner_id',

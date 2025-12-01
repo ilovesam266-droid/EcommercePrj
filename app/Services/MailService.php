@@ -38,7 +38,6 @@ class MailService
                 'variant' => $item->productVariantSize?->variant_size ?? null,
             ];
         })->toArray();
-        Log::info($products);
 
         return [
             // customer info
