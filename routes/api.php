@@ -39,6 +39,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('stripe/confirm-payment', [StripePaymentController::class, 'confirmPaymentIntent']);
     Route::post('cart', [CartController::class, 'addToCart']);
     Route::get('cart', [CartController::class, 'show']);
+    Route::patch('cart/{itemId}',  [CartController::class, 'updateQuantity']);
+    Route::delete('cart/{itemId}',  [CartController::class, 'removeCartItem']);
 });
     // Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
     Route::post('stripe/webhook', [StripeWebhookController::class, 'handle'])

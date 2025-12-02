@@ -29,11 +29,11 @@ class MailService
         // Map product details
         $products = $order->orderItems->map(function ($item) {
             return [
-                'name' => $item->productVariantSize?->product?->name ?? 'Product is not valid',
+                // 'name' => $item->productVariantSize?->product?->name ?? 'Product is not valid',
                 'price' => number_format($item->unit_price),
                 'quantity' => $item->quantity,
                 'subtotal' => number_format($item->unit_price * $item->quantity),
-                'thumbnail' => $item->productVariantSize?->product?->images->first() ?? null,
+                // 'thumbnail' => $item->productVariantSize?->product?->images->first() ?? null,
                 'sku' => $item->productVariantSize?->sku ?? null,
                 'variant' => $item->productVariantSize?->variant_size ?? null,
             ];
@@ -92,6 +92,7 @@ class MailService
             $variables = array_merge($this->buildOrderVariables($order), [
                 'cancel_reason' => $order->cancel_reason ?? 'Customer request',
             ]);
+            Log::info('variables', $variables);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderCancelledMail($template, $variables));

@@ -91,6 +91,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 Route::view('/index', 'layouts.pagef-layout');
 Route::view('/shop', 'clients.pages.shop');
+Route::get('/products', function() {
+    return view('clients.pages.shop');
+});
+
 // Route::get('/test-mail', function () {
 //     $template = Mail::first();
 //     $variables = [

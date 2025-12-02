@@ -7,10 +7,12 @@ use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Controllers\Api\V1\Payment\Stripe\StripePaymentController;
 use App\Http\Requests\Api\Order\StoreOrderRequest;
 use App\Http\Resources\OrderTransformer;
+use App\Repository\Constracts\CartRepositoryInterface;
 use App\Repository\Constracts\OrderItemRepositoryInterface;
 use App\Repository\Constracts\OrderRepositoryInterface;
 use App\Repository\Constracts\ProductVariantSizeRepositoryInterface;
 use App\Repository\Constracts\UserRepositoryInterface;
+use App\Repository\Eloquent\CartRepository;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,17 +25,20 @@ class OrderController extends BaseApiController
     protected OrderItemRepositoryInterface $orderItemRepo;
     protected ProductVariantSizeRepositoryInterface $variantRepo;
     protected UserRepositoryInterface $userRepo;
+    protected CartRepositoryInterface $cartRepo;
     public function __construct(
         OrderRepositoryInterface $order_repo,
         ProductVariantSizeRepositoryInterface $variant_repo,
         OrderItemRepositoryInterface $item_repo,
         UserRepositoryInterface $user_repo,
+        CartRepositoryInterface $cart_repo,
     ) {
         parent::__construct();
         $this->orderRepo = $order_repo;
         $this->orderItemRepo = $item_repo;
         $this->variantRepo = $variant_repo;
         $this->userRepo = $user_repo;
+        $this->cartRepo = $cart_repo;
     }
     /**
      * Display a listing of the resource.
@@ -60,8 +65,21 @@ class OrderController extends BaseApiController
         DB::beginTransaction();
         try {
             $validated = $request->validated();
-            $validatedItems = $this->validateItems($validated['items']);
+            if (isset($validated['cart_item_ids'])) {
+                $userId = Auth::id();
+                $cartItems = $this->cartRepo->getCartItemById($userId, $validated['cart_item_ids']);
+                $validatedItems = $this->validateItems($cartItems);
+            } else {
+                $variant = $this->variantRepo->find((int)$validated['variant_id']);
+
+                $validatedItems = [[
+                    'variant_id' => $variant->id,
+                    'qty'        => $validated['qty'],
+                    'price'      => $variant->price,
+                ]];
+            }
             $pricing = $this->calculate($validatedItems);
+
             $order = $this->orderRepo->create([
                 'owner_id' => Auth::id(),
                 'province' => $validated['province'],
@@ -137,25 +155,23 @@ class OrderController extends BaseApiController
         return $this->success($order, 'Order deleted successfully.');
     }
 
-    public function validateItems(array $items)
+    public function validateItems($items)
     {
-        $variantId = array_column($items, 'variant_id');
+        $variantId = $items->pluck('product_variant_size_id')->all();
 
         $variants = $this->variantRepo->getByIdsForUpdate($variantId);
 
         $validated = [];
         foreach ($items as $item) {
-            $variant = $variants[$item['variant_id']];
+            $variant = $variants[$item->product_variant_size_id];
 
-            if ($variant->stock < $item['qty']) {
-                throw ValidationException::withMessages([
-                    'stock' => "Variant {$variant->id} is not enough stock",
-                ]);
+            if ($variant->stock < $item->quantity) {
+                return $this->error('Your buying is not enough stock to sell');
             }
 
             $validated[] = [
-                'variant_id' => $item['variant_id'],
-                'qty' => $item['qty'],
+                'variant_id' => $item->product_variant_size_id,
+                'qty' => $item->quantity,
                 'price' => $variant->price,
             ];
         }

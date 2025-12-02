@@ -30,9 +30,12 @@ class StoreOrderRequest extends ApiFormRequest
 
             'payment_method' => ['required', Rule::in(array_map(fn($case) => $case->value, PaymentMethod::cases()))],
 
-            'items' => 'required|array|min:1',
-            'items.*.variant_id' => 'required|exists:product_variant_sizes,id',
-            'items.*.qty' => 'required|integer|min:1',
+
+            'cart_item_ids'    => ['required_without:variant_id,qty', 'array', 'min:1'],
+            'cart_item_ids.*'  => ['integer', 'distinct', 'exists:cart_items,id'],
+
+            'variant_id' => ['integer', 'required_without:cart_item_ids'],
+            'qty' => ['integer', 'required_without:cart_item_ids', 'min:1'],
         ];
     }
 }

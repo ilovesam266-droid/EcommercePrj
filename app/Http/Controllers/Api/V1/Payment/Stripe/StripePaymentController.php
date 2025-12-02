@@ -29,7 +29,6 @@ class StripePaymentController extends Controller
         ]);
 
         $order = $this->orders->find((int) $request->order_id);
-
         if (!$order) return response()->json(['error' => 'order not found'], 404);
 
         if ($order->status == OrderStatus::DONE) {
