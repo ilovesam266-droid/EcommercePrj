@@ -44,7 +44,7 @@
                                             class="status-badge {{ $mail->type->colorClass() }}">{{ $mail->type }}</span>
                                     </td>
                                     <td>
-                                        <p>{{ Str::before($mail->body, '. ') }}...</p>
+                                        <p>{{ Str::limit($mail->body, 50) }}...</p>
                                     </td>
                                     <td>
                                         <div>{{ $mail->created_at->format('d/m/Y') }}</div>
@@ -52,7 +52,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a title="Edit" class="btn btn-sm btn-info btn-action"
+                                            <a title="Edit" class="btn btn-sm btn-info btn-action text-white"
                                                 href="{{ route('admin.edit_mail', ['editingMailId' => $mail->id]) }}"><svg
                                                     style="width: 20px;height: 20px;  stroke: currentColor; fill: currentColor; ">
                                                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-airplay">

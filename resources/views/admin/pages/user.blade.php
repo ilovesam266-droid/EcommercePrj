@@ -91,9 +91,9 @@
                                         <td>
                                             @if ($user->defaultAddress())
                                                 <div class="text-truncate fw-medium" style="max-width: 420px;">
-                                                    {{ Str::limit($user->defaultAddress->detailed_address, 43) }}
+                                                    {{ Str::limit($user->defaultAddress->detailed_address ?? null, 43) }}
                                                     <span class="copy-icon"
-                                                        onclick="copyToClipboard(@js($user->defaultAddress->ward))"
+                                                        onclick="copyToClipboard(@js($user->defaultAddress->ward ?? null))"
                                                         title="Copy Address">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="18"
                                                             height="18" fill="currentColor" viewBox="0 0 16 16">
@@ -104,9 +104,9 @@
                                                         </svg>
                                                     </span></div>
                                                 <div class="small text-body-secondary">
-                                                    {{ $user->defaultAddress->ward }},
-                                                    {{ $user->defaultAddress->district }},
-                                                    {{ $user->defaultAddress->province }}
+                                                    {{ $user->defaultAddress->ward ?? null }},
+                                                    {{ $user->defaultAddress->district ?? null }},
+                                                    {{ $user->defaultAddress->province ?? null }}
                                                 </div>
                                             @else
                                                 <span class="text-muted">No default address</span>

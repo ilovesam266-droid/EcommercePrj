@@ -12,6 +12,8 @@ use App\Repository\Constracts\MailRecipientRepositoryInterface;
 use App\Repository\Constracts\MailRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
+use function Symfony\Component\Clock\now;
+
 class MailService
 {
     protected MailRepositoryInterface $mailRepository;
@@ -28,12 +30,25 @@ class MailService
 
         // Map product details
         $products = $order->orderItems->map(function ($item) {
+            $image = $item->productVariantSize?->product?->images->first();
+            $thumbnailBase64 = null;
+
+            if ($image && !empty($image->url)) {
+                $fullPath = storage_path('app/public/' . $image->url);
+
+                if (file_exists($fullPath)) {
+                    $thumbnailBase64 = $this->resizeImageToBase64($fullPath, 200, 200, 70);
+                }
+            } else {
+                return null;
+            }
+
             return [
-                // 'name' => $item->productVariantSize?->product?->name ?? 'Product is not valid',
+                'name' => $item->productVariantSize?->product?->name ?? 'Product is not valid',
                 'price' => number_format($item->unit_price),
                 'quantity' => $item->quantity,
                 'subtotal' => number_format($item->unit_price * $item->quantity),
-                // 'thumbnail' => $item->productVariantSize?->product?->images->first() ?? null,
+                'thumbnail' => $thumbnailBase64 ?? null,
                 'sku' => $item->productVariantSize?->sku ?? null,
                 'variant' => $item->productVariantSize?->variant_size ?? null,
             ];
@@ -65,6 +80,38 @@ class MailService
         ];
     }
 
+    private function resizeImageToBase64(string $path, int $w = 200, int $h = 200, int $quality = 70): ?string
+    {
+        $info = getimagesize($path);
+        if (!$info) return null;
+
+        switch ($info['mime']) {
+            case 'image/jpeg':
+                $src = imagecreatefromjpeg($path);
+                break;
+            case 'image/png':
+                $src = imagecreatefrompng($path);
+                break;
+            case 'image/webp':
+                $src = imagecreatefromwebp($path);
+                break;
+            default:
+                return null;
+        }
+
+        $dst = imagecreatetruecolor($w, $h);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $w, $h, imagesx($src), imagesy($src));
+
+        ob_start();
+        imagejpeg($dst, null, $quality);
+        $imageData = ob_get_clean();
+
+        imagedestroy($src);
+        imagedestroy($dst);
+
+        return "data:image/jpeg;base64," . base64_encode($imageData);
+    }
+
     public function buildMailRecipientData($recipient, $template, $status = 'unread', $error = null)
     {
         $data = [
@@ -90,9 +137,9 @@ class MailService
 
         if ($template) {
             $variables = array_merge($this->buildOrderVariables($order), [
-                'cancel_reason' => $order->cancel_reason ?? 'Customer request',
+                'cancel_reason' => $order->cancellation_reason ?? 'Customer request',
+                'canceled_at' => $order->canceled_at ?? now(),
             ]);
-            Log::info('variables', $variables);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderCancelledMail($template, $variables));
@@ -108,14 +155,12 @@ class MailService
     {
         $recipient = $order->owner;
 
-        $template = $this->mailRepository->findByType('order_confirmed');
+        $template = array_merge($this->buildOrderVariables($order), [
+                'confirmed_at' => $order->confirmed_at ?? now(),
+            ]);
 
         if ($template) {
-            $variables = [
-                'fullname' => $recipient->fullname,
-                'order_id' => $order->id,
-                'app_name' => config('app.name'),
-            ];
+            $variables = $this->buildOrderVariables($order);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderConfirmedMail($template, $variables));
@@ -134,11 +179,9 @@ class MailService
         $template = $this->mailRepository->findByType('order_shipping');
 
         if ($template) {
-            $variables = [
-                'fullname' => $recipient->fullname,
-                'order_id' => $order->id,
-                'app_name' => config('app.name'),
-            ];
+            $variables = array_merge($this->buildOrderVariables($order), [
+                'shipping_at' => $order->shipping_at ?? now(),
+            ]);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderShippingMail($template, $variables));
@@ -157,12 +200,10 @@ class MailService
         $template = $this->mailRepository->findByType('order_failed');
 
         if ($template) {
-            $variables = [
-                'fullname' => $recipient->fullname,
-                'order_id' => $order->id,
+            $variables = array_merge($this->buildOrderVariables($order), [
                 'failed_reason' => $order->failure_reason ?? 'Customer request',
-                'app_name' => config('app.name'),
-            ];
+                'failed_at' => $order->failed_at ?? now(),
+            ]);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderFailedMail($template, $variables));
@@ -181,12 +222,11 @@ class MailService
         $template = $this->mailRepository->findByType('order_done');
 
         if ($template) {
-            $variables = [
-                'fullname' => $recipient->fullname,
-                'order_id' => $order->id,
-                'done_at' => $order->done_at,
-                'app_name' => config('app.name'),
-            ];
+            $variables = array_merge($this->buildOrderVariables($order), [
+            'shipping_at' => $order->shipping_at,
+            'order_date' => $order->created_at,
+            'delivered_date' => $order->done_at,
+        ]);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderDoneMail($template, $variables));
