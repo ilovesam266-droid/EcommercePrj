@@ -32,7 +32,7 @@ class ProductController extends BaseApiController
     {
         $this->searchFilterPerpage($request);
 
-        $products = $this->productRepository->getAllProducts($this->perPage, $this->sort, $this->filter, $this->search);
+        $products = $this->productRepository->getAllProducts($this->perPage, $this->sort, $this->search, $this->filter);
         if ($products->isEmpty()){
             return $this->error("No product retrived.");
         }

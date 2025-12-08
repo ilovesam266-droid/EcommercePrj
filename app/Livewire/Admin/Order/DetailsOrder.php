@@ -91,9 +91,15 @@ class DetailsOrder extends Component
     public function cancelOrder()
     {
         $this->status = OrderStatus::CANCELED;
+        $order = $this->orderRepository->find((int) $this->orderId);
+        if ($error = $order->validateStatusChange(OrderStatus::CANCELED->value)) {
+            $this->dispatch('showToast', 'error', 'Failed', $error);
+        }
         $orderStatus['status'] = $this->status;
         $orderStatus['canceled_at'] = now();
         $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $this->dispatch('showToast', 'success', 'Success', 'Order Cancelled!');
+
         $order->load('owner');
         event(new OrderCancelled($order));
     }
@@ -101,19 +107,32 @@ class DetailsOrder extends Component
     public function confirmOrder()
     {
         $this->status = OrderStatus::CONFIRMED;
-        $orderStatus['status'] = $this->status;
-        $orderStatus['confirmed_at'] = now();
-        $order = $this->orderRepository->update($this->orderId, $orderStatus);
-        $order->load('owner');
-        event(new OrderConfirmed($order));
+        $order = $this->orderRepository->find((int) $this->orderId);
+        if ($error = $order->validateStatusChange(OrderStatus::CONFIRMED->value)) {
+            $this->dispatch('showToast', 'error', 'Failed', $error);
+        } else {
+            $orderStatus['status'] = $this->status;
+            $orderStatus['confirmed_at'] = now();
+            $order = $this->orderRepository->update($this->orderId, $orderStatus);
+            $this->dispatch('showToast', 'success', 'Success', 'Order Confirmed!');
+
+            $order->load('owner');
+            event(new OrderConfirmed($order));
+        }
     }
 
     public function shipOrder()
     {
         $this->status = OrderStatus::SHIPPING;
+        $order = $this->orderRepository->find((int) $this->orderId);
+        if ($error = $order->validateStatusChange(OrderStatus::CONFIRMED->value)) {
+            $this->dispatch('showToast', 'error', 'Failed', $error);
+        }
         $orderStatus['status'] = $this->status;
         $orderStatus['shipping_at'] = now();
         $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $this->dispatch('showToast', 'success', 'Success', 'Order Shipping!');
+
         $order->load('owner');
         event(new OrderShipping($order));
     }
@@ -121,8 +140,14 @@ class DetailsOrder extends Component
     public function failedOrder()
     {
         $this->status = OrderStatus::FAILED;
+        $order = $this->orderRepository->find((int) $this->orderId);
+        if ($error = $order->validateStatusChange(OrderStatus::FAILED->value)) {
+            $this->dispatch('showToast', 'error', 'Failed', $error);
+        }
         $orderStatus['status'] = $this->status;
         $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $this->dispatch('showToast', 'success', 'Success', 'Order Failed!');
+
         $order->load('owner');
         event(new OrderFailed($order));
     }
@@ -130,9 +155,15 @@ class DetailsOrder extends Component
     public function doneOrder()
     {
         $this->status = OrderStatus::DONE;
+        $order = $this->orderRepository->find((int) $this->orderId);
+        if ($error = $order->validateStatusChange(OrderStatus::FAILED->value)) {
+            $this->dispatch('showToast', 'error', 'Failed', $error);
+        }
         $orderStatus['status'] = $this->status;
         $orderStatus['done_at'] = now();
         $order = $this->orderRepository->update($this->orderId, $orderStatus);
+        $this->dispatch('showToast', 'success', 'Success', 'Order Done!');
+
         $order->load('owner');
         event(new OrderDone($order));
     }

@@ -13,6 +13,7 @@ class AuthController extends Controller
     public function loginShow(){
         return view('admin.pages.auth.login');
     }
+
     public function login(LoginRequest $request){
         $credentials = $request->validated();
         $loginField = filter_var($credentials['login_id'], FILTER_VALIDATE_EMAIL) ? 'email':'username';
@@ -29,6 +30,7 @@ class AuthController extends Controller
             'login_id' => 'Wrong account or password',
         ])->withInput();
     }
+
     public function Logout(){
         Auth::logout();
         request()->session()->invalidate();

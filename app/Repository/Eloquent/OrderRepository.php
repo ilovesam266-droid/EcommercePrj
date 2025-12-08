@@ -14,7 +14,8 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return Order::class;
     }
 
-    public function getAllOrders($perPage, $sort, $search, $filter){
+    public function getAllOrders($perPage, $sort, $search, $filter)
+    {
         return $this->all(
             $this->getFilteredOrder($filter, $search),
             ['created_at' => $sort],
@@ -54,6 +55,11 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
                 });
             }
         };
+    }
+
+    public function updateStatus(string $newStatus)
+    {
+        return $this->model->updateStatus($newStatus);
     }
 
     public function totalPending()

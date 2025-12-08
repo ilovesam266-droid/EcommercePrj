@@ -15,6 +15,7 @@ class AuthController extends Controller
     {
         $this->userRepository = $userRepo;
     }
+
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();

@@ -138,7 +138,7 @@ class MailService
         if ($template) {
             $variables = array_merge($this->buildOrderVariables($order), [
                 'cancel_reason' => $order->cancellation_reason ?? 'Customer request',
-                'canceled_at' => $order->canceled_at ?? now(),
+                'canceled_at' => $order->canceled_at,
             ]);
 
             try {
@@ -155,12 +155,12 @@ class MailService
     {
         $recipient = $order->owner;
 
-        $template = array_merge($this->buildOrderVariables($order), [
-                'confirmed_at' => $order->confirmed_at ?? now(),
-            ]);
+        $template = $this->mailRepository->findByType('order_confirmed');
 
         if ($template) {
-            $variables = $this->buildOrderVariables($order);
+            $variables = array_merge($this->buildOrderVariables($order), [
+                'confirmed_at' => $order->confirmed_at,
+            ]);
 
             try {
                 Mail::to($recipient->email)->sendNow(new OrderConfirmedMail($template, $variables));
@@ -180,7 +180,7 @@ class MailService
 
         if ($template) {
             $variables = array_merge($this->buildOrderVariables($order), [
-                'shipping_at' => $order->shipping_at ?? now(),
+                'shipping_at' => $order->shipping_at,
             ]);
 
             try {
@@ -202,7 +202,7 @@ class MailService
         if ($template) {
             $variables = array_merge($this->buildOrderVariables($order), [
                 'failed_reason' => $order->failure_reason ?? 'Customer request',
-                'failed_at' => $order->failed_at ?? now(),
+                'failed_at' => $order->failed_at,
             ]);
 
             try {

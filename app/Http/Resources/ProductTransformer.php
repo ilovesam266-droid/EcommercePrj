@@ -13,6 +13,8 @@ class ProductTransformer extends JsonResource
             'id'          => $this->id,
             'name'        => $this->name,
             'slug'        => $this->slug,
+            'price'       => $this->variant_sizes->min('price') ?? 100000,
+            'stock'       => $this->sumStock(),
             'description' => $this->description,
             'status'      => $this->status,
             'created_by'  => $this->created_by,
@@ -35,12 +37,11 @@ class ProductTransformer extends JsonResource
                 ];
             }),
 
-            'reviews' => $this->reviews->map(function ($review) {
-                return [
-                    'created_by' => $review->user_id,
-                    'rating'     => $review->rating,
-                ];
-            }),
+            'reviews' =>
+            [
+                'rating' => round($this->averageRating(), 1),
+                'num_rate' => $this->reviews->count(),
+            ]
         ];
     }
 }

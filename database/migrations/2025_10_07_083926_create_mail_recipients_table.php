@@ -25,8 +25,6 @@ return new class extends Migration
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->unique(['user_id', 'mail_id']);
         });
     }
 

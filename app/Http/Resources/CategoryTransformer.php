@@ -17,8 +17,7 @@ class CategoryTransformer extends JsonResource
         return [
             'name'        => $this->name,
             'slug'        => $this->slug,
-            'description' => $this->description,
-            'status'      => $this->status,
+            'num_cate'    => $this->products->count(),
             'created_at'  => $this->created_at?->toDateTimeString(),
             'updated_at'  => $this->updated_at?->toDateTimeString(),
         ];
